@@ -1,5 +1,6 @@
 
 function Menu(canvas, isAnimated) {
+	var self = this;
 	this.buttons = new Array(),
 	this.canvas = canvas,
 	this.isAnimated = isAnimated,
@@ -10,14 +11,13 @@ function Menu(canvas, isAnimated) {
 	}
 	
 	this.listener_mousemove = function (event) {
-		/*var i, x = 0, y = 0;
-		console.info(this.buttons);
-		for (i = 0; i < this.buttons.length; i += 1) {
-			if (this.buttons[i].inRange(x, y)) {
-				this.redrawMenu();
+		var i, x = 0, y = 0;
+		for (i = 0; i < self.buttons.length; i += 1) {
+			if (self.buttons[i].inRange(x, y)) {
+				self.redrawMenu();
 				break;
 			}
-		}*/
+		}
 	}
 	
 	this.redrawMenu = function () {
@@ -30,8 +30,7 @@ function Menu(canvas, isAnimated) {
 	
 	this.listener_mouseup = function (event) {
 		console.info('listener_mouseup!', event);
-		console.info(this);
-		this.redrawMenu();
+		self.redrawMenu();
 	}
 }
 
