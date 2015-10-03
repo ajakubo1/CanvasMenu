@@ -3,6 +3,8 @@ HTML menu for games and applications
 
 ## Usage
 
+To use library in your project, you have to include canvasmenu.js in your html file
+
 Right now, you can create the menu by constructor:
 
 ```javascript
