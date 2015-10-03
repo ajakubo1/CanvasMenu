@@ -1,11 +1,10 @@
 
-function Menu(canvas, width, height, isAnimated) {
+function Menu(canvas, width, height) {
 	var self = this;
 	this.buttons = new Array(),
 	this.canvas = canvas,
 	this.canvas.width = width;
 	this.canvas.height = height;
-	this.isAnimated = isAnimated,
 	this.ctx = canvas.getContext('2d');
 	this.scaleX = width / 640;
 	this.scaleY = height / 480;
