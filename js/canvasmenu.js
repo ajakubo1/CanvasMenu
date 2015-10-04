@@ -6,12 +6,12 @@ function Menu(canvas, width, height) {
 	this.canvas.width = width;
 	this.canvas.height = height;
 	this.ctx = canvas.getContext('2d');
-	this.scaleX = width / 640;
-	this.scaleY = height / 480;
+	this.scaleX = 1;
+	this.scaleY = 1;
 	this.focused = undefined;
 	
 	this.listener_mousedown = function (event) {
-		var i, x = event.layerX * self.scaleX, y = event.layerY * self.scaleY;
+		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.buttons[i].setState(BUTTON_ENUM.down);
@@ -22,7 +22,7 @@ function Menu(canvas, width, height) {
 	}
 	
 	this.listener_mousemove = function (event) {
-		var i, x = event.layerX * self.scaleX, y = event.layerY * self.scaleY;
+		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
 		
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
@@ -43,7 +43,7 @@ function Menu(canvas, width, height) {
 	}
 	
 	this.listener_mouseup = function (event) {
-		var i, x = event.layerX * self.scaleX, y = event.layerY * self.scaleY;
+		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.buttons[i].setState(BUTTON_ENUM.up);
@@ -109,8 +109,6 @@ function Button(x, y, width, height, text) {
 	ctx.clearRect(0, 0, this.width, this.height);
 	ctx.fillStyle = "green";
 	ctx.fillRect(0, 0, this.width, this.height);
-	
-	ctx.
 	
 	ctx = this.canvas_focused.getContext('2d');
 	ctx.clearRect(0, 0, this.width, this.height);
