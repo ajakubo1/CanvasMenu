@@ -37,7 +37,7 @@ function Menu(canvas, width, height) {
 				self.focused = self.buttons[i];
 				self.buttons[i].setState(BUTTON_ENUM.focused);
 				self.redrawMenu();
-				break;
+				break;  
 			}
 		}
 	}
@@ -48,6 +48,7 @@ function Menu(canvas, width, height) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.buttons[i].setState(BUTTON_ENUM.up);
 				self.redrawMenu();
+				self.buttons[i].click();
 				break;
 			}
 		}
@@ -69,8 +70,15 @@ Menu.prototype.init = function () {
 	this.redrawMenu();
 }
 
-Menu.prototype.appendButton = function (button) {
+Menu.prototype.destroy = function () {
+	this.canvas.removeEventListener('mouseup', this.listener_mouseup);
+	this.canvas.removeEventListener('mousedown', this.listener_mousedown);
+	this.canvas.removeEventListener('mousemove', this.listener_mousemove);
+}
+
+Menu.prototype.appendButton = function (button) { 
 	this.buttons.push(button);
+	button.setParentMenu(this);
 }
 
 var BUTTON_ENUM = {
@@ -155,4 +163,23 @@ Button.prototype.getX = function () {
 
 Button.prototype.getY = function () {
 	return this.y;
+}
+
+Button.prototype.setParentMenu = function (menu) {
+	this.menu = menu;
+}
+
+Button.prototype.clickHandler = function (handler) {
+	this.onclick = handler;
+}
+
+Button.prototype.click = function () {
+	if (this.onclick instanceof Menu) {
+		this.menu.destroy();
+		this.onclick.init();
+	} else {
+		if(this.onclick !== undefined) {
+			this.onclick.call();
+		}
+	}
 }
