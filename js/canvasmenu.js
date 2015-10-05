@@ -117,21 +117,37 @@ function Button(x, y, width, height, text) {
 	ctx.clearRect(0, 0, this.width, this.height);
 	ctx.fillStyle = "green";
 	ctx.fillRect(0, 0, this.width, this.height);
+	ctx.font = '30pt Arial';
+	ctx.textAlign="center";
+	ctx.fillStyle = "white";
+	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
 	
 	ctx = this.canvas_focused.getContext('2d');
 	ctx.clearRect(0, 0, this.width, this.height);
 	ctx.fillStyle = "blue";
 	ctx.fillRect(0, 0, this.width, this.height);
+	ctx.font = '30pt Arial';
+	ctx.textAlign="center";
+	ctx.fillStyle = "white";
+	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
 	
 	ctx = this.canvas_down.getContext('2d');
 	ctx.clearRect(0, 0, this.width, this.height);
 	ctx.fillStyle = "red";
 	ctx.fillRect(0, 0, this.width, this.height);
+	ctx.font = '30pt Arial';
+	ctx.textAlign="center";
+	ctx.fillStyle = "white";
+	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
 	
 	ctx = this.canvas_up.getContext('2d');
 	ctx.clearRect(0, 0, this.width, this.height);
 	ctx.fillStyle = "orange";
 	ctx.fillRect(0, 0, this.width, this.height);
+	ctx.font = '30pt Arial';
+	ctx.textAlign="center";
+	ctx.fillStyle = "black";
+	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
 }
 
 Button.prototype.inRange = function (x, y) {
