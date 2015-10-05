@@ -4,21 +4,33 @@ var width = 800,
 	buttonHegith = 50;
 
 var mainMenu = new Menu(document.getElementById('canvas'), width, height);
+var newGameMenu = new Menu(document.getElementById('canvas'), width, height);
 var optionsMenu = new Menu(document.getElementById('canvas'), width, height);
+var aboutMenu = new Menu(document.getElementById('canvas'), width, height);
 
-var button1 = new Button(width / 2 - buttonWidth / 2, 300, buttonWidth, buttonHegith, "Button 1");
-button1.clickHandler(optionsMenu);
+var newGameMainMenuButton = new Button(width / 2 - buttonWidth / 2, 300, buttonWidth, buttonHegith, "New Game");
+newGameMainMenuButton.clickHandler(newGameMenu);
 
-var button2 = new Button(width / 2 - buttonWidth / 2, 300 + buttonHegith + 20, buttonWidth, buttonHegith, "Button 2");
-var button3 = new Button(width / 2 - buttonWidth / 2, 300 + 2 * (buttonHegith + 20), buttonWidth, buttonHegith, "Button 3");
+var optionsMainMenuButton = new Button(width / 2 - buttonWidth / 2, 300 + buttonHegith + 20, buttonWidth, buttonHegith, "Options");
+optionsMainMenuButton.clickHandler(optionsMenu);
 
-var button4 = new Button(width / 2 - buttonWidth / 2, 300, buttonWidth, buttonHegith, "Button 4");
-button4.clickHandler(mainMenu);
+var aboutMainMenuButton = new Button(width / 2 - buttonWidth / 2, 300 + 2 * (buttonHegith + 20), buttonWidth, buttonHegith, "About");
+aboutMainMenuButton.clickHandler(aboutMenu);
 
-mainMenu.appendButton(button1);
-mainMenu.appendButton(button2);
-mainMenu.appendButton(button3);
+mainMenu.appendButton(newGameMainMenuButton);
+mainMenu.appendButton(optionsMainMenuButton);
+mainMenu.appendButton(aboutMainMenuButton);
 
-optionsMenu.appendButton(button4);
+var backOptionsButton = new Button(10, height - 60, buttonHegith, buttonHegith, String.fromCharCode(parseInt("21DC", 16)));
+backOptionsButton.clickHandler(mainMenu);
+newGameMenu.appendButton(backOptionsButton);
+
+var backNewGameButton = new Button(10, height - 60, buttonHegith, buttonHegith, String.fromCharCode(parseInt("21DC", 16)));
+backNewGameButton.clickHandler(mainMenu);
+optionsMenu.appendButton(backNewGameButton);
+
+var backAboutButton = new Button(10, height - 60, buttonHegith, buttonHegith, String.fromCharCode(parseInt("21DC", 16)));
+backAboutButton.clickHandler(mainMenu);
+aboutMenu.appendButton(backAboutButton);
 
 mainMenu.init();
