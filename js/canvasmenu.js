@@ -71,12 +71,19 @@ Menu.prototype.init = function () {
 }
 
 Menu.prototype.destroy = function () {
+	var i;
+	
 	this.canvas.removeEventListener('mouseup', this.listener_mouseup);
 	this.canvas.removeEventListener('mousedown', this.listener_mousedown);
 	this.canvas.removeEventListener('mousemove', this.listener_mousemove);
+	
+	for (i = 0; i < this.buttons.length; i += 1) {
+		this.buttons[i].setState(BUTTON_ENUM.inactive);
+		this.redrawMenu();
+	}
 }
 
-Menu.prototype.appendButton = function (button) { 
+Menu.prototype.appendButton = function (button) {
 	this.buttons.push(button);
 	button.setParentMenu(this);
 }
@@ -96,6 +103,8 @@ function Button(x, y, width, height, text) {
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
 	this.state = BUTTON_ENUM.inactive;
+	this.tick = 0;
+	this.maxTick = 60;
 	
 	this.canvas_inactive = document.createElement('canvas');
 	this.canvas_inactive.width = width;
@@ -113,41 +122,69 @@ function Button(x, y, width, height, text) {
 	this.canvas_up.width = width;
 	this.canvas_up.height = height;
 	
-	var ctx = this.canvas_inactive.getContext('2d');
-	ctx.clearRect(0, 0, this.width, this.height);
-	ctx.fillStyle = "green";
-	ctx.fillRect(0, 0, this.width, this.height);
-	ctx.font = '30pt Arial';
-	ctx.textAlign="center";
-	ctx.fillStyle = "white";
-	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	this.redraw = function () {
+		if (this.state === BUTTON_ENUM.inactive) {
+			this.redrawInactive();
+		} else if (this.state === BUTTON_ENUM.focused) {
+			this.redrawFocused();
+		} else if (this.state === BUTTON_ENUM.down) {
+			this.redrawDown();
+		} else if (this.state === BUTTON_ENUM.up) {
+			this.redrawUp();
+		}
+	}
 	
-	ctx = this.canvas_focused.getContext('2d');
-	ctx.clearRect(0, 0, this.width, this.height);
-	ctx.fillStyle = "blue";
-	ctx.fillRect(0, 0, this.width, this.height);
-	ctx.font = '30pt Arial';
-	ctx.textAlign="center";
-	ctx.fillStyle = "white";
-	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	this.redrawInactive = function () {
+		var ctx = this.canvas_inactive.getContext('2d');
+		ctx.clearRect(0, 0, this.width, this.height);
+		ctx.fillStyle = "green";
+		ctx.fillRect(0, 0, this.width, this.height);
+		ctx.font = '30pt Arial';
+		ctx.textAlign="center";
+		ctx.fillStyle = "white";
+		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	}
 	
-	ctx = this.canvas_down.getContext('2d');
-	ctx.clearRect(0, 0, this.width, this.height);
-	ctx.fillStyle = "red";
-	ctx.fillRect(0, 0, this.width, this.height);
-	ctx.font = '30pt Arial';
-	ctx.textAlign="center";
-	ctx.fillStyle = "white";
-	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	this.redrawInactive();
 	
-	ctx = this.canvas_up.getContext('2d');
-	ctx.clearRect(0, 0, this.width, this.height);
-	ctx.fillStyle = "orange";
-	ctx.fillRect(0, 0, this.width, this.height);
-	ctx.font = '30pt Arial';
-	ctx.textAlign="center";
-	ctx.fillStyle = "black";
-	ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	this.redrawFocused = function () {
+		var ctx = this.canvas_focused.getContext('2d');
+		ctx.clearRect(0, 0, this.width, this.height);
+		ctx.fillStyle = "blue";
+		ctx.fillRect(0, 0, this.width, this.height);
+		ctx.font = '30pt Arial';
+		ctx.textAlign="center";
+		ctx.fillStyle = "white";
+		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	}
+	
+	this.redrawFocused();
+	
+	this.redrawDown = function () {
+		var ctx = this.canvas_down.getContext('2d');
+		ctx.clearRect(0, 0, this.width, this.height);
+		ctx.fillStyle = "red";
+		ctx.fillRect(0, 0, this.width, this.height);
+		ctx.font = '30pt Arial';
+		ctx.textAlign="center";
+		ctx.fillStyle = "white";
+		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	}
+	
+	this.redrawDown();
+	
+	this.redrawUp = function () {
+		var ctx = this.canvas_up.getContext('2d');
+		ctx.clearRect(0, 0, this.width, this.height);
+		ctx.fillStyle = "orange";
+		ctx.fillRect(0, 0, this.width, this.height);
+		ctx.font = '30pt Arial';
+		ctx.textAlign="center";
+		ctx.fillStyle = "black";
+		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+	}
+	
+	this.redrawUp();
 }
 
 Button.prototype.inRange = function (x, y) {
@@ -159,6 +196,17 @@ Button.prototype.inRange = function (x, y) {
 
 Button.prototype.setState = function (newState) {
 	this.state = newState;
+	this.tick = 0;
+}
+
+Button.prototype.redrawBackground = function (step) {
+	this.tick += step;
+	
+	if (this.tick > 60) {
+		this.tick = step - 60;
+	}
+	
+	this.redraw
 }
 
 Button.prototype.getCanvas = function () {
