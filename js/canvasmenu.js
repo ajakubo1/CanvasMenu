@@ -1,5 +1,5 @@
 
-function Menu(canvas, width, height, animated, animation) {
+function Menu(canvas, width, height, animation) {
 	var self = this;
 	this.buttons = [];
 	this.canvas = canvas;
@@ -11,7 +11,7 @@ function Menu(canvas, width, height, animated, animation) {
 	this.scaleX = 1;
 	this.scaleY = 1;
 	this.focused = undefined;
-	this.animated = animated || false;
+	this.animated = animation ? true : false;
 	this.running = false;
 	this.updateTime = undefined;
 	this.tickLength = 16.66666666;
@@ -24,7 +24,7 @@ function Menu(canvas, width, height, animated, animation) {
 		if (self.focused.inRange(x, y)) {
 			self.focused.setState(BUTTON_ENUM.down);
 			self.focused.redrawBackground(self.tickCount);
-			if(!animated) {
+			if(!self.animated) {
 				self.redrawButtons();
 			}
 		}
@@ -37,7 +37,7 @@ function Menu(canvas, width, height, animated, animation) {
 			if (!self.focused.inRange(x, y)) {
 				self.focused.setState(BUTTON_ENUM.inactive);
 				self.focused = undefined;
-				if(!animated) {
+				if(!self.animated) {
 					self.redrawButtons();
 				}
 				//
@@ -48,7 +48,7 @@ function Menu(canvas, width, height, animated, animation) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
 				self.buttons[i].setState(BUTTON_ENUM.focused);
-				if(!animated) {
+				if(!self.animated) {
 					self.redrawButtons();
 				}
 				break;
@@ -60,7 +60,7 @@ function Menu(canvas, width, height, animated, animation) {
 		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 		if (self.focused.inRange(x, y)) {
 			self.focused.setState(BUTTON_ENUM.up);
-			if(!animated) {
+			if(!self.animated) {
 				self.redrawButtons();
 			}
 			self.focused.click();

@@ -50,10 +50,10 @@ var menuAnimation = function () {
     }
 };
 
-var mainMenu = new Menu(document.getElementById('canvas'), width, height, true, menuAnimation);
-var newGameMenu = new Menu(document.getElementById('canvas'), width, height, false);
-var optionsMenu = new Menu(document.getElementById('canvas'), width, height, false);
-var aboutMenu = new Menu(document.getElementById('canvas'), width, height, false);
+var mainMenu = new Menu(document.getElementById('canvas'), width, height, menuAnimation);
+var newGameMenu = new Menu(document.getElementById('canvas'), width, height);
+var optionsMenu = new Menu(document.getElementById('canvas'), width, height);
+var aboutMenu = new Menu(document.getElementById('canvas'), width, height);
 
 var newGameMainMenuButton = new Button(width / 2 - buttonWidth / 2, 270, buttonWidth, buttonHeight, "New Game");
 newGameMainMenuButton.clickHandler(newGameMenu);
