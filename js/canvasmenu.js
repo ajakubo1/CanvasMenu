@@ -149,31 +149,31 @@ var BUTTON_ENUM = {
 	"up": 3
 };
 
-function Button(x, y, width, height, text, redrawInactive, redrawFocused, redrawDown, redrawUp) {
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
+function Button(config) {
+	this.x = config.x;
+	this.y = config.y;
+	this.width = config.width;
+	this.height = config.height;
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
 	this.state = BUTTON_ENUM.inactive;
 	this.canvas_inactive = document.createElement('canvas');
-	this.canvas_inactive.width = width;
-	this.canvas_inactive.height = height;
+	this.canvas_inactive.width = this.width;
+	this.canvas_inactive.height = this.height;
 	this.tick = 0;
-	this.text = text;
+	this.text = config.text;
 
 	this.canvas_focused = document.createElement('canvas');
-	this.canvas_focused.width = width;
-	this.canvas_focused.height = height;
+	this.canvas_focused.width = this.width;
+	this.canvas_focused.height = this.height;
 
 	this.canvas_down = document.createElement('canvas');
-	this.canvas_down.width = width;
-	this.canvas_down.height = height;
+	this.canvas_down.width = this.width;
+	this.canvas_down.height = this.height;
 
 	this.canvas_up = document.createElement('canvas');
-	this.canvas_up.width = width;
-	this.canvas_up.height = height;
+	this.canvas_up.width = this.width;
+	this.canvas_up.height = this.height;
 
 	this.redraw = function () {
 		if (this.state === BUTTON_ENUM.inactive) {
@@ -187,54 +187,78 @@ function Button(x, y, width, height, text, redrawInactive, redrawFocused, redraw
 		}
 	};
 
-	this.redrawInactive = redrawInactive || function () {
+	this.redrawInactive = function () {
 		var ctx = this.canvas_inactive.getContext('2d');
 		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.fillStyle = 'rgb(' + (100 - this.tick) + ', 0, 0)';
-		ctx.fillRect(0, 0, this.width, this.height);
-		ctx.font = '30pt Arial';
-		ctx.textAlign="center";
-		ctx.fillStyle = "white";
-		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+
+		if (config.redrawInactive) {
+			config.redrawInactive(ctx);
+		} else {
+			ctx.fillStyle = "green";
+			ctx.fillRect(0, 0, this.width, this.height);
+			ctx.font = '30pt Arial';
+			ctx.textAlign="center";
+			ctx.fillStyle = "white";
+		}
+
+		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
 	};
 
 	this.redrawInactive();
 
-	this.redrawFocused = redrawFocused || function () {
+	this.redrawFocused = function () {
 		var ctx = this.canvas_focused.getContext('2d');
 		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.fillStyle = "blue";
-		ctx.fillRect(0, 0, this.width, this.height);
-		ctx.font = '30pt Arial';
-		ctx.textAlign="center";
-		ctx.fillStyle = "white";
-		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+
+		if (config.redrawFocused) {
+			config.redrawFocused(ctx);
+		} else {
+			ctx.fillStyle = "blue";
+			ctx.fillRect(0, 0, this.width, this.height);
+			ctx.font = '30pt Arial';
+			ctx.textAlign="center";
+			ctx.fillStyle = "white";
+		}
+
+		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
 	};
 
 	this.redrawFocused();
 
-	this.redrawDown = redrawDown || function () {
+	this.redrawDown = function () {
 		var ctx = this.canvas_down.getContext('2d');
 		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.fillStyle = "red";
-		ctx.fillRect(0, 0, this.width, this.height);
-		ctx.font = '30pt Arial';
-		ctx.textAlign="center";
-		ctx.fillStyle = "white";
-		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+
+		if (config.redrawDown) {
+			config.redrawDown(ctx);
+		} else {
+			ctx.fillStyle = "red";
+			ctx.fillRect(0, 0, this.width, this.height);
+			ctx.font = '30pt Arial';
+			ctx.textAlign="center";
+			ctx.fillStyle = "white";
+		}
+
+		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
 	};
 
 	this.redrawDown();
 
-	this.redrawUp = redrawUp || function () {
+	this.redrawUp = function () {
 		var ctx = this.canvas_up.getContext('2d');
 		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.fillStyle = "orange";
-		ctx.fillRect(0, 0, this.width, this.height);
-		ctx.font = '30pt Arial';
-		ctx.textAlign="center";
-		ctx.fillStyle = "black";
-		ctx.fillText(text, this.width / 2, (this.height - 30) / 2 + 30);
+
+		if (config.redrawUp) {
+			config.redrawUp(ctx);
+		} else {
+			ctx.fillStyle = "orange";
+			ctx.fillRect(0, 0, this.width, this.height);
+			ctx.font = '30pt Arial';
+			ctx.textAlign="center";
+			ctx.fillStyle = "black";
+		}
+
+		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
 	};
 
 	this.redrawUp();
