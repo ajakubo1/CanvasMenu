@@ -1,5 +1,5 @@
 
-function Menu(canvas, width, height, animated) {
+function Menu(canvas, width, height, animated, animation) {
 	var self = this;
 	this.buttons = [];
 	this.canvas = canvas;
@@ -20,11 +20,12 @@ function Menu(canvas, width, height, animated) {
 
 	this.listener_mousedown = function (event) {
 		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
-		for (i = 0; i < self.buttons.length; i += 1) {
-			if (self.buttons[i].inRange(x, y)) {
-				self.buttons[i].setState(BUTTON_ENUM.down);
+
+		if (self.focused.inRange(x, y)) {
+			self.focused.setState(BUTTON_ENUM.down);
+			self.focused.redrawBackground(self.tickCount);
+			if(!animated) {
 				self.redrawButtons();
-				break;
 			}
 		}
 	};
@@ -36,7 +37,10 @@ function Menu(canvas, width, height, animated) {
 			if (!self.focused.inRange(x, y)) {
 				self.focused.setState(BUTTON_ENUM.inactive);
 				self.focused = undefined;
-				self.redrawButtons();
+				if(!animated) {
+					self.redrawButtons();
+				}
+				//
 			}
 		}
 
@@ -44,7 +48,9 @@ function Menu(canvas, width, height, animated) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
 				self.buttons[i].setState(BUTTON_ENUM.focused);
-				self.redrawButtons();
+				if(!animated) {
+					self.redrawButtons();
+				}
 				break;
 			}
 		}
@@ -52,13 +58,13 @@ function Menu(canvas, width, height, animated) {
 
 	this.listener_mouseup = function (event) {
 		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
-		for (i = 0; i < self.buttons.length; i += 1) {
-			if (self.buttons[i].inRange(x, y)) {
-				self.buttons[i].setState(BUTTON_ENUM.up);
+		if (self.focused.inRange(x, y)) {
+			self.focused.setState(BUTTON_ENUM.up);
+			if(!animated) {
 				self.redrawButtons();
-				self.buttons[i].click();
-				break;
 			}
+			self.focused.click();
+			self.focused.redrawBackground(self.tickCount);
 		}
 	};
 
@@ -75,25 +81,7 @@ function Menu(canvas, width, height, animated) {
 		}
 	};
 
-	this.redrawBackground = function () {
-		if (self.tickCount % 10 === 0) {
-			this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-			self.ctx.fillStyle = 'rgb(' + (100 + self.tickCount % 5) + ', 0, 0)';
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-			self.ctx.fillRect(Math.random() * (self.width - 100), Math.random() * (self.height - 100), 100, 100);
-		}
-	};
+	this.redrawBackground = animation;
 
 	this.run = function (frameTime) {
 		if (self.running) {
