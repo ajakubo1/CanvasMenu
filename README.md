@@ -26,7 +26,7 @@ var buttonWidth = 200; // px
 var buttonHeight = 50; // px
 var buttonText = "Test text"
 
-var button = new Button(x, y, buttonWidth, buttonHegith, buttonText);
+var button = new Button(x, y, buttonWidth, buttonHeight, buttonText);
 
 //And adding the button to previously created menu:
 
@@ -42,7 +42,7 @@ myMenu.init();
 
 ```
 
-I've create it this way, so you can connect a couple of different menus (options menu, main menu).
+I've created it this way, so you can connect a couple of different menus (options menu, main menu).
 
 ## Installation
 

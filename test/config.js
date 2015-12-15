@@ -80,7 +80,11 @@ var optionsMainMenuButton = new Button({
     y: 270 + buttonHeight + 20,
     width: buttonWidth,
     height: buttonHeight,
-    text: "Options"
+    text: "Options",
+    redrawInactiveColor: "grey",
+    redrawFocusedColor: "pink",
+    redrawDownColor: "cyan",
+    redrawUpColor: "crimson"
 });
 optionsMainMenuButton.clickHandler(optionsMenu);
 
