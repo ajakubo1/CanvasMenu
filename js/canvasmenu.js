@@ -19,7 +19,7 @@ function Menu(canvas, width, height, animated) {
 	this.tickMax = 60;
 
 	this.listener_mousedown = function (event) {
-		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
+		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.buttons[i].setState(BUTTON_ENUM.down);
@@ -30,7 +30,7 @@ function Menu(canvas, width, height, animated) {
 	};
 
 	this.listener_mousemove = function (event) {
-		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
+		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
@@ -51,7 +51,7 @@ function Menu(canvas, width, height, animated) {
 	};
 
 	this.listener_mouseup = function (event) {
-		var i, x = event.clientX * self.scaleX - canvas.offsetLeft, y = event.clientY * self.scaleY - canvas.offsetTop;
+		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.buttons[i].setState(BUTTON_ENUM.up);
