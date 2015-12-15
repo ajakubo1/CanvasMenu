@@ -1,13 +1,12 @@
+
+//Initial variables
 var width = 800,
 	height = 600,
 	buttonWidth = 300,
 	buttonHeight = 50;
 
-
-
-
+//Animation of menu
 var squares = [];
-
 var menuAnimation = function () {
     var i;
 
@@ -50,17 +49,29 @@ var menuAnimation = function () {
     }
 };
 
+//Init menus
 var mainMenu = new Menu(document.getElementById('canvas'), width, height, menuAnimation);
 var newGameMenu = new Menu(document.getElementById('canvas'), width, height);
 var optionsMenu = new Menu(document.getElementById('canvas'), width, height);
 var aboutMenu = new Menu(document.getElementById('canvas'), width, height);
 
+//Button redraw function
+var redrawInactive = function (ctx) {
+    ctx.fillStyle = "rgb(" + (200 - this.tick * 2) + ", 0, 0)";
+    ctx.fillRect(0, 0, this.width, this.height);
+    ctx.font = '30pt Arial';
+    ctx.textAlign="center";
+    ctx.fillStyle = "white";
+};
+
+//Button creation + click binding
 var newGameMainMenuButton = new Button({
     x: width / 2 - buttonWidth / 2,
     y: 270,
     width: buttonWidth,
     height: buttonHeight,
-    text: "New Game"
+    text: "New Game",
+    redrawInactive: redrawInactive
 });
 newGameMainMenuButton.clickHandler(newGameMenu);
 
@@ -115,4 +126,5 @@ var backAboutButton = new Button({
 backAboutButton.clickHandler(mainMenu);
 aboutMenu.appendButton(backAboutButton);
 
+//Init first menu
 mainMenu.init();

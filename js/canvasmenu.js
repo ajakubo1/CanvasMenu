@@ -192,7 +192,7 @@ function Button(config) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
 		if (config.redrawInactive) {
-			config.redrawInactive(ctx);
+			config.redrawInactive.call(this, ctx);
 		} else {
 			ctx.fillStyle = "green";
 			ctx.fillRect(0, 0, this.width, this.height);
@@ -211,7 +211,7 @@ function Button(config) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
 		if (config.redrawFocused) {
-			config.redrawFocused(ctx);
+			config.redrawFocused.call(this, ctx);
 		} else {
 			ctx.fillStyle = "blue";
 			ctx.fillRect(0, 0, this.width, this.height);
@@ -230,7 +230,7 @@ function Button(config) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
 		if (config.redrawDown) {
-			config.redrawDown(ctx);
+			config.redrawDown.call(this, ctx);
 		} else {
 			ctx.fillStyle = "red";
 			ctx.fillRect(0, 0, this.width, this.height);
@@ -249,7 +249,7 @@ function Button(config) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
 		if (config.redrawUp) {
-			config.redrawUp(ctx);
+			config.redrawUp.call(this, ctx);
 		} else {
 			ctx.fillStyle = "orange";
 			ctx.fillRect(0, 0, this.width, this.height);
