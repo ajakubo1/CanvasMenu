@@ -1,6 +1,14 @@
 # CanvasMenu
 HTML menu for games and applications
 
+
+## Installation
+
+To use library in your project, you have to include canvasmenu.js in your html file
+```
+<script src="js/canvasmenu.js"></script>
+```
+
 ## Usage
 
 Right now, you can create the menu by constructor:
@@ -44,9 +52,7 @@ myMenu.init();
 
 I've created it this way, so you can connect a couple of different menus (options menu, main menu).
 
-## Installation
+## Advanced usage
 
-To use library in your project, you have to include canvasmenu.js in your html file
-```
-<script src="js/canvasmenu.js"></script>
-```
+I'll explain how it works in a couple of days, I think. Take a look at test.html and test/config.js for examples of
+more advanced usage for now.
