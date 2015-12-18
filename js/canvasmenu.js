@@ -22,7 +22,7 @@ function Menu(canvas, width, height, animation) {
 		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 
 		if (self.focused.inRange(x, y)) {
-			this.swapButtonState(BUTTON_ENUM.down);
+			self.swapButtonState(BUTTON_ENUM.down);
 			self.focused.redrawBackground(self.tickCount);
 		}
 	};
@@ -32,7 +32,7 @@ function Menu(canvas, width, height, animation) {
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
-				this.swapButtonState(BUTTON_ENUM.inactive);
+				self.swapButtonState(BUTTON_ENUM.inactive);
 				self.focused = undefined;
 			}
 		}
@@ -40,7 +40,7 @@ function Menu(canvas, width, height, animation) {
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
-				this.swapButtonState(BUTTON_ENUM.focused);
+				self.swapButtonState(BUTTON_ENUM.focused);
 				break;
 			}
 		}
@@ -56,7 +56,7 @@ function Menu(canvas, width, height, animation) {
 	};
 
 	this.swapButtonState = function (newState) {
-		self.focused.setState(newStatep);
+		self.focused.setState(newState);
 		if(!self.animated) {
 			self.redrawButtons();
 		}
@@ -151,23 +151,20 @@ function Button(config) {
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
 	this.state = BUTTON_ENUM.inactive;
-	this.canvas_inactive = document.createElement('canvas');
-	this.canvas_inactive.width = this.width;
-	this.canvas_inactive.height = this.height;
 	this.tick = 0;
 	this.text = config.text;
 
-	this.canvas_focused = document.createElement('canvas');
-	this.canvas_focused.width = this.width;
-	this.canvas_focused.height = this.height;
+	this.init_canvas = function () {
+		var canvas = document.createElement('canvas');
+		canvas.width = this.width;
+		canvas.height = this.height;
+		return canvas;
+	};
 
-	this.canvas_down = document.createElement('canvas');
-	this.canvas_down.width = this.width;
-	this.canvas_down.height = this.height;
-
-	this.canvas_up = document.createElement('canvas');
-	this.canvas_up.width = this.width;
-	this.canvas_up.height = this.height;
+	this.canvas_inactive = this.init_canvas();
+	this.canvas_focused = this.init_canvas();
+	this.canvas_down = this.init_canvas();
+	this.canvas_up = this.init_canvas();
 
 	this.redraw = function () {
 		if (this.state === BUTTON_ENUM.inactive) {
@@ -181,14 +178,13 @@ function Button(config) {
 		}
 	};
 
-	this.redrawInactive = function () {
-		var ctx = this.canvas_inactive.getContext('2d');
+	this.redraw_button = function (ctx, redrawFunction, fill) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
-		if (config.redrawInactive) {
-			config.redrawInactive.call(this, ctx);
+		if (redrawFunction) {
+			redrawFunction.call(this, ctx);
 		} else {
-			ctx.fillStyle = config.redrawInactiveColor || "green";
+			ctx.fillStyle = fill;
 			ctx.fillRect(0, 0, this.width, this.height);
 			ctx.font = '30pt Arial';
 			ctx.textAlign="center";
@@ -196,63 +192,32 @@ function Button(config) {
 		}
 
 		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
+	};
+
+	this.redrawInactive = function () {
+		this.redraw_button(this.canvas_inactive.getContext('2d'), config.redrawInactive,
+				config.redrawInactiveColor || "green");
 	};
 
 	this.redrawInactive();
 
 	this.redrawFocused = function () {
-		var ctx = this.canvas_focused.getContext('2d');
-		ctx.clearRect(0, 0, this.width, this.height);
-
-		if (config.redrawFocused) {
-			config.redrawFocused.call(this, ctx);
-		} else {
-			ctx.fillStyle = config.redrawFocusedColor || "blue";
-			ctx.fillRect(0, 0, this.width, this.height);
-			ctx.font = '30pt Arial';
-			ctx.textAlign="center";
-			ctx.fillStyle = "white";
-		}
-
-		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
+		this.redraw_button(this.canvas_focused.getContext('2d'), config.redrawFocused,
+				config.redrawFocusedColor || "blue");
 	};
 
 	this.redrawFocused();
 
 	this.redrawDown = function () {
-		var ctx = this.canvas_down.getContext('2d');
-		ctx.clearRect(0, 0, this.width, this.height);
-
-		if (config.redrawDown) {
-			config.redrawDown.call(this, ctx);
-		} else {
-			ctx.fillStyle = config.redrawDownColor || "red";
-			ctx.fillRect(0, 0, this.width, this.height);
-			ctx.font = '30pt Arial';
-			ctx.textAlign="center";
-			ctx.fillStyle = "white";
-		}
-
-		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
+		this.redraw_button(this.canvas_down.getContext('2d'), config.redrawDown,
+				config.redrawDownColor || "red");
 	};
 
 	this.redrawDown();
 
 	this.redrawUp = function () {
-		var ctx = this.canvas_up.getContext('2d');
-		ctx.clearRect(0, 0, this.width, this.height);
-
-		if (config.redrawUp) {
-			config.redrawUp.call(this, ctx);
-		} else {
-			ctx.fillStyle = config.redrawUpColor || "orange";
-			ctx.fillRect(0, 0, this.width, this.height);
-			ctx.font = '30pt Arial';
-			ctx.textAlign="center";
-			ctx.fillStyle = "black";
-		}
-
-		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
+		this.redraw_button(this.canvas_up.getContext('2d'), config.redrawUp,
+				config.redrawUpColor || "orange");
 	};
 
 	this.redrawUp();
