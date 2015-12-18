@@ -19,14 +19,11 @@ function Menu(canvas, width, height, animation) {
 	this.tickMax = 60;
 
 	this.listener_mousedown = function (event) {
-		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
+		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 
 		if (self.focused.inRange(x, y)) {
-			self.focused.setState(BUTTON_ENUM.down);
+			this.swapButtonState(BUTTON_ENUM.down);
 			self.focused.redrawBackground(self.tickCount);
-			if(!self.animated) {
-				self.redrawButtons();
-			}
 		}
 	};
 
@@ -35,36 +32,33 @@ function Menu(canvas, width, height, animation) {
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
-				self.focused.setState(BUTTON_ENUM.inactive);
+				this.swapButtonState(BUTTON_ENUM.inactive);
 				self.focused = undefined;
-				if(!self.animated) {
-					self.redrawButtons();
-				}
-				//
 			}
 		}
 
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
-				self.buttons[i].setState(BUTTON_ENUM.focused);
-				if(!self.animated) {
-					self.redrawButtons();
-				}
+				this.swapButtonState(BUTTON_ENUM.focused);
 				break;
 			}
 		}
 	};
 
 	this.listener_mouseup = function (event) {
-		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
+		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 		if (self.focused.inRange(x, y)) {
-			self.focused.setState(BUTTON_ENUM.up);
-			if(!self.animated) {
-				self.redrawButtons();
-			}
-			self.focused.click();
+			self.swapButtonState(BUTTON_ENUM.up);
 			self.focused.redrawBackground(self.tickCount);
+			self.focused.click();
+		}
+	};
+
+	this.swapButtonState = function (newState) {
+		self.focused.setState(newStatep);
+		if(!self.animated) {
+			self.redrawButtons();
 		}
 	};
 
