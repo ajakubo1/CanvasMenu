@@ -4,9 +4,8 @@
   "description": "HTML Canvas menu for games and applications",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish":
-    "cp js/canvasmenu.js canvasmenu.js ; uglifyjs canvasmenu.js -c -m --source-map canvasmenu.map -o canvasmenu.min.js",
+    "test": "node_modules/mocha/bin/mocha",
+    "prepublish": "cp js/canvasmenu.js canvasmenu.js ; uglifyjs canvasmenu.js -c -m --source-map canvasmenu.map -o canvasmenu.min.js",
     "postpublish": "rm canvasmenu.js canvasmenu.map canvasmenu.min.js"
   },
   "repository": {
@@ -23,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/ajakubo1/CanvasMenu/issues"
   },
-  "homepage": "https://github.com/ajakubo1/CanvasMenu#readme"
+  "homepage": "https://github.com/ajakubo1/CanvasMenu#readme",
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  }
 }
