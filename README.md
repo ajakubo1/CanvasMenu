@@ -11,16 +11,23 @@ To use library in your project, you have to include canvasmenu.js in your html f
 
 ## Usage
 
-(Take a look on code sample in sample/1 folder)
+*Take a look on code sample in samples/1 folder*
+*You can run demo at: http://trash.thedimgames.com/CanvasMenu/samples/1/)*
 
 Right now, you can create the menu by constructor:
 
 ```javascript
 
-var canvas = document.getElementById('canvas');
-var width = 800; // px
-var height = 600; // px
-var myMenu = new Menu(canvas, width, height);
+var canvas = document.getElementById('canvas'),
+    width = 800, // px
+    height = 600; // px
+
+
+var myMenu = new Menu({
+    canvas: document.getElementById('canvas'),
+    width: width,
+    height: height
+});
 
 ```
 
@@ -30,11 +37,11 @@ After that you can define buttons:
 
 ```javascript
 
-var x = 20; // px
-var y = 20; // px
-var buttonWidth = 200; // px
-var buttonHeight = 50; // px
-var buttonText = "Test text"
+var x = 20, // px
+    y = 20, // px
+    buttonWidth = 200, // px
+    buttonHeight = 50, // px
+    buttonText = "Test text";
 
 var button = new Button({
     x: x,
@@ -43,9 +50,20 @@ var button = new Button({
     height: buttonHeight,
     text: buttonText
 });
+```
 
-//And adding the button to previously created menu:
+Let's define some click hadnlers:
 
+```javascript
+button.clickHandler(function () {
+    alert("You've clicked me!");
+});
+
+```
+
+And append button to the main menu:
+
+```javascript
 myMenu.appendButton(button);
 
 ```
@@ -62,5 +80,5 @@ I've created it this way, so you can connect a couple of different menus (option
 
 ## Advanced usage
 
-I'll explain how it works in a couple of days, I think. Take a look at test.html and test/config.js for examples of
-more advanced usage for now.
+*Take a look on code sample in samples folder*
+*You can run demo at: http://trash.thedimgames.com/CanvasMenu/samples/)*

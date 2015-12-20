@@ -1,17 +1,29 @@
 
-function Menu(canvas, width, height, animation) {
+/**
+ *
+ * @param {object} config - configuration for the button
+ * Mandatory:
+ * @param {DOM object} config.canvas - x coordinate for button
+ * @param {number} config.width - y coordinate for button
+ * @param {number} config.height - width for button
+ * @param {functon} [config.animation=undefined] - height for button
+ *
+ * @constructor
+ *
+ */
+function Menu(config) {
 	var self = this;
 	this.buttons = [];
-	this.canvas = canvas;
-	this.width = width;
-	this.height = height;
-	this.canvas.width = width;
-	this.canvas.height = height;
-	this.ctx = canvas.getContext('2d');
+	this.canvas = config.canvas;
+	this.width = config.width;
+	this.height = config.height;
+	this.canvas.width = this.width;
+	this.canvas.height = this.height;
+	this.ctx = this.canvas.getContext('2d');
 	this.scaleX = 1;
 	this.scaleY = 1;
 	this.focused = undefined;
-	this.animated = animation ? true : false;
+	this.animated = config.animation ? true : false;
 	this.running = false;
 	this.updateTime = undefined;
 	this.tickLength = 16.66666666;
@@ -68,14 +80,14 @@ function Menu(canvas, width, height, animation) {
 		if (this.animated) {
 			this.redrawBackground();
 		} else {
-			this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+			this.ctx.clearRect(0, 0, this.width, this.height);
 		}
 		for (i = 0; i < this.buttons.length; i += 1) {
 			this.ctx.drawImage(this.buttons[i].getCanvas(), this.buttons[i].getX(), this.buttons[i].getY());
 		}
 	};
 
-	this.redrawBackground = animation;
+	this.redrawBackground = config.animation;
 
 	this.run = function (frameTime) {
 		if (self.running) {
@@ -149,22 +161,22 @@ var BUTTON_ENUM = {
  * @param {number} config.y - y coordinate for button
  * @param {number} config.width - width for button
  * @param {number} config.height - height for button
- * @param {string} config.text - text displayed in button field
+ * @param {string} [config.text=undefined] - text displayed in button field
  *
  * Optional:
- * @param {string} config.font - font style for button (inputted directly into context.font during draw phase)
- * @param {string} config.redrawInactiveColor - html color for inactive button background (defaults to 'green')
- * @param {string} config.redrawFocusedColor - html color for focused button background (defaults to 'blue')
- * @param {string} config.redrawDownColor - html color for down button background (defaults to 'red')
- * @param {string} config.redrawUpColor - html color for up button background (defaults to 'orange')
- * @param {string} config.redrawInactiveFont - html color for inactive button foreground (defaults to 'white')
- * @param {string} config.redrawFocusedFont - html color for focused button foreground (defaults to 'white')
- * @param {string} config.redrawDownFont - html color for down button foreground (defaults to 'white')
- * @param {string} config.redrawUpFont - html color for up button foreground (defaults to 'white')
- * @param {function} config.redrawInactive - function called to redraw background during inactive state
- * @param {function} config.redrawFocused - function called to redraw background during inactive state
- * @param {function} config.redrawDown - function called to redraw background during inactive state
- * @param {function} config.redrawUp - function called to redraw background during inactive state
+ * @param {string} [config.font=(this.height * 3 / 5 ) + 'pt Arial'] - font style for button (inputted directly into context.font during draw phase)
+ * @param {string} [config.redrawInactiveColor='green'] - html color for inactive button background (defaults to 'green')
+ * @param {string} [config.redrawFocusedColor='blue'] - html color for focused button background (defaults to 'blue')
+ * @param {string} [config.redrawDownColor='red'] - html color for down button background (defaults to 'red')
+ * @param {string} [config.redrawUpColor='orange'] - html color for up button background (defaults to 'orange')
+ * @param {string} [config.redrawInactiveFont='white'] - html color for inactive button foreground (defaults to 'white')
+ * @param {string} [config.redrawFocusedFont='white'] - html color for focused button foreground (defaults to 'white')
+ * @param {string} [config.redrawDownFont='white'] - html color for down button foreground (defaults to 'white')
+ * @param {string} [config.redrawUpFont='white'] - html color for up button foreground (defaults to 'white')
+ * @param {function} [config.redrawInactive=undefined] - function called to redraw background during inactive state
+ * @param {function} [config.redrawFocused=undefined] - function called to redraw background during inactive state
+ * @param {function} [config.redrawDown=undefined] - function called to redraw background during inactive state
+ * @param {function} [config.redrawUp=undefined] - function called to redraw background during inactive state
  *
  * @constructor
  *

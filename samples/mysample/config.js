@@ -50,10 +50,27 @@ var menuAnimation = function () {
 };
 
 //Init menus
-var mainMenu = new Menu(document.getElementById('canvas'), width, height, menuAnimation);
-var newGameMenu = new Menu(document.getElementById('canvas'), width, height);
-var optionsMenu = new Menu(document.getElementById('canvas'), width, height);
-var aboutMenu = new Menu(document.getElementById('canvas'), width, height);
+var mainMenu = new Menu({
+    canvas: document.getElementById('canvas'),
+    width: width,
+    height: height,
+    animation: menuAnimation
+});
+var newGameMenu = new Menu({
+    canvas: document.getElementById('canvas'),
+    width: width,
+    height: height
+});
+var optionsMenu = new Menu({
+    canvas: document.getElementById('canvas'),
+    width: width,
+    height: height
+});
+var aboutMenu = new Menu({
+    canvas: document.getElementById('canvas'),
+    width: width,
+    height: height
+});
 
 //Button redraw function
 var redrawInactive = function (ctx) {
