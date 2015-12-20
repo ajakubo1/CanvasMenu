@@ -11,6 +11,8 @@ To use library in your project, you have to include canvasmenu.js in your html f
 
 ## Usage
 
+(Take a look on code sample in sample/1 folder)
+
 Right now, you can create the menu by constructor:
 
 ```javascript
@@ -34,7 +36,13 @@ var buttonWidth = 200; // px
 var buttonHeight = 50; // px
 var buttonText = "Test text"
 
-var button = new Button(x, y, buttonWidth, buttonHeight, buttonText);
+var button = new Button({
+    x: x,
+    y: y,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: buttonText
+});
 
 //And adding the button to previously created menu:
 
