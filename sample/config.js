@@ -3,7 +3,7 @@
 var width = 800,
 	height = 600,
 	buttonWidth = 300,
-	buttonHeight = 40;
+	buttonHeight = 50;
 
 //Animation of menu
 var squares = [];
@@ -59,9 +59,6 @@ var aboutMenu = new Menu(document.getElementById('canvas'), width, height);
 var redrawInactive = function (ctx) {
     ctx.fillStyle = "rgb(" + (200 - this.tick * 2) + ", 0, 0)";
     ctx.fillRect(0, 0, this.width, this.height);
-    ctx.font = '30pt Arial';
-    ctx.textAlign="center";
-    ctx.fillStyle = "white";
 };
 
 //Button creation + click binding

@@ -187,12 +187,12 @@ function Button(config) {
 		} else {
 			ctx.fillStyle = fill;
 			ctx.fillRect(0, 0, this.width, this.height);
-			ctx.font = this.font;
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.fillStyle = fontFill;
 		}
 
+		ctx.font = this.font;
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillStyle = fontFill;
 		ctx.fillText(this.text, this.width / 2, this.height / 2);
 	};
 
