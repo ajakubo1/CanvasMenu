@@ -11,8 +11,9 @@ To use library in your project, you have to include canvasmenu.js in your html f
 
 ## Usage
 
-*Take a look on code sample in samples/1 folder*
-*You can run demo at: http://trash.thedimgames.com/CanvasMenu/samples/1/)*
+*Code sample in samples/1 folder.*
+
+*Demo for this example: http://trash.thedimgames.com/CanvasMenu/samples/1/*
 
 Right now, you can create the menu by constructor:
 
@@ -52,7 +53,7 @@ var button = new Button({
 });
 ```
 
-Let's define some click hadnlers:
+Let's define some click handlers:
 
 ```javascript
 button.clickHandler(function () {
@@ -80,5 +81,4 @@ I've created it this way, so you can connect a couple of different menus (option
 
 ## Advanced usage
 
-*Take a look on code sample in samples folder*
-*You can run demo at: http://trash.thedimgames.com/CanvasMenu/samples/)*
+*Demo for all samples currently present: http://trash.thedimgames.com/CanvasMenu/samples/)*
