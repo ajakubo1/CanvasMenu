@@ -81,8 +81,6 @@ function Menu(canvas, width, height, animation) {
 		if (self.running) {
 			var tickCount = Math.floor((frameTime - self.updateTime) / self.tickLength), i;
 	        if (tickCount > 0) {
-	            /*logic(tickCount);
-	            render();*/
 
 				self.updateTime += tickCount * self.tickLength;
 
@@ -143,6 +141,34 @@ var BUTTON_ENUM = {
 	"up": 3
 };
 
+/**
+ *
+ * @param {object} config - configuration for the button
+ * Mandatory:
+ * @param {number} config.x - x coordinate for button
+ * @param {number} config.y - y coordinate for button
+ * @param {number} config.width - width for button
+ * @param {number} config.height - height for button
+ * @param {string} config.text - text displayed in button field
+ *
+ * Optional:
+ * @param {string} config.font - font style for button (inputted directly into context.font during draw phase)
+ * @param {string} config.redrawInactiveColor - html color for inactive button background (defaults to 'green')
+ * @param {string} config.redrawFocusedColor - html color for focused button background (defaults to 'blue')
+ * @param {string} config.redrawDownColor - html color for down button background (defaults to 'red')
+ * @param {string} config.redrawUpColor - html color for up button background (defaults to 'orange')
+ * @param {string} config.redrawInactiveFont - html color for inactive button foreground (defaults to 'white')
+ * @param {string} config.redrawFocusedFont - html color for focused button foreground (defaults to 'white')
+ * @param {string} config.redrawDownFont - html color for down button foreground (defaults to 'white')
+ * @param {string} config.redrawUpFont - html color for up button foreground (defaults to 'white')
+ * @param {function} config.redrawInactive - function called to redraw background during inactive state
+ * @param {function} config.redrawFocused - function called to redraw background during inactive state
+ * @param {function} config.redrawDown - function called to redraw background during inactive state
+ * @param {function} config.redrawUp - function called to redraw background during inactive state
+ *
+ * @constructor
+ *
+ */
 function Button(config) {
 	this.x = config.x;
 	this.y = config.y;
@@ -205,21 +231,21 @@ function Button(config) {
 
 	this.redrawFocused = function () {
 		this.redraw_button(this.canvas_focused.getContext('2d'), config.redrawFocused,
-				config.redrawFocusedColor || "blue", config.redrawInactiveFont || "white");
+				config.redrawFocusedColor || "blue", config.redrawFocusedFont || "white");
 	};
 
 	this.redrawFocused();
 
 	this.redrawDown = function () {
 		this.redraw_button(this.canvas_down.getContext('2d'), config.redrawDown,
-				config.redrawDownColor || "red", config.redrawInactiveFont || "white");
+				config.redrawDownColor || "red", config.redrawDownFont || "white");
 	};
 
 	this.redrawDown();
 
 	this.redrawUp = function () {
 		this.redraw_button(this.canvas_up.getContext('2d'), config.redrawUp,
-				config.redrawUpColor || "orange", config.redrawInactiveFont || "white");
+				config.redrawUpColor || "orange", config.redrawUpFont || "white");
 	};
 
 	this.redrawUp();
