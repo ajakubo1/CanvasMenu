@@ -153,6 +153,7 @@ function Button(config) {
 	this.state = BUTTON_ENUM.inactive;
 	this.tick = 0;
 	this.text = config.text;
+	this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
 
 	this.init_canvas = function () {
 		var canvas = document.createElement('canvas');
@@ -178,7 +179,7 @@ function Button(config) {
 		}
 	};
 
-	this.redraw_button = function (ctx, redrawFunction, fill) {
+	this.redraw_button = function (ctx, redrawFunction, fill, fontFill) {
 		ctx.clearRect(0, 0, this.width, this.height);
 
 		if (redrawFunction) {
@@ -186,9 +187,9 @@ function Button(config) {
 		} else {
 			ctx.fillStyle = fill;
 			ctx.fillRect(0, 0, this.width, this.height);
-			ctx.font = '30pt Arial';
+			ctx.font = this.font;
 			ctx.textAlign="center";
-			ctx.fillStyle = "white";
+			ctx.fillStyle = fontFill;
 		}
 
 		ctx.fillText(this.text, this.width / 2, (this.height - 30) / 2 + 30);
@@ -196,28 +197,28 @@ function Button(config) {
 
 	this.redrawInactive = function () {
 		this.redraw_button(this.canvas_inactive.getContext('2d'), config.redrawInactive,
-				config.redrawInactiveColor || "green");
+				config.redrawInactiveColor || "green", config.redrawInactiveFont || "white");
 	};
 
 	this.redrawInactive();
 
 	this.redrawFocused = function () {
 		this.redraw_button(this.canvas_focused.getContext('2d'), config.redrawFocused,
-				config.redrawFocusedColor || "blue");
+				config.redrawFocusedColor || "blue", config.redrawInactiveFont || "white");
 	};
 
 	this.redrawFocused();
 
 	this.redrawDown = function () {
 		this.redraw_button(this.canvas_down.getContext('2d'), config.redrawDown,
-				config.redrawDownColor || "red");
+				config.redrawDownColor || "red", config.redrawInactiveFont || "white");
 	};
 
 	this.redrawDown();
 
 	this.redrawUp = function () {
 		this.redraw_button(this.canvas_up.getContext('2d'), config.redrawUp,
-				config.redrawUpColor || "orange");
+				config.redrawUpColor || "orange", config.redrawInactiveFont || "white");
 	};
 
 	this.redrawUp();
