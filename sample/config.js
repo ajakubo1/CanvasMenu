@@ -3,7 +3,7 @@
 var width = 800,
 	height = 600,
 	buttonWidth = 300,
-	buttonHeight = 30;
+	buttonHeight = 40;
 
 //Animation of menu
 var squares = [];
