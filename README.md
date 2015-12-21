@@ -9,6 +9,7 @@ To use library in your project, you have to include canvasmenu.js in your html f
 <script src="js/canvasmenu.js"></script>
 ```
 
+
 ## Usage
 
 *Code sample in samples/1 folder.*
@@ -79,6 +80,114 @@ myMenu.init();
 
 I've created it this way, so you can connect a couple of different menus (options menu, main menu).
 
+
 ## Advanced usage
 
+Ok, let's get stareted with more advanced things you can do with my library.
+
 *Demo for all samples currently present: http://trash.thedimgames.com/CanvasMenu/samples/)*
+
+
+### Creating two menus looped together
+
+*Code sample in samples/2 folder.*
+
+*Demo for this example: http://trash.thedimgames.com/CanvasMenu/samples/2/*
+
+At first we need to define those menus and setup the whole environment:
+
+```javascript
+var canvas = document.getElementById('canvas'),
+    width = 800, // px
+    height = 600; // px
+
+
+var menuConfig = {
+    canvas: canvas,
+    width: width,
+    height: height
+};
+
+var mainMenu = new Menu(menuConfig),
+    optionsMenu = new Menu(menuConfig);
+
+var buttonWidth = 400, // px
+    buttonHeight = 50; // px
+
+```
+
+Define buttons used in ``mainMenu``:
+
+```javascript
+
+var newGameButton = new Button({
+    x: 200,
+    y: 280,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "New Game"
+});
+//That's what we'll be looping
+var optionsButton = new Button({
+    x: 200,
+    y: 280 + buttonHeight + 10,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "Options"
+});
+var exitButton = new Button({
+    x: 200,
+    y: 280 + 2 * (buttonHeight + 10),
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "Exit"
+});
+
+```
+
+Define buttons used in ``optionsMenu``:
+
+```javascript
+
+var infoButton = new Button({
+    x: 200,
+    y: 280,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "Information"
+});
+var mainMenuButton = new Button({
+    x: 200,
+    y: 280 + 2 * (buttonHeight + 10),
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "<- Back"
+});
+
+```
+
+Now it's time to make the loop:
+
+```javascript
+
+optionsButton.clickHandler(optionsMenu);
+mainMenuButton.clickHandler(mainMenu);
+
+```
+
+As you may have noticed, instead of defining a function, you can put a ``Menu`` object into the ``clickHandler``. 
+Don't worry about it. My code will deal with it :).
+
+At the end we have to add previously defined buttons into the menus and init the ``mainMenu`` object:
+
+```javascript
+mainMenu.appendButton(newGameButton);
+mainMenu.appendButton(optionsButton);
+mainMenu.appendButton(exitButton);
+
+optionsMenu.appendButton(infoButton);
+optionsMenu.appendButton(mainMenuButton);
+
+mainMenu.init();
+```
+
