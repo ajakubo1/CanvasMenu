@@ -191,3 +191,8 @@ optionsMenu.appendButton(mainMenuButton);
 mainMenu.init();
 ```
 
+So basically, when you're in ``mainMenu``, by clicking ``optionsButton`` you activate the ``optionsMenu`` (All of the 
+animations for ``mainMenu`` are then suspended). When you're in ``optionsMenu`` and click '<- Back' button, you 
+activate the ``mainMenu``.
+
+You can loop more menus like that!
