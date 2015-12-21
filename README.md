@@ -196,3 +196,130 @@ animations for ``mainMenu`` are then suspended). When you're in ``optionsMenu`` 
 activate the ``mainMenu``.
 
 You can loop more menus like that!
+
+
+### Customize buttons
+
+*Code sample in samples/3 folder.*
+
+*Demo for this example: http://trash.thedimgames.com/CanvasMenu/samples/3/*
+
+I will be customizing buttons for the code defined in the last example (only for the ``mainMenu``).
+
+First of all, I don't really like the default color sets. They are nasty as hell! To start changing them I need to 
+explain a 
+couple of things.
+
+There are 4 states in which buttons can be:
+
+    * inactive - when the button is just visible. Mouse is not over the button and it has not been clicked
+    * focused - when button has mouse over it
+    * down - when button is pressed (mousedown event)
+    * up - when pressing the button ended (mouseup event).
+
+By default, CanvasMenu sets default colors for those states as 'green', 'blue', 'red', 'orange'. To change that you 
+need to re-write ``Button`` constructors. Additional parameters you're looking for during constructor call are:
+
+```javascript
+
+{
+    redrawInactiveColor: 'green',
+    redrawFocusedColor: 'blue',
+    redrawDownColor: 'red',
+    redrawUpColor: 'orange'
+}
+
+```
+
+Next thing: by default font color for those buttons are set as white. But sometimes it is not looking very good (I 
+don't know, maybe you like yellow-ish buttons?). In that case I've added a possibility to change font color for each 
+of those states (FYI: default is 'white'):
+
+```javascript
+
+{
+    redrawInactiveFont: 'green',
+    redrawFocusedFont: 'blue',
+    redrawDownFont: 'red',
+    redrawUpFont: 'orange'
+}
+
+```
+
+And last thing. By default, the font which is set in canvas context is counted as follows:
+
+```javascript
+
+this.height * 3 / 5 ) + 'pt Arial'
+```
+
+This ensures that font is adjusted to button height and... Well... It sets 'Arial' as default font. If you want to 
+change that, you can edit the following configuration variable:
+
+```javascript
+
+{
+    font: (this.height * 3 / 5 ) + 'pt Arial'
+}
+
+```
+
+Now if we know all of that, let's re-define buttons:
+
+```javascript
+
+var newGameButton = new Button({
+    x: 200,
+    y: 280,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "New Game",
+    redrawInactiveColor: '#FFFF00',
+    redrawFocusedColor: '#660033',
+    redrawDownColor: '#FF0033',
+    redrawUpColor: '#330033',
+    redrawInactiveFont: '#111111',
+    redrawDownFont: '#111111',
+    font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
+});
+var optionsButton = new Button({
+    x: 200,
+    y: 280 + buttonHeight + 10,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "Options",
+    redrawInactiveColor: '#FFFF00',
+    redrawFocusedColor: '#660033',
+    redrawDownColor: '#FF0033',
+    redrawUpColor: '#330033',
+    redrawInactiveFont: '#111111',
+    redrawDownFont: '#111111',
+    font: (buttonHeight * 2 / 5 ) + 'pt Courier'
+});
+var exitButton = new Button({
+    x: 200,
+    y: 280 + 2 * (buttonHeight + 10),
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "Exit",
+    redrawInactiveColor: '#FFFF00',
+    redrawFocusedColor: '#660033',
+    redrawDownColor: '#FF0033',
+    redrawUpColor: '#330033',
+    redrawInactiveFont: '#111111',
+    redrawDownFont: '#111111',
+    font: (buttonHeight * 2 / 5 ) + 'pt Courier'
+});
+
+
+```
+
+And we're done! Buttons look much better now. Sort of. Ah, hell, you're a better artist then me, I just write the 
+freakin' code :p. You do it!
+
+
+### Button Animations
+
+
+### Menu Animations
+
