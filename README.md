@@ -212,10 +212,10 @@ couple of things.
 
 There are 4 states in which buttons can be:
 
-    * inactive - when the button is just visible. Mouse is not over the button and it has not been clicked
-    * focused - when button has mouse over it
-    * down - when button is pressed (mousedown event)
-    * up - when pressing the button ended (mouseup event).
+* inactive - when the button is just visible. Mouse is not over the button and it has not been clicked
+* focused - when button has mouse over it
+* down - when button is pressed (mousedown event)
+* up - when pressing the button ended (mouseup event).
 
 By default, CanvasMenu sets default colors for those states as 'green', 'blue', 'red', 'orange'. To change that you 
 need to re-write ``Button`` constructors. Additional parameters you're looking for during constructor call are:
@@ -238,10 +238,10 @@ of those states (FYI: default is 'white'):
 ```javascript
 
 {
-    redrawInactiveFont: 'green',
-    redrawFocusedFont: 'blue',
-    redrawDownFont: 'red',
-    redrawUpFont: 'orange'
+    redrawInactiveFont: 'white',
+    redrawFocusedFont: 'white',
+    redrawDownFont: 'white',
+    redrawUpFont: 'white'
 }
 
 ```
@@ -250,7 +250,7 @@ And last thing. By default, the font which is set in canvas context is counted a
 
 ```javascript
 
-this.height * 3 / 5 ) + 'pt Arial'
+(this.height * 3 / 5 ) + 'pt Arial'
 ```
 
 This ensures that font is adjusted to button height and... Well... It sets 'Arial' as default font. If you want to 
