@@ -85,7 +85,7 @@ I've created it this way, so you can connect a couple of different menus (option
 
 Ok, let's get stareted with more advanced things you can do with my library.
 
-*Demo for all samples currently present: http://trash.thedimgames.com/CanvasMenu/samples/)*
+*Demo for all samples currently present at: http://trash.thedimgames.com/CanvasMenu/samples/)*
 
 
 ### Creating two menus looped together
@@ -263,6 +263,8 @@ change that, you can edit the following configuration variable:
 }
 
 ```
+I presume that you can add some custom fonts in css (just like you'd be adding custom fonts to a web page), and use 
+them here, but I have not tested it yet.
 
 Now if we know all of that, let's re-define buttons:
 
@@ -314,11 +316,189 @@ var exitButton = new Button({
 
 ```
 
-And we're done! Buttons look much better now. Sort of. Ah, hell, you're a better artist then me, I just write the 
+And we're done! Buttons look much better now. Sort of. Ah, hell, you're a better artist than I am, I just write the 
 freakin' code :p. You do it!
 
 
 ### Button Animations
+
+*Code sample in samples/4 folder.*
+
+*Demo for this example: http://trash.thedimgames.com/CanvasMenu/samples/4/*
+
+Ok, maybe we'll deal with button animations? It will be the last thing about buttons. Instead of just changing the 
+colors for buttons, you can also add some animations to make them look nice.
+
+A couple of things about animations: by default I'm trying to draw 60fps. It should be easily possible, as drawing 5 
+buttons in one menu is not as complicated as... re-drawing 1000 of objects on a hd screen, for instance. I've written 
+the animation loop so it can adjust to frame skipping. Basically, I'm using a game loop to re-draw everything.
+
+Main object responsible for triggering animations is the ``Menu`` object. Buttons on their own don't have animation 
+loops, but they have interfaces which are called for that. You can change the way animations are made by adjusting 
+variables in Button constructor:
+
+```javascript
+
+{
+    redrawInactive: function () {},
+    redrawFocused: function () {},
+    redrawDown: function () {},
+    redrawUp: function () {}
+}
+
+```
+
+If you don't know when those functions should be called, read the previous menu about customizing buttons.
+
+So... Maybe enough talking, let's write some code.
+
+First thing - to trigger button animation, you have to pass additional parameter in ``Menu`` constructor 
+(``animation``):
+
+```javascript
+var menuConfig = {
+    canvas: canvas,
+    width: width,
+    height: height,
+    animation: function () {}
+};
+
+var mainMenu = new Menu(menuConfig);
+```
+This new parameter will be used when I'll be talking about menu animation. For now let's leave it empty.
+
+Let's define function responsible for redrawing button in inactive state:
+
+```javascript
+
+/**
+ * It will be a module :)
+ *
+ * @returns {redraw}
+ * @constructor
+ */
+var RedrawInactiveButton = function () {
+    //I want to devide the button field into 5px squares, so I need to know how many squares would fit horizontally
+    // and vertically:
+    var width = buttonWidth / 5,
+        height = buttonHeight / 5;
+
+    /**
+     * Function used for drawing little canvas squares
+     *
+     * (it will be better if we draw those 5x5 squares during initiation, not during rendering phase)
+     *
+     * @param color
+     * @returns {Element}
+     */
+    function drawSmallRect(color) {
+        var canvas = document.createElement('canvas');
+        canvas.width = 5;
+        canvas.height = 5;
+        var context = canvas.getContext('2d');
+
+        context.fillStyle = color;
+        context.fillRect(0, 0, this.width, this.height);
+
+        return canvas;
+    }
+
+    //Array to store yellowish-dark colors
+    var darkRect = [
+        drawSmallRect('#939900'),
+        drawSmallRect('#939900'),
+        drawSmallRect('#939900'),
+        drawSmallRect('#939900'),
+        drawSmallRect('#c4cc00'),
+        drawSmallRect('#474d00'),
+        drawSmallRect('#2f3300'),
+        drawSmallRect('#181a00'),
+        drawSmallRect('#181a00'),
+        drawSmallRect('#181a00'),
+        drawSmallRect('#768000'),
+        drawSmallRect('#FFCC33'),
+        drawSmallRect('#FFCC66'),
+        drawSmallRect('#FFCC99'),
+        drawSmallRect('#000000'),
+        drawSmallRect('#000000'),
+        drawSmallRect('#000000'),
+        drawSmallRect('#000000')
+    ];
+
+    //Array to store yellowish-light colors
+    var rect = [
+        drawSmallRect('#FFFF00'),
+        drawSmallRect('#FFFF33'),
+        drawSmallRect('#FFFF66'),
+        drawSmallRect('#FFFF99'),
+        drawSmallRect('#FFFFCC'),
+        drawSmallRect('#FFCC00'),
+        drawSmallRect('#FFCC33'),
+        drawSmallRect('#FFCC66'),
+        drawSmallRect('#FFCC99'),
+        drawSmallRect('#FFCCCC')
+
+    ];
+
+    //Array of all squares which would fit into the button
+    var squares = Array(width * height);
+
+    /**
+     * Function which is re-picking square colors from rect and darkRect
+     */
+    function pickNew() {
+        var i;
+        for(i = 0; i < width * height; i += 1) {
+            if (i < width * 2) { //Let's pick darker set of colors for border squares
+                squares[i] = darkRect[Math.floor(Math.random() * darkRect.length)]
+            } else if (i > width * (height - 2)) { //Let's pick darker set of colors for border squares
+                squares[i] = darkRect[Math.floor(Math.random() * darkRect.length)]
+            } else if (i % width < 2) { //Let's pick darker set of colors for border squares
+                squares[i] = darkRect[Math.floor(Math.random() * darkRect.length)]
+            } else if (i % width > width - 3) { //Let's pick darker set of colors for border squares
+                squares[i] = darkRect[Math.floor(Math.random() * darkRect.length)]
+            } else { //If it's not in the border, re-pick color from the lighter set of rectangles
+                squares[i] = rect[Math.floor(Math.random() * rect.length)]
+            }
+
+        }
+    }
+    pickNew();
+
+    /**
+     * This function will be responsible directly for rendering the button
+     * @param ctx
+     */
+    function redraw(ctx) {
+        var i;
+        if (this.tick % 10 === 0) { //Every 10 ticks (so... every 10 * 16ms = 160 ms)
+            pickNew(); //Let's pick new squares to draw
+        }
+
+        for(i = 0; i < width * height; i += 1) { //We also need to redraw the squares which were already drawn
+            //Unfortunately, you have to do that, because i call ctx.clearRect before I call on this function :/...
+            // So...
+            ctx.drawImage(squares[i], i % width * 5, Math.floor(i / width) * 5);
+        }
+    }
+
+    //And lets return only the redraw function
+    return redraw;
+};
+
+```
+
+And one last thing. You need to change the constructor of ``Button`` to use the new function. Just change the 
+``redrawInactiveColor`` directive into:
+
+```javascript
+{
+    //...
+    redrawInactive: new RedrawInactiveButton(),
+    //...
+}
+
+```
 
 
 ### Menu Animations

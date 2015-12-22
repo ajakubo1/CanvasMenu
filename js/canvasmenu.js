@@ -6,7 +6,9 @@
  * @param {DOM object} config.canvas - x coordinate for button
  * @param {number} config.width - y coordinate for button
  * @param {number} config.height - width for button
- * @param {functon} [config.animation=undefined] - height for button
+ *
+ * @param {number} [config.tickMax=Number.MAX_VALUE] - change the amount of time for which tick will be rotated
+ * @param {functon} [config.animation=undefined] - menu animation function
  *
  * @constructor
  *
@@ -26,9 +28,9 @@ function Menu(config) {
 	this.animated = config.animation ? true : false;
 	this.running = false;
 	this.updateTime = undefined;
-	this.tickLength = 16.66666666;
+	this.tickLength = 1000.0 / 60;
 	this.tickCount = 0;
-	this.tickMax = 60;
+	this.tickMax = config.tickMax || Number.MAX_VALUE;
 
 	this.listener_mousedown = function (event) {
 		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
