@@ -7,7 +7,8 @@ var width = 800,
 
 //Animation of menu
 var squares = [];
-var menuAnimation = function () {
+var menuAnimation = function () {   //There is something wrong with this function... But it works, just don't change
+                                    // anything :D
     var i;
 
     if (this.tickCount % 5 === 0 && squares.length !== 8 * 6) {

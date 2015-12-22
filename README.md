@@ -78,12 +78,15 @@ myMenu.init();
 
 ```
 
-I've created it this way, so you can connect a couple of different menus (options menu, main menu).
+I've created it such way, that you can connect a couple of different menus (options menu, main menu).
 
 
 ## Advanced usage
 
-Ok, let's get stareted with more advanced things you can do with my library.
+Ok, let's get stareted with more advanced things you can do with my library. Please, if you'd manage to write 
+something beautiful with it, let me know, I would really enjoy knowing that. A print-screen or a movie would also be 
+great! And - if you're willing - I can add your sample code to all of the samples (so that more people would know, 
+what can you do with ``CanvasMenu``)
 
 *Demo for all samples currently present at: http://trash.thedimgames.com/CanvasMenu/samples/)*
 
@@ -500,6 +503,73 @@ And one last thing. You need to change the constructor of ``Button`` to use the 
 
 ```
 
+Doesn't it look nice? Hmm... I don't really know to tell you the truth. It makes me feel a little bit... Edgy... 
+Well, you'll manage to make it better :).
 
 ### Menu Animations
 
+*Code sample in samples/5 folder.*
+
+*Demo for this example: http://trash.thedimgames.com/CanvasMenu/samples/5/*
+
+And the last thing I wanted to show - menu animations. Basically, we'll be filling here the ``animation`` function 
+passed as ``Menu`` constructor. Let's just step into it (for basics, read the previous article about animating buttons)
+
+```javascript
+
+var MenuAnimation = function () {
+    //I want to devide the menu into 50px squares, so I need to know how many squares would fit horizontally
+    // and vertically:
+    var menuWidth = width / 50,
+        menuHeight = height / 50,
+        menuSize = menuWidth * menuHeight;
+
+    //Did you know that Int8Array is more efficient than regular array? :)
+    squares = new Int8Array(menuSize);
+
+    function render() {
+        var i, j;
+
+        if(this.tickCount % 9 === 0) {//Every 9 frames (9 * 16ms) add new square (horizontal and vertical)
+            for(i = 0; i < menuHeight; i += 1) {
+                if(squares[i * menuWidth] === 0) {
+                    squares[i * menuWidth] = 251;
+                    //squares[menuSize - i * menuWidth] = 150;
+                    break;
+                } else {
+                    for (j = 1; j < menuWidth; j += 1) {
+                        if(squares[i * menuWidth + j] === 0) {
+                            squares[i * menuWidth + j] = 251;
+                            //squares[menuSize - i * menuWidth + j] = 150;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); //You have to call clear rect on your own
+        for(i = 0; i < menuSize; i += 1) {
+            if(squares[i] !== 0) {
+                this.ctx.fillStyle = 'rgb(' + squares[i] + ', 0, 0)';
+                this.ctx.fillRect(i % menuWidth * 50, Math.floor(i / menuWidth) * 50, 50, 50);
+                squares[i] -= 1;
+            }
+        }
+    }
+
+    return render;
+};
+
+var menuConfig = {
+    canvas: canvas,
+    width: width,
+    height: height,
+    animation: new MenuAnimation()
+};
+
+var mainMenu = new Menu(menuConfig);
+
+```
+
+I think that would be all. I hope I've clearly shown you all of the functionalities I've implemented so far. Enjoy!

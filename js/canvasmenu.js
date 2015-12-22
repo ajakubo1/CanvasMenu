@@ -35,7 +35,7 @@ function Menu(config) {
 	this.listener_mousedown = function (event) {
 		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
 
-		if (self.focused.inRange(x, y)) {
+		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_ENUM.down);
 			self.focused.redrawBackground(self.tickCount);
 		}
@@ -62,7 +62,7 @@ function Menu(config) {
 
 	this.listener_mouseup = function (event) {
 		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
-		if (self.focused.inRange(x, y)) {
+		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_ENUM.up);
 			self.focused.redrawBackground(self.tickCount);
 			self.focused.click();
