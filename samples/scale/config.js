@@ -52,7 +52,7 @@ var menuConfig = {
     width: width,
     height: height,
     animation: new MenuAnimation(),
-    autoscale: true
+    autorescale: true
 };
 
 var mainMenu = new Menu(menuConfig);

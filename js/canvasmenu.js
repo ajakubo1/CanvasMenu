@@ -9,7 +9,7 @@
  *
  * @param {number} [config.tickMax=Number.MAX_VALUE] - change the amount of time for which tick will be rotated
  * @param {functon} [config.animation=undefined] - menu animation function
- * @param {boolean} [config.autoscale=false] - let the menu scale automatically (from css transform)
+ * @param {boolean} [config.autorescale=false] - let the menu scale automatically (from css transform)
  *
  * @constructor
  *
@@ -32,7 +32,7 @@ function Menu(config) {
 	this.tickLength = 1000.0 / 60;
 	this.tickCount = 0;
 	this.tickMax = config.tickMax || Number.MAX_VALUE;
-	this.autoscale = config.autoscale || false;
+	this.autorescale = config.autorescale || false;
 
 	this.listener_mousedown = function (event) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
@@ -148,7 +148,7 @@ Menu.prototype.init = function () {
 	this.redrawButtons();
 	this.running = true;
 
-	if (this.autoscale) {
+	if (this.autorescale) {
 		window.addEventListener('resize', this.rescale);
 		this.rescale();
 	}
@@ -166,7 +166,7 @@ Menu.prototype.destroy = function () {
 	this.canvas.removeEventListener('mousedown', this.listener_mousedown);
 	this.canvas.removeEventListener('mousemove', this.listener_mousemove);
 
-	if (this.autoscale) {
+	if (this.autorescale) {
 		window.removeEventListener('resize', this.rescale);
 	}
 
