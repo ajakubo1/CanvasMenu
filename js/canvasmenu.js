@@ -9,6 +9,7 @@
  *
  * @param {number} [config.tickMax=Number.MAX_VALUE] - change the amount of time for which tick will be rotated
  * @param {functon} [config.animation=undefined] - menu animation function
+ * @param {boolean} [config.autorescale=false] - let the menu scale automatically (from css transform)
  *
  * @constructor
  *
@@ -31,9 +32,10 @@ function Menu(config) {
 	this.tickLength = 1000.0 / 60;
 	this.tickCount = 0;
 	this.tickMax = config.tickMax || Number.MAX_VALUE;
+	this.autorescale = config.autorescale || false;
 
 	this.listener_mousedown = function (event) {
-		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
+		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_ENUM.down);
@@ -42,7 +44,7 @@ function Menu(config) {
 	};
 
 	this.listener_mousemove = function (event) {
-		var i, x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
+		var i, x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
@@ -61,7 +63,7 @@ function Menu(config) {
 	};
 
 	this.listener_mouseup = function (event) {
-		var x = event.pageX * self.scaleX - this.offsetLeft, y = event.pageY * self.scaleY - this.offsetTop;
+		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_ENUM.up);
 			self.focused.redrawBackground(self.tickCount);
@@ -87,6 +89,30 @@ function Menu(config) {
 		for (i = 0; i < this.buttons.length; i += 1) {
 			this.ctx.drawImage(this.buttons[i].getCanvas(), this.buttons[i].getX(), this.buttons[i].getY());
 		}
+	};
+
+	/**
+	 * found it at https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+	 */
+	this.rescale = function () {
+		var	style = window.getComputedStyle(self.canvas, null),
+				transform = style.getPropertyValue("-webkit-transform") ||
+						style.getPropertyValue("-moz-transform") ||
+						style.getPropertyValue("-ms-transform") ||
+						style.getPropertyValue("-o-transform") ||
+						style.getPropertyValue("transform") ||
+						undefined,
+				values;
+
+		if (!transform) {
+			return;
+		}
+
+		values = transform.split('(')[1];
+		values = values.split(')')[0];
+		values = values.split(',');
+		self.scaleX = values[0];
+		self.scaleY = values[3];
 	};
 
 	this.redrawBackground = config.animation;
@@ -115,12 +141,21 @@ function Menu(config) {
 	};
 }
 
+Menu.prototype.isVisible = function () {
+	return this.running;
+};
+
 Menu.prototype.init = function () {
 	this.canvas.addEventListener('mouseup', this.listener_mouseup);
 	this.canvas.addEventListener('mousedown', this.listener_mousedown);
 	this.canvas.addEventListener('mousemove', this.listener_mousemove);
 	this.redrawButtons();
 	this.running = true;
+
+	if (this.autorescale) {
+		window.addEventListener('resize', this.rescale);
+		this.rescale();
+	}
 
 	if (this.animated) {
 		this.updateTime = window.performance.now();
@@ -135,6 +170,10 @@ Menu.prototype.destroy = function () {
 	this.canvas.removeEventListener('mousedown', this.listener_mousedown);
 	this.canvas.removeEventListener('mousemove', this.listener_mousemove);
 
+	if (this.autorescale) {
+		window.removeEventListener('resize', this.rescale);
+	}
+
 	for (i = 0; i < this.buttons.length; i += 1) {
 		this.buttons[i].setState(BUTTON_ENUM.inactive);
 		this.redrawButtons();
@@ -146,6 +185,19 @@ Menu.prototype.destroy = function () {
 Menu.prototype.appendButton = function (button) {
 	this.buttons.push(button);
 	button.setParentMenu(this);
+};
+
+Menu.prototype.updateScale = function (scale) {
+	this.scaleX = scale;
+	this.scaleY = scale;
+};
+
+Menu.prototype.updateScaleX = function (scale) {
+	this.scaleX = scale;
+};
+
+Menu.prototype.updateScaleY = function (scale) {
+	this.scaleY = scale;
 };
 
 var BUTTON_ENUM = {
