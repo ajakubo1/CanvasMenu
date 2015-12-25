@@ -141,6 +141,10 @@ function Menu(config) {
 	};
 }
 
+Menu.prototype.isVisible = function () {
+	return this.running;
+};
+
 Menu.prototype.init = function () {
 	this.canvas.addEventListener('mouseup', this.listener_mouseup);
 	this.canvas.addEventListener('mousedown', this.listener_mousedown);

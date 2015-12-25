@@ -32,13 +32,14 @@ var SCALER = function (config) {
         self.canvas.style.transformOrigin = "0 0"; //scale from top left
         self.canvas.style.transform = "scale(" + self.scale + ")";
 
-        //self.canvas.style.transform = "scale(" + scaleX + ", " + scaleY + ")";
+        //self.canvas.style.transform = "scale(" + scaleX + ", " + scaleY + ")"; // uncomment this and comment out
+        // previous two lines to scale x and y to fill the whole screen
 
 
         self.canvas.style.top = top;
         self.canvas.style.left = left;
 
-        /*if (self.menu) {
+        /*if (self.menu) { // uncomment this to update scale manually
             self.menu.updateScale(self.scale);
         }*/
     };
