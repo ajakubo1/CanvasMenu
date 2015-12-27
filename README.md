@@ -17,7 +17,7 @@ To use library in your project, you have to include canvasmenu.js in your html f
 
 ## Tutorials
 
-All of the tutrials moved to [wiki page](https://github.com/ajakubo1/CanvasMenu/wiki)
+All of the tutorials moved to [wiki page](https://github.com/ajakubo1/CanvasMenu/wiki)
 
 ## Demos
 
@@ -25,7 +25,7 @@ If you want to check what can be done with the library, check [this link](http:/
 
 ## From the author
 
-If you have any suggestions for the library, write me an email!
+If you have any suggestions for the library, write me an email (ajakubo1@gmail.com) or open new issue on github!
 
 Check for updates regularly!
 
