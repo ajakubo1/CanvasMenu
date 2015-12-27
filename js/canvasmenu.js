@@ -325,6 +325,19 @@ Button.prototype.inRange = function (x, y) {
 };
 
 Button.prototype.setState = function (newState) {
+	var menuCanvas = this.menu.canvas;
+
+	// If the button state is changed to 'focused', when means
+	// the button is in the 'hover' state...
+	if (newState === BUTTON_ENUM.focused) {
+		// ...change the mouse cursor to 'pointer' so it behaves as
+		// a regular link.
+		menuCanvas.style.cursor = 'pointer';
+	} else {
+		// If it's not, switch the cursor to the regular state.
+		menuCanvas.style.cursor = '';
+	}
+
 	this.state = newState;
 	this.tick = 0;
 };
