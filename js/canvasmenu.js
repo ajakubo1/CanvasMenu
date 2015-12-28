@@ -38,7 +38,7 @@ function Menu(config) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-			self.swapButtonState(BUTTON_ENUM.down);
+			self.swapButtonState(BUTTON_ENUM.active);
 			self.focused.redrawBackground(self.tickCount);
 		}
 	};
@@ -48,7 +48,7 @@ function Menu(config) {
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
-				self.swapButtonState(BUTTON_ENUM.inactive);
+				self.swapButtonState(BUTTON_ENUM.idle);
 				self.focused = undefined;
 			}
 		}
@@ -56,7 +56,7 @@ function Menu(config) {
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
-				self.swapButtonState(BUTTON_ENUM.focused);
+				self.swapButtonState(BUTTON_ENUM.hover);
 				break;
 			}
 		}
@@ -175,7 +175,7 @@ Menu.prototype.destroy = function () {
 	}
 
 	for (i = 0; i < this.buttons.length; i += 1) {
-		this.buttons[i].setState(BUTTON_ENUM.inactive);
+		this.buttons[i].setState(BUTTON_ENUM.idle);
 		this.redrawButtons();
 	}
 
@@ -201,9 +201,9 @@ Menu.prototype.updateScaleY = function (scale) {
 };
 
 var BUTTON_ENUM = {
-	"inactive": 0,
-	"focused": 1,
-	"down": 2,
+	"idle": 0,
+	"hover": 1,
+	"active": 2,
 	"up": 3
 };
 
@@ -242,7 +242,7 @@ function Button(config) {
 	this.height = config.height;
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
-	this.state = BUTTON_ENUM.inactive;
+	this.state = BUTTON_ENUM.idle;
 	this.tick = 0;
 	this.text = config.text;
 	this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
@@ -260,11 +260,11 @@ function Button(config) {
 	this.canvas_up = this.init_canvas();
 
 	this.redraw = function () {
-		if (this.state === BUTTON_ENUM.inactive) {
+		if (this.state === BUTTON_ENUM.idle) {
 			this.redrawInactive();
-		} else if (this.state === BUTTON_ENUM.focused) {
+		} else if (this.state === BUTTON_ENUM.hover) {
 			this.redrawFocused();
-		} else if (this.state === BUTTON_ENUM.down) {
+		} else if (this.state === BUTTON_ENUM.active) {
 			this.redrawDown();
 		} else if (this.state === BUTTON_ENUM.up) {
 			this.redrawUp();
@@ -327,9 +327,9 @@ Button.prototype.inRange = function (x, y) {
 Button.prototype.setState = function (newState) {
 	var menuCanvas = this.menu.canvas;
 
-	// If the button state is changed to 'focused', when means
+	// If the button state is changed to 'hover', when means
 	// the button is in the 'hover' state...
-	if (newState === BUTTON_ENUM.focused) {
+	if (newState === BUTTON_ENUM.hover) {
 		// ...change the mouse cursor to 'pointer' so it behaves as
 		// a regular link.
 		menuCanvas.style.cursor = 'pointer';
@@ -348,11 +348,11 @@ Button.prototype.redrawBackground = function (step) {
 };
 
 Button.prototype.getCanvas = function () {
-	if (this.state === BUTTON_ENUM.inactive) {
+	if (this.state === BUTTON_ENUM.idle) {
 		return this.canvas_inactive;
-	} else if (this.state === BUTTON_ENUM.focused) {
+	} else if (this.state === BUTTON_ENUM.hover) {
 		return this.canvas_focused;
-	} else if (this.state === BUTTON_ENUM.down) {
+	} else if (this.state === BUTTON_ENUM.active) {
 		return this.canvas_down;
 	} else if (this.state === BUTTON_ENUM.up) {
 		return this.canvas_up;
