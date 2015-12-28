@@ -35,7 +35,7 @@ function Menu(config) {
 	this.autorescale = config.autorescale || false;
 
 	this.listener_mousedown = function (event) {
-		var i, x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
+		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_STATES.down);
@@ -381,14 +381,16 @@ Button.prototype.trigger = function (eventType, event) {
             handlers[i].init();
         } else {
             handlers[i].call(this, event);
-            //TODO What else should I pass along?
         }
     }
 };
 
 Button.prototype.on = function (eventType, handler) {
-    //TODO: throw exeption when trying to listen for event which is not supported
-    //TODO: throw exeption when there is an additional Menu object on 'mouseup'
-
-    this.events[eventType].push(handler);
+    //TODO: throw exeption when there is an additional Menu object on 'click'
+    if (!(eventType in this.events)) {
+        throw new Error("Wrong Event! This library only allows for triggering the following events: "
+            + Object.keys(this.events));
+    } else {
+        this.events[eventType].push(handler);
+    }
 };
