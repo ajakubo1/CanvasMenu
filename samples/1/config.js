@@ -4,7 +4,7 @@ var canvas = document.getElementById('canvas'),
     height = 600; // px
 
 
-var myMenu = new Menu({
+var myMenu = new CM.Menu({
     canvas: document.getElementById('canvas'),
     width: width,
     height: height
@@ -16,7 +16,7 @@ var x = 20, // px
     buttonHeight = 50, // px
     buttonText = "Test text";
 
-var button = new Button({
+var button = new CM.Button({
     x: x,
     y: y,
     width: buttonWidth,

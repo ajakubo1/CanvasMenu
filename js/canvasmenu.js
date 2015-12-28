@@ -1,4 +1,6 @@
 
+CM = {};
+
 /**
  *
  * @param {object} config - configuration for the button
@@ -14,7 +16,7 @@
  * @constructor
  *
  */
-function Menu(config) {
+CM.Menu = function(config) {
 	var self = this;
 	this.buttons = [];
 	this.canvas = config.canvas;
@@ -149,11 +151,11 @@ function Menu(config) {
 	};
 }
 
-Menu.prototype.isVisible = function () {
+CM.Menu.prototype.isVisible = function () {
 	return this.running;
 };
 
-Menu.prototype.init = function () {
+CM.Menu.prototype.init = function () {
 	this.canvas.addEventListener('mouseup', this.listener_mouseup);
 	this.canvas.addEventListener('mousedown', this.listener_mousedown);
 	this.canvas.addEventListener('mousemove', this.listener_mousemove);
@@ -171,7 +173,7 @@ Menu.prototype.init = function () {
 	}
 };
 
-Menu.prototype.destroy = function () {
+CM.Menu.prototype.destroy = function () {
 	var i;
 
 	this.canvas.removeEventListener('mouseup', this.listener_mouseup);
@@ -190,21 +192,21 @@ Menu.prototype.destroy = function () {
 	this.running = false;
 };
 
-Menu.prototype.appendButton = function (button) {
+CM.Menu.prototype.appendButton = function (button) {
 	this.buttons.push(button);
 	button.setMenu(this);
 };
 
-Menu.prototype.updateScale = function (scale) {
+CM.Menu.prototype.updateScale = function (scale) {
 	this.scaleX = scale;
 	this.scaleY = scale;
 };
 
-Menu.prototype.updateScaleX = function (scale) {
+CM.Menu.prototype.updateScaleX = function (scale) {
 	this.scaleX = scale;
 };
 
-Menu.prototype.updateScaleY = function (scale) {
+CM.Menu.prototype.updateScaleY = function (scale) {
 	this.scaleY = scale;
 };
 
@@ -243,7 +245,7 @@ var BUTTON_STATES = {
  * @constructor
  *
  */
-function Button(config) {
+CM.Button = function(config) {
 	this.x = config.x;
 	this.y = config.y;
 	this.width = config.width;
@@ -321,16 +323,16 @@ function Button(config) {
     this.redraw(BUTTON_STATES.over);
     this.redraw(BUTTON_STATES.down);
     this.redraw(BUTTON_STATES.up);
-}
+};
 
-Button.prototype.inRange = function (x, y) {
+CM.Button.prototype.inRange = function (x, y) {
 	if (x >= this.x && x <= this.x_limit && y >= this.y && y <= this.y_limit) {
 		return true;
 	}
 	return false;
 };
 
-Button.prototype.setState = function (newState) {
+CM.Button.prototype.setState = function (newState) {
 	var menuCanvas = this.menu.canvas;
 
 	// If the button state is changed to 'over', when means
@@ -348,35 +350,35 @@ Button.prototype.setState = function (newState) {
 	this.tick = 0;
 };
 
-Button.prototype.getState = function () {
+CM.Button.prototype.getState = function () {
     return this.state;
 };
 
-Button.prototype.redrawBackground = function (step) {
+CM.Button.prototype.redrawBackground = function (step) {
 	this.tick = step;
 	this.redraw();
 };
 
-Button.prototype.getCanvas = function () {
+CM.Button.prototype.getCanvas = function () {
 	return this.canvas[this.state];
 };
 
-Button.prototype.getX = function () {
+CM.Button.prototype.getX = function () {
 	return this.x;
 };
 
-Button.prototype.getY = function () {
+CM.Button.prototype.getY = function () {
 	return this.y;
 };
 
-Button.prototype.setMenu = function (menu) {
+CM.Button.prototype.setMenu = function (menu) {
 	this.menu = menu;
 };
 
-Button.prototype.trigger = function (eventType, event) {
+CM.Button.prototype.trigger = function (eventType, event) {
     var i, handlers = this.events[eventType];
     for (i = 0; i < handlers.length; i += 1) {
-        if (eventType === 'click' && handlers[i] instanceof Menu) {
+        if (eventType === 'click' && handlers[i] instanceof CM.Menu) {
             this.menu.destroy();
             handlers[i].init();
         } else {
@@ -385,21 +387,20 @@ Button.prototype.trigger = function (eventType, event) {
     }
 };
 
-Button.prototype.on = function (eventType, handler) {
-    //TODO: throw exeption when there is an additional Menu object on 'click'
+CM.Button.prototype.on = function (eventType, handler) {
     if (!(eventType in this.events)) {
         throw new Error("Wrong Event! This library only allows for triggering the following events: "
             + Object.keys(this.events));
     } else {
-        if (eventType === 'click' && handler instanceof Menu) {
+        if (eventType === 'click' && handler instanceof CM.Menu) {
             var i;
             for (i = 0; i < this.events[eventType].length; i += 1) {
-                if(this.events[eventType][i] instanceof Menu) {
+                if(this.events[eventType][i] instanceof CM.Menu) {
                     throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
                 }
             }
-        } else {
-            this.events[eventType].push(handler);
         }
+
+        this.events[eventType].push(handler);
     }
 };

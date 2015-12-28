@@ -51,23 +51,23 @@ var menuAnimation = function () {   //There is something wrong with this functio
 };
 
 //Init menus
-var mainMenu = new Menu({
+var mainMenu = new CM.Menu({
     canvas: document.getElementById('canvas'),
     width: width,
     height: height,
     animation: menuAnimation
 });
-var newGameMenu = new Menu({
+var newGameMenu = new CM.Menu({
     canvas: document.getElementById('canvas'),
     width: width,
     height: height
 });
-var optionsMenu = new Menu({
+var optionsMenu = new CM.Menu({
     canvas: document.getElementById('canvas'),
     width: width,
     height: height
 });
-var aboutMenu = new Menu({
+var aboutMenu = new CM.Menu({
     canvas: document.getElementById('canvas'),
     width: width,
     height: height
@@ -80,7 +80,7 @@ var redrawInactive = function (ctx) {
 };
 
 //Button creation + click binding
-var newGameMainMenuButton = new Button({
+var newGameMainMenuButton = new CM.Button({
     x: width / 2 - buttonWidth / 2,
     y: 270,
     width: buttonWidth,
@@ -92,7 +92,7 @@ var newGameMainMenuButton = new Button({
 });
 newGameMainMenuButton.on('click', newGameMenu);
 
-var optionsMainMenuButton = new Button({
+var optionsMainMenuButton = new CM.Button({
     x: width / 2 - buttonWidth / 2,
     y: 270 + buttonHeight + 20,
     width: buttonWidth,
@@ -113,7 +113,7 @@ var optionsMainMenuButton = new Button({
 });
 optionsMainMenuButton.on('click', optionsMenu);
 
-var aboutMainMenuButton = new Button({
+var aboutMainMenuButton = new CM.Button({
     x: width / 2 - buttonWidth / 2,
     y: 270 + 2 * (buttonHeight + 20),
     width: buttonWidth,
@@ -125,7 +125,7 @@ mainMenu.appendButton(newGameMainMenuButton);
 mainMenu.appendButton(optionsMainMenuButton);
 mainMenu.appendButton(aboutMainMenuButton);
 
-var backOptionsButton = new Button({
+var backOptionsButton = new CM.Button({
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -135,7 +135,7 @@ var backOptionsButton = new Button({
 backOptionsButton.on('click', mainMenu);
 newGameMenu.appendButton(backOptionsButton);
 
-var backNewGameButton = new Button({
+var backNewGameButton = new CM.Button({
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -145,7 +145,7 @@ var backNewGameButton = new Button({
 backNewGameButton.on('click', mainMenu);
 optionsMenu.appendButton(backNewGameButton);
 
-var backAboutButton = new Button({
+var backAboutButton = new CM.Button({
     x: 10,
     y: height - 60,
     width: buttonHeight,

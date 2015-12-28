@@ -11,7 +11,7 @@ var menuConfig = {
     animation: function () {}
 };
 
-var mainMenu = new Menu(menuConfig);
+var mainMenu = new CM.Menu(menuConfig);
 
 var buttonWidth = 400, // px
     buttonHeight = 50; // px
@@ -210,7 +210,7 @@ var RedrawFocusedButton = function () {
 };
 
 
-var newGameButton = new Button({
+var newGameButton = new CM.Button({
     x: 200,
     y: 280,
     width: buttonWidth,
@@ -232,7 +232,7 @@ var newGameButton = new Button({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
-var optionsButton = new Button({
+var optionsButton = new CM.Button({
     x: 200,
     y: 280 + buttonHeight + 10,
     width: buttonWidth,
@@ -254,7 +254,7 @@ var optionsButton = new Button({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
-var exitButton = new Button({
+var exitButton = new CM.Button({
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
