@@ -38,7 +38,7 @@ function Menu(config) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-			self.swapButtonState(BUTTON_ENUM.active);
+			self.swapButtonState(BUTTON_STATES.down);
 			self.focused.redrawBackground(self.tickCount);
 		}
 	};
@@ -48,7 +48,7 @@ function Menu(config) {
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
-				self.swapButtonState(BUTTON_ENUM.idle);
+				self.swapButtonState(BUTTON_STATES.idle);
 				self.focused = undefined;
 			}
 		}
@@ -56,7 +56,7 @@ function Menu(config) {
 		for (i = 0; i < self.buttons.length; i += 1) {
 			if (self.buttons[i].inRange(x, y)) {
 				self.focused = self.buttons[i];
-				self.swapButtonState(BUTTON_ENUM.hover);
+				self.swapButtonState(BUTTON_STATES.over);
 				break;
 			}
 		}
@@ -65,7 +65,7 @@ function Menu(config) {
 	this.listener_mouseup = function (event) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-			self.swapButtonState(BUTTON_ENUM.up);
+			self.swapButtonState(BUTTON_STATES.up);
 			self.focused.redrawBackground(self.tickCount);
 			self.focused.click();
 		}
@@ -175,7 +175,7 @@ Menu.prototype.destroy = function () {
 	}
 
 	for (i = 0; i < this.buttons.length; i += 1) {
-		this.buttons[i].setState(BUTTON_ENUM.idle);
+		this.buttons[i].setState(BUTTON_STATES.idle);
 		this.redrawButtons();
 	}
 
@@ -200,11 +200,11 @@ Menu.prototype.updateScaleY = function (scale) {
 	this.scaleY = scale;
 };
 
-var BUTTON_ENUM = {
-	"idle": 0,
-	"hover": 1,
-	"active": 2,
-	"up": 3
+var BUTTON_STATES = {
+	"idle": "idle",
+	"over": "over",
+	"down": "down",
+	"up": "up"
 };
 
 /**
@@ -242,7 +242,7 @@ function Button(config) {
 	this.height = config.height;
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
-	this.state = BUTTON_ENUM.idle;
+	this.state = BUTTON_STATES.idle;
 	this.tick = 0;
 	this.text = config.text;
 	this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
@@ -254,67 +254,57 @@ function Button(config) {
 		return canvas;
 	};
 
-	this.canvas_inactive = this.init_canvas();
-	this.canvas_focused = this.init_canvas();
-	this.canvas_down = this.init_canvas();
-	this.canvas_up = this.init_canvas();
+	this.canvas = {
+		"idle": this.init_canvas(),
+		"over": this.init_canvas(),
+		"down": this.init_canvas(),
+		"up": this.init_canvas()
+	};
 
-	this.redraw = function () {
-		if (this.state === BUTTON_ENUM.idle) {
-			this.redrawInactive();
-		} else if (this.state === BUTTON_ENUM.hover) {
-			this.redrawFocused();
-		} else if (this.state === BUTTON_ENUM.active) {
-			this.redrawDown();
-		} else if (this.state === BUTTON_ENUM.up) {
-			this.redrawUp();
+	this.default = {
+		"idle": {
+			"color": "green",
+			"font": "white"
+		},
+		"over": {
+			"color": "blue",
+			"font": "white"
+		},
+		"down": {
+			"color": "red",
+			"font": "white"
+		},
+		"up": {
+			"color": "orange",
+			"font": "white"
 		}
 	};
 
-	this.redraw_button = function (ctx, redrawFunction, fill, fontFill) {
-		ctx.clearRect(0, 0, this.width, this.height);
+	this.redraw = function (state) {
+        state = state || this.state;
+		var context = this.canvas[state].getContext('2d');
+		context.clearRect(0, 0, this.width, this.height);
 
-		if (redrawFunction) {
-			redrawFunction.call(this, ctx);
+		if (config[state] && config[state].fn) {
+			config[state].fn.call(this, context);
 		} else {
-			ctx.fillStyle = fill;
-			ctx.fillRect(0, 0, this.width, this.height);
+            context.fillStyle = config[state] ? config[state].color || this.default[state].color :
+                this.default[state].color;
+			context.fillRect(0, 0, this.width, this.height);
 		}
 
-		ctx.font = this.font;
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-		ctx.fillStyle = fontFill;
-		ctx.fillText(this.text, this.width / 2, this.height / 2);
+		context.font = this.font;
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+        context.fillStyle = config[state] ? config[state].font || this.default[state].font :
+            this.default[state].font;
+		context.fillText(this.text, this.width / 2, this.height / 2);
 	};
 
-	this.redrawInactive = function () {
-		this.redraw_button(this.canvas_inactive.getContext('2d'), config.redrawInactive,
-				config.redrawInactiveColor || "green", config.redrawInactiveFont || "white");
-	};
-
-	this.redrawInactive();
-
-	this.redrawFocused = function () {
-		this.redraw_button(this.canvas_focused.getContext('2d'), config.redrawFocused,
-				config.redrawFocusedColor || "blue", config.redrawFocusedFont || "white");
-	};
-
-	this.redrawFocused();
-
-	this.redrawDown = function () {
-		this.redraw_button(this.canvas_down.getContext('2d'), config.redrawDown,
-				config.redrawDownColor || "red", config.redrawDownFont || "white");
-	};
-
-	this.redrawDown();
-
-	this.redrawUp = function () {
-		this.redraw_button(this.canvas_up.getContext('2d'), config.redrawUp,
-				config.redrawUpColor || "orange", config.redrawUpFont || "white");
-	};
-
-	this.redrawUp();
+	this.redraw();
+    this.redraw(BUTTON_STATES.over);
+    this.redraw(BUTTON_STATES.down);
+    this.redraw(BUTTON_STATES.up);
 }
 
 Button.prototype.inRange = function (x, y) {
@@ -327,9 +317,9 @@ Button.prototype.inRange = function (x, y) {
 Button.prototype.setState = function (newState) {
 	var menuCanvas = this.menu.canvas;
 
-	// If the button state is changed to 'hover', when means
-	// the button is in the 'hover' state...
-	if (newState === BUTTON_ENUM.hover) {
+	// If the button state is changed to 'over', when means
+	// the button is in the 'over' state...
+	if (newState === BUTTON_STATES.over) {
 		// ...change the mouse cursor to 'pointer' so it behaves as
 		// a regular link.
 		menuCanvas.style.cursor = 'pointer';
@@ -348,15 +338,7 @@ Button.prototype.redrawBackground = function (step) {
 };
 
 Button.prototype.getCanvas = function () {
-	if (this.state === BUTTON_ENUM.idle) {
-		return this.canvas_inactive;
-	} else if (this.state === BUTTON_ENUM.hover) {
-		return this.canvas_focused;
-	} else if (this.state === BUTTON_ENUM.active) {
-		return this.canvas_down;
-	} else if (this.state === BUTTON_ENUM.up) {
-		return this.canvas_up;
-	}
+	return this.canvas[this.state];
 };
 
 Button.prototype.getX = function () {

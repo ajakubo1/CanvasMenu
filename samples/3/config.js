@@ -21,12 +21,20 @@ var newGameButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "New Game",
-    redrawInactiveColor: '#FFFF00',
-    redrawFocusedColor: '#660033',
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
+    idle: {
+        color: '#FFFF00',
+        font: '#111111'
+    },
+    over: {
+        color: '#660033'
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
 var optionsButton = new Button({
@@ -35,13 +43,21 @@ var optionsButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "Options",
-    redrawInactiveColor: '#FFFF00',
-    redrawFocusedColor: '#660033',
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
-    font: (buttonHeight * 2 / 5 ) + 'pt Courier'
+    idle: {
+        color: '#FFFF00',
+        font: '#111111'
+    },
+    over: {
+        color: '#660033'
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
+    font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
 var exitButton = new Button({
     x: 200,
@@ -49,13 +65,21 @@ var exitButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "Exit",
-    redrawInactiveColor: '#FFFF00',
-    redrawFocusedColor: '#660033',
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
-    font: (buttonHeight * 2 / 5 ) + 'pt Courier'
+    idle: {
+        color: '#FFFF00',
+        font: '#111111'
+    },
+    over: {
+        color: '#660033'
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
+    font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
 
 newGameButton.clickHandler(function () {

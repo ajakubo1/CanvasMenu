@@ -86,7 +86,9 @@ var newGameMainMenuButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "New Game",
-    redrawInactive: redrawInactive
+    idle: {
+        fn: redrawInactive
+    }
 });
 newGameMainMenuButton.clickHandler(newGameMenu);
 
@@ -96,10 +98,18 @@ var optionsMainMenuButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "Options",
-    redrawInactiveColor: "grey",
-    redrawFocusedColor: "pink",
-    redrawDownColor: "cyan",
-    redrawUpColor: "crimson"
+    idle: {
+        color: "grey"
+    },
+    over: {
+        color: "pink"
+    },
+    down: {
+        color: "cyan"
+    },
+    up: {
+        color: "crimson"
+    }
 });
 optionsMainMenuButton.clickHandler(optionsMenu);
 

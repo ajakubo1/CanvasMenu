@@ -216,12 +216,20 @@ var newGameButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "New Game",
-    redrawInactive: new RedrawInactiveButton(),
-    redrawFocused: new RedrawFocusedButton(),
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
+    idle: {
+        font: '#111111',
+        fn: new RedrawInactiveButton()
+    },
+    over: {
+        fn: new RedrawFocusedButton()
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
 var optionsButton = new Button({
@@ -230,12 +238,20 @@ var optionsButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "Options",
-    redrawInactive: new RedrawInactiveButton(),
-    redrawFocused: new RedrawFocusedButton(),
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
+    idle: {
+        font: '#111111',
+        fn: new RedrawInactiveButton()
+    },
+    over: {
+        fn: new RedrawFocusedButton()
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
 var exitButton = new Button({
@@ -244,12 +260,20 @@ var exitButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "Exit",
-    redrawInactive: new RedrawInactiveButton(),
-    redrawFocused: new RedrawFocusedButton(),
-    redrawDownColor: '#FF0033',
-    redrawUpColor: '#330033',
-    redrawInactiveFont: '#111111',
-    redrawDownFont: '#111111',
+    idle: {
+        font: '#111111',
+        fn: new RedrawInactiveButton()
+    },
+    over: {
+        fn: new RedrawFocusedButton()
+    },
+    down: {
+        color: '#FF0033',
+        font: '#111111'
+    },
+    up: {
+        color: '#330033'
+    },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
 

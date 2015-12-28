@@ -42,10 +42,10 @@ describe("Button", function () {
         it("Should have canvas idle width as indicated in config.width", function () {
             expect(button.canvas_inactive.width).to.equal(config.width);
         });
-        it("Should have canvas hover width as indicated in config.width", function () {
+        it("Should have canvas over width as indicated in config.width", function () {
             expect(button.canvas_focused.width).to.equal(config.width);
         });
-        it("Should have canvas active width as indicated in config.width", function () {
+        it("Should have canvas down width as indicated in config.width", function () {
             expect(button.canvas_down.width).to.equal(config.width);
         });
         it("Should have canvas up width as indicated in config.width", function () {
@@ -58,10 +58,10 @@ describe("Button", function () {
         it("Should have canvas idle height as indicated in config.height", function () {
             expect(button.canvas_inactive.height).to.equal(config.height);
         });
-        it("Should have canvas hover height as indicated in config.height", function () {
+        it("Should have canvas over height as indicated in config.height", function () {
             expect(button.canvas_focused.height).to.equal(config.height);
         });
-        it("Should have canvas active height as indicated in config.height", function () {
+        it("Should have canvas down height as indicated in config.height", function () {
             expect(button.canvas_down.height).to.equal(config.height);
         });
         it("Should have canvas up height as indicated in config.height", function () {
@@ -73,7 +73,7 @@ describe("Button", function () {
         });
 
         it("Make sure that button state is idle", function () {
-            expect(button.state).to.equal(BUTTON_ENUM.idle);
+            expect(button.state).to.equal(BUTTON_STATES.idle);
         });
 
         it("Make sure that animation is at step 1", function () {
@@ -137,51 +137,51 @@ describe("Button", function () {
         it("Check if animation frame gets resets after state change", function () {
             button.tick = 30;
             expect(button.tick).to.equal(30);
-            button.setState(BUTTON_ENUM.idle);
+            button.setState(BUTTON_STATES.idle);
             expect(button.tick).to.equal(0);
         });
 
-        it("Swap state to hover", function () {
-            button.setState(BUTTON_ENUM.hover);
-            expect(button.state).to.equal(BUTTON_ENUM.hover);
+        it("Swap state to over", function () {
+            button.setState(BUTTON_STATES.over);
+            expect(button.state).to.equal(BUTTON_STATES.over);
         });
 
-        it("Swap state to hover, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_ENUM.hover);
+        it("Swap state to over, make sure that you get the right canvas", function () {
+            button.setState(BUTTON_STATES.over);
             expect(button.getCanvas()).to.equal(button.canvas_focused);
         });
 
-        it("Swap state to active", function () {
-            button.setState(BUTTON_ENUM.active);
-            expect(button.state).to.equal(BUTTON_ENUM.active);
+        it("Swap state to down", function () {
+            button.setState(BUTTON_STATES.down);
+            expect(button.state).to.equal(BUTTON_STATES.down);
         });
 
-        it("Swap state to active, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_ENUM.active);
+        it("Swap state to down, make sure that you get the right canvas", function () {
+            button.setState(BUTTON_STATES.down);
             expect(button.getCanvas()).to.equal(button.canvas_down);
         });
 
         it("Swap state to up", function () {
-            button.setState(BUTTON_ENUM.up);
-            expect(button.state).to.equal(BUTTON_ENUM.up);
+            button.setState(BUTTON_STATES.up);
+            expect(button.state).to.equal(BUTTON_STATES.up);
         });
 
         it("Swap state to up, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_ENUM.up);
+            button.setState(BUTTON_STATES.up);
             expect(button.getCanvas()).to.equal(button.canvas_up);
         });
 
         it("Swap state to idle", function () {
-            button.setState(BUTTON_ENUM.up);
-            expect(button.state).to.equal(BUTTON_ENUM.up);
-            button.setState(BUTTON_ENUM.idle);
-            expect(button.state).to.equal(BUTTON_ENUM.idle);
+            button.setState(BUTTON_STATES.up);
+            expect(button.state).to.equal(BUTTON_STATES.up);
+            button.setState(BUTTON_STATES.idle);
+            expect(button.state).to.equal(BUTTON_STATES.idle);
         });
 
         it("Swap state to idle, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_ENUM.up);
-            expect(button.state).to.equal(BUTTON_ENUM.up);
-            button.setState(BUTTON_ENUM.idle);
+            button.setState(BUTTON_STATES.up);
+            expect(button.state).to.equal(BUTTON_STATES.up);
+            button.setState(BUTTON_STATES.idle);
             expect(button.getCanvas()).to.equal(button.canvas_inactive);
         });
     });
