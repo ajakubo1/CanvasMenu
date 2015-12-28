@@ -24,8 +24,24 @@ var button = new Button({
     text: buttonText
 });
 
-button.clickHandler(function () {
+button.on('click', function (event) {
     alert("You've clicked me!");
+});
+
+button.on('mousedown', function (event) {
+    console.info("Down!");
+});
+
+button.on('mousemove', function (event) {
+    console.info("Moving!");
+});
+
+button.on('mouseenter', function (event) {
+    console.info("Enter!");
+});
+
+button.on('mouseleave', function (event) {
+    console.info("Leave!");
 });
 
 //And adding the button to previously created menu:

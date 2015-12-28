@@ -90,7 +90,7 @@ var newGameMainMenuButton = new Button({
         fn: redrawInactive
     }
 });
-newGameMainMenuButton.clickHandler(newGameMenu);
+newGameMainMenuButton.on('click', newGameMenu);
 
 var optionsMainMenuButton = new Button({
     x: width / 2 - buttonWidth / 2,
@@ -111,7 +111,7 @@ var optionsMainMenuButton = new Button({
         color: "crimson"
     }
 });
-optionsMainMenuButton.clickHandler(optionsMenu);
+optionsMainMenuButton.on('click', optionsMenu);
 
 var aboutMainMenuButton = new Button({
     x: width / 2 - buttonWidth / 2,
@@ -119,7 +119,7 @@ var aboutMainMenuButton = new Button({
     width: buttonWidth,
     height: buttonHeight,
     text: "About"});
-aboutMainMenuButton.clickHandler(aboutMenu);
+aboutMainMenuButton.on('click', aboutMenu);
 
 mainMenu.appendButton(newGameMainMenuButton);
 mainMenu.appendButton(optionsMainMenuButton);
@@ -132,7 +132,7 @@ var backOptionsButton = new Button({
     height: buttonHeight,
     text: String.fromCharCode(parseInt("21DC", 16))
 });
-backOptionsButton.clickHandler(mainMenu);
+backOptionsButton.on('click', mainMenu);
 newGameMenu.appendButton(backOptionsButton);
 
 var backNewGameButton = new Button({
@@ -142,7 +142,7 @@ var backNewGameButton = new Button({
     height: buttonHeight,
     text: String.fromCharCode(parseInt("21DC", 16))
 });
-backNewGameButton.clickHandler(mainMenu);
+backNewGameButton.on('click', mainMenu);
 optionsMenu.appendButton(backNewGameButton);
 
 var backAboutButton = new Button({
@@ -152,7 +152,7 @@ var backAboutButton = new Button({
     height: buttonHeight,
     text: String.fromCharCode(parseInt("21DC", 16))
 });
-backAboutButton.clickHandler(mainMenu);
+backAboutButton.on('click', mainMenu);
 aboutMenu.appendButton(backAboutButton);
 
 //Init first menu

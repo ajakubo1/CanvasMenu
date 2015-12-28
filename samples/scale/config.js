@@ -321,13 +321,13 @@ var exitButton = new Button({
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
 
-newGameButton.clickHandler(function () {
+newGameButton.on('click', function () {
     alert("Your code should go here, not mine :)");
 });
-optionsButton.clickHandler(function () {
+optionsButton.on('click', function () {
     alert("Let's not make it more complicated then it should be :)...");
 });
-exitButton.clickHandler(function () {
+exitButton.on('click', function () {
     alert("Exit where? It's a freakin' web page!");
 });
 

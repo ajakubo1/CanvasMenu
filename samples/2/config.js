@@ -39,13 +39,13 @@ var exitButton = new Button({
     text: "Exit"
 });
 
-newGameButton.clickHandler(function () {
+newGameButton.on('click', function () {
     alert("Your code should go here, not mine :)");
 });
-exitButton.clickHandler(function () {
+exitButton.on('click', function () {
     alert("Exit where? It's a freakin' web page!");
 });
-optionsButton.clickHandler(optionsMenu);
+optionsButton.on('click', optionsMenu);
 
 var infoButton = new Button({
     x: 200,
@@ -62,7 +62,7 @@ var mainMenuButton = new Button({
     text: "<- Back"
 });
 
-infoButton.clickHandler(function () {
+infoButton.on('click', function () {
     alert("Right now I only serve simple buttons. So... Options are not as spectacular as I would want them to" +
         " be...\n" +
         "But! And it's a big but! I will be adding a couple of new button types, which should be good for:\n\n" +
@@ -70,7 +70,7 @@ infoButton.clickHandler(function () {
         " - radio button/multiple choice button\n" +
         " - text field maybe?");
 });
-mainMenuButton.clickHandler(mainMenu);
+mainMenuButton.on('click', mainMenu);
 
 mainMenu.appendButton(newGameButton);
 mainMenu.appendButton(optionsButton);

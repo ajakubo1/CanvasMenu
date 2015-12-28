@@ -35,11 +35,12 @@ function Menu(config) {
 	this.autorescale = config.autorescale || false;
 
 	this.listener_mousedown = function (event) {
-		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
+		var i, x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
 			self.swapButtonState(BUTTON_STATES.down);
 			self.focused.redrawBackground(self.tickCount);
+            self.focused.trigger('mousedown', event);
 		}
 	};
 
@@ -49,25 +50,32 @@ function Menu(config) {
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
 				self.swapButtonState(BUTTON_STATES.idle);
+                self.focused.trigger('mouseleave', event);
 				self.focused = undefined;
-			}
-		}
-
-		for (i = 0; i < self.buttons.length; i += 1) {
-			if (self.buttons[i].inRange(x, y)) {
-				self.focused = self.buttons[i];
-				self.swapButtonState(BUTTON_STATES.over);
-				break;
-			}
-		}
+			} else {
+                self.focused.trigger('mousemove', event);
+            }
+		} else {
+            for (i = 0; i < self.buttons.length; i += 1) {
+                if (self.buttons[i].inRange(x, y)) {
+                    self.focused = self.buttons[i];
+                    self.swapButtonState(BUTTON_STATES.over);
+                    self.focused.trigger('mouseenter', event);
+                    break;
+                }
+            }
+        }
 	};
 
 	this.listener_mouseup = function (event) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-			self.swapButtonState(BUTTON_STATES.up);
-			self.focused.redrawBackground(self.tickCount);
-			self.focused.click();
+            if (self.focused.getState() === BUTTON_STATES.down) {
+                self.swapButtonState(BUTTON_STATES.up);
+                self.focused.trigger('click', event);
+                self.focused.redrawBackground(self.tickCount);
+            }
+            self.focused.trigger('mouseup', event);
 		}
 	};
 
@@ -184,7 +192,7 @@ Menu.prototype.destroy = function () {
 
 Menu.prototype.appendButton = function (button) {
 	this.buttons.push(button);
-	button.setParentMenu(this);
+	button.setMenu(this);
 };
 
 Menu.prototype.updateScale = function (scale) {
@@ -246,6 +254,14 @@ function Button(config) {
 	this.tick = 0;
 	this.text = config.text;
 	this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
+    this.events = {
+        "click": [],
+        "mousedown": [],
+        "mouseup": [],
+        "mousemove": [],
+        "mouseenter": [],
+        "mouseleave": []
+    };
 
 	this.init_canvas = function () {
 		var canvas = document.createElement('canvas');
@@ -332,6 +348,10 @@ Button.prototype.setState = function (newState) {
 	this.tick = 0;
 };
 
+Button.prototype.getState = function () {
+    return this.state;
+};
+
 Button.prototype.redrawBackground = function (step) {
 	this.tick = step;
 	this.redraw();
@@ -349,21 +369,26 @@ Button.prototype.getY = function () {
 	return this.y;
 };
 
-Button.prototype.setParentMenu = function (menu) {
+Button.prototype.setMenu = function (menu) {
 	this.menu = menu;
 };
 
-Button.prototype.clickHandler = function (handler) {
-	this.onclick = handler;
+Button.prototype.trigger = function (eventType, event) {
+    var i, handlers = this.events[eventType];
+    for (i = 0; i < handlers.length; i += 1) {
+        if (eventType === 'click' && handlers[i] instanceof Menu) {
+            this.menu.destroy();
+            handlers[i].init();
+        } else {
+            handlers[i].call(this, event);
+            //TODO What else should I pass along?
+        }
+    }
 };
 
-Button.prototype.click = function () {
-	if (this.onclick instanceof Menu) {
-		this.menu.destroy();
-		this.onclick.init();
-	} else {
-		if(this.onclick !== undefined) {
-			this.onclick.call();
-		}
-	}
+Button.prototype.on = function (eventType, handler) {
+    //TODO: throw exeption when trying to listen for event which is not supported
+    //TODO: throw exeption when there is an additional Menu object on 'mouseup'
+
+    this.events[eventType].push(handler);
 };
