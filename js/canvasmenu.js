@@ -391,6 +391,15 @@ Button.prototype.on = function (eventType, handler) {
         throw new Error("Wrong Event! This library only allows for triggering the following events: "
             + Object.keys(this.events));
     } else {
-        this.events[eventType].push(handler);
+        if (eventType === 'click' && handler instanceof Menu) {
+            var i;
+            for (i = 0; i < this.events[eventType].length; i += 1) {
+                if(this.events[eventType][i] instanceof Menu) {
+                    throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+                }
+            }
+        } else {
+            this.events[eventType].push(handler);
+        }
     }
 };
