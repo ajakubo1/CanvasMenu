@@ -12,7 +12,11 @@
     "deploy": "uglifyjs src/menu.js src/element.js src/button.js -c -m --source-map dist/canvasmenu.map -o dist/canvasmenu.min.js",
     "test": "node_modules/mocha/bin/mocha",
     "prepublish": "cp js/canvasmenu.js canvasmenu.js ; uglifyjs canvasmenu.js -c -m --source-map canvasmenu.map -o canvasmenu.min.js",
-    "postpublish": "rm canvasmenu.js canvasmenu.map canvasmenu.min.js"
+    "postpublish": "rm canvasmenu.js canvasmenu.map canvasmenu.min.js",
+    "watch": "watch 'npm run merge' src/",
+    "lint": "jshint src/*.js",
+    "pretest": "npm run lint",
+    "commit": "git add . && git commit -m '$COMMENT'"
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,9 @@
   },
   "homepage": "https://github.com/ajakubo1/CanvasMenu#readme",
   "devDependencies": {
-    "mocha": "^2.3.4"
+    "jshint": "^2.9.1-rc2",
+    "mocha": "^2.3.4",
+    "uglify-js": "^2.6.1",
+    "watch": "^0.17.1"
   }
 }
