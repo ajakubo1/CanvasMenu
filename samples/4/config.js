@@ -210,7 +210,7 @@ var RedrawFocusedButton = function () {
 };
 
 
-var newGameButton = mainMenu.createButton({
+var newGameButton = mainMenu.create('button', {
     x: 200,
     y: 280,
     width: buttonWidth,
@@ -232,7 +232,7 @@ var newGameButton = mainMenu.createButton({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
-var optionsButton = mainMenu.createButton({
+var optionsButton = mainMenu.create('button', {
     x: 200,
     y: 280 + buttonHeight + 10,
     width: buttonWidth,
@@ -254,7 +254,7 @@ var optionsButton = mainMenu.createButton({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
-var exitButton = mainMenu.createButton({
+var exitButton = mainMenu.create('button', {
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,

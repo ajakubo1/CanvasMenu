@@ -80,7 +80,7 @@ var redrawInactive = function (ctx) {
 };
 
 //Button creation + click binding
-var newGameMainMenuButton = mainMenu.createButton({
+var newGameMainMenuButton = mainMenu.create('button', {
     x: width / 2 - buttonWidth / 2,
     y: 270,
     width: buttonWidth,
@@ -92,7 +92,7 @@ var newGameMainMenuButton = mainMenu.createButton({
 });
 newGameMainMenuButton.on('click', newGameMenu);
 
-var optionsMainMenuButton = mainMenu.createButton({
+var optionsMainMenuButton = mainMenu.create('button', {
     x: width / 2 - buttonWidth / 2,
     y: 270 + buttonHeight + 20,
     width: buttonWidth,
@@ -113,7 +113,7 @@ var optionsMainMenuButton = mainMenu.createButton({
 });
 optionsMainMenuButton.on('click', optionsMenu);
 
-var aboutMainMenuButton = mainMenu.createButton({
+var aboutMainMenuButton = mainMenu.create('button', {
     x: width / 2 - buttonWidth / 2,
     y: 270 + 2 * (buttonHeight + 20),
     width: buttonWidth,
@@ -121,7 +121,7 @@ var aboutMainMenuButton = mainMenu.createButton({
     text: "About"});
 aboutMainMenuButton.on('click', aboutMenu);
 
-var backOptionsButton = newGameMenu.createButton({
+var backOptionsButton = newGameMenu.create('button', {
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -130,7 +130,7 @@ var backOptionsButton = newGameMenu.createButton({
 });
 backOptionsButton.on('click', mainMenu);
 
-var backNewGameButton = optionsMenu.createButton({
+var backNewGameButton = optionsMenu.create('button', {
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -139,7 +139,7 @@ var backNewGameButton = optionsMenu.createButton({
 });
 backNewGameButton.on('click', mainMenu);
 
-var backAboutButton = aboutMenu.createButton({
+var backAboutButton = aboutMenu.create('button', {
     x: 10,
     y: height - 60,
     width: buttonHeight,

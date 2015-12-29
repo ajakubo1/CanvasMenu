@@ -16,7 +16,7 @@ var mainMenu = new CM.Menu(menuConfig),
 var buttonWidth = 400, // px
     buttonHeight = 50; // px
 
-var newGameButton = mainMenu.createButton({
+var newGameButton = mainMenu.create('button', {
     x: 200,
     y: 280,
     width: buttonWidth,
@@ -24,14 +24,14 @@ var newGameButton = mainMenu.createButton({
     text: "New Game"
 });
 //That's what we'll be looping
-var optionsButton = mainMenu.createButton({
+var optionsButton = mainMenu.create('button', {
     x: 200,
     y: 280 + buttonHeight + 10,
     width: buttonWidth,
     height: buttonHeight,
     text: "Options"
 });
-var exitButton = mainMenu.createButton({
+var exitButton = mainMenu.create('button', {
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
@@ -47,14 +47,14 @@ exitButton.on('click', function () {
 });
 optionsButton.on('click', optionsMenu);
 
-var infoButton = optionsMenu.createButton({
+var infoButton = optionsMenu.create('button', {
     x: 200,
     y: 280,
     width: buttonWidth,
     height: buttonHeight,
     text: "Information"
 });
-var mainMenuButton = optionsMenu.createButton({
+var mainMenuButton = optionsMenu.create('button', {
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
