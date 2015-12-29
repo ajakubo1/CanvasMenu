@@ -4,6 +4,12 @@
   "description": "HTML Canvas menu for games and applications",
   "main": "index.js",
   "scripts": {
+    "merge": "npm run merge:menu && npm run merge:element && npm run merge:button && npm run merge:minify",
+    "merge:menu": "cat src/menu.js > dist/canvasmenu.js",
+    "merge:element": "cat src/element.js >> dist/canvasmenu.js",
+    "merge:button": "cat src/button.js >> dist/canvasmenu.js",
+    "merge:minify": "uglifyjs dist/canvasmenu.js -c -m --source-map dist/canvasmenu.map -o dist/canvasmenu.min.js",
+    "deploy": "uglifyjs src/menu.js src/element.js src/button.js -c -m --source-map dist/canvasmenu.map -o dist/canvasmenu.min.js",
     "test": "node_modules/mocha/bin/mocha",
     "prepublish": "cp js/canvasmenu.js canvasmenu.js ; uglifyjs canvasmenu.js -c -m --source-map canvasmenu.map -o canvasmenu.min.js",
     "postpublish": "rm canvasmenu.js canvasmenu.map canvasmenu.min.js"
