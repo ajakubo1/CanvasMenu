@@ -16,7 +16,7 @@ var x = 20, // px
     buttonHeight = 50, // px
     buttonText = "Test text";
 
-myMenu.createButton({
+myMenu.create('button', {
     x: x,
     y: y,
     width: buttonWidth,

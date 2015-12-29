@@ -149,7 +149,7 @@ CM.Menu = function(config) {
 			window.requestAnimationFrame(self.run);
 		}
 	};
-}
+};
 
 CM.Menu.prototype.isVisible = function () {
 	return this.running;
@@ -395,8 +395,8 @@ CM.Button.prototype.trigger = function (eventType, event) {
 
 CM.Button.prototype.on = function (eventType, handler) {
     if (!(eventType in this.events)) {
-        throw new Error("Wrong Event! This library only allows for triggering the following events: "
-            + Object.keys(this.events));
+        throw new Error("Wrong Event! This library only allows for triggering the following events: " +
+				Object.keys(this.events));
     } else {
         if (eventType === 'click' && handler instanceof CM.Menu) {
             var i;
@@ -411,8 +411,14 @@ CM.Button.prototype.on = function (eventType, handler) {
     }
 };
 
-CM.Menu.prototype.createButton = function (config) {
-    var button = new CM.Button(config);
-    this.add(button);
-    return button;
+CM.Menu.prototype.create = function (componentType, config) {
+	// capitalize the type of the component, so 'button' will became 'Button'
+	componentType = componentType.charAt(0).toUpperCase() + componentType.slice(1);
+	if (CM[componentType]){
+		var component = new CM[componentType](config);
+		this.add(component);
+		return component;
+	} else {
+		throw new Error("Component of " + componentType + " type not found");
+	}
 };
