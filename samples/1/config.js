@@ -16,7 +16,7 @@ var x = 20, // px
     buttonHeight = 50, // px
     buttonText = "Test text";
 
-var button = new CM.Button({
+var button = myMenu.createButton({
     x: x,
     y: y,
     width: buttonWidth,
@@ -43,9 +43,5 @@ button.on('mouseenter', function (event) {
 button.on('mouseleave', function (event) {
     console.info("Leave!");
 });
-
-//And adding the button to previously created menu:
-
-myMenu.appendButton(button);
 
 myMenu.init();

@@ -16,7 +16,7 @@ var mainMenu = new CM.Menu(menuConfig),
 var buttonWidth = 400, // px
     buttonHeight = 50; // px
 
-var newGameButton = new CM.Button({
+var newGameButton = mainMenu.createButton({
     x: 200,
     y: 280,
     width: buttonWidth,
@@ -24,14 +24,14 @@ var newGameButton = new CM.Button({
     text: "New Game"
 });
 //That's what we'll be looping
-var optionsButton = new CM.Button({
+var optionsButton = mainMenu.createButton({
     x: 200,
     y: 280 + buttonHeight + 10,
     width: buttonWidth,
     height: buttonHeight,
     text: "Options"
 });
-var exitButton = new CM.Button({
+var exitButton = mainMenu.createButton({
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
@@ -47,14 +47,14 @@ exitButton.on('click', function () {
 });
 optionsButton.on('click', optionsMenu);
 
-var infoButton = new CM.Button({
+var infoButton = optionsMenu.createButton({
     x: 200,
     y: 280,
     width: buttonWidth,
     height: buttonHeight,
     text: "Information"
 });
-var mainMenuButton = new CM.Button({
+var mainMenuButton = optionsMenu.createButton({
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
@@ -71,12 +71,4 @@ infoButton.on('click', function () {
         " - text field maybe?");
 });
 mainMenuButton.on('click', mainMenu);
-
-mainMenu.appendButton(newGameButton);
-mainMenu.appendButton(optionsButton);
-mainMenu.appendButton(exitButton);
-
-optionsMenu.appendButton(infoButton);
-optionsMenu.appendButton(mainMenuButton);
-
 mainMenu.init();

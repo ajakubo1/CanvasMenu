@@ -18,7 +18,7 @@ CM = {};
  */
 CM.Menu = function(config) {
 	var self = this;
-	this.buttons = [];
+	this.elements = [];
 	this.canvas = config.canvas;
 	this.width = config.width;
 	this.height = config.height;
@@ -58,9 +58,9 @@ CM.Menu = function(config) {
                 self.focused.trigger('mousemove', event);
             }
 		} else {
-            for (i = 0; i < self.buttons.length; i += 1) {
-                if (self.buttons[i].inRange(x, y)) {
-                    self.focused = self.buttons[i];
+            for (i = 0; i < self.elements.length; i += 1) {
+                if (self.elements[i].inRange(x, y)) {
+                    self.focused = self.elements[i];
                     self.swapButtonState(BUTTON_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
@@ -96,8 +96,8 @@ CM.Menu = function(config) {
 		} else {
 			this.ctx.clearRect(0, 0, this.width, this.height);
 		}
-		for (i = 0; i < this.buttons.length; i += 1) {
-			this.ctx.drawImage(this.buttons[i].getCanvas(), this.buttons[i].getX(), this.buttons[i].getY());
+		for (i = 0; i < this.elements.length; i += 1) {
+			this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
 		}
 	};
 
@@ -140,8 +140,8 @@ CM.Menu = function(config) {
 					self.tickCount = 0;
 				}
 
-				for (i = 0; i < self.buttons.length; i += 1) {
-					self.buttons[i].redrawBackground(self.tickCount);
+				for (i = 0; i < self.elements.length; i += 1) {
+					self.elements[i].redrawBackground(self.tickCount);
 				}
 
 				self.redrawButtons();
@@ -184,16 +184,16 @@ CM.Menu.prototype.destroy = function () {
 		window.removeEventListener('resize', this.rescale);
 	}
 
-	for (i = 0; i < this.buttons.length; i += 1) {
-		this.buttons[i].setState(BUTTON_STATES.idle);
+	for (i = 0; i < this.elements.length; i += 1) {
+		this.elements[i].setState(BUTTON_STATES.idle);
 		this.redrawButtons();
 	}
 
 	this.running = false;
 };
 
-CM.Menu.prototype.appendButton = function (button) {
-	this.buttons.push(button);
+CM.Menu.prototype.add = function (button) {
+	this.elements.push(button);
 	button.setMenu(this);
 };
 
@@ -403,4 +403,10 @@ CM.Button.prototype.on = function (eventType, handler) {
 
         this.events[eventType].push(handler);
     }
+};
+
+CM.Menu.prototype.createButton = function (config) {
+    var button = new CM.Button(config);
+    this.add(button);
+    return button;
 };

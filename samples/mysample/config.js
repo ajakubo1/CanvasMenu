@@ -80,7 +80,7 @@ var redrawInactive = function (ctx) {
 };
 
 //Button creation + click binding
-var newGameMainMenuButton = new CM.Button({
+var newGameMainMenuButton = mainMenu.createButton({
     x: width / 2 - buttonWidth / 2,
     y: 270,
     width: buttonWidth,
@@ -92,7 +92,7 @@ var newGameMainMenuButton = new CM.Button({
 });
 newGameMainMenuButton.on('click', newGameMenu);
 
-var optionsMainMenuButton = new CM.Button({
+var optionsMainMenuButton = mainMenu.createButton({
     x: width / 2 - buttonWidth / 2,
     y: 270 + buttonHeight + 20,
     width: buttonWidth,
@@ -113,7 +113,7 @@ var optionsMainMenuButton = new CM.Button({
 });
 optionsMainMenuButton.on('click', optionsMenu);
 
-var aboutMainMenuButton = new CM.Button({
+var aboutMainMenuButton = mainMenu.createButton({
     x: width / 2 - buttonWidth / 2,
     y: 270 + 2 * (buttonHeight + 20),
     width: buttonWidth,
@@ -121,11 +121,7 @@ var aboutMainMenuButton = new CM.Button({
     text: "About"});
 aboutMainMenuButton.on('click', aboutMenu);
 
-mainMenu.appendButton(newGameMainMenuButton);
-mainMenu.appendButton(optionsMainMenuButton);
-mainMenu.appendButton(aboutMainMenuButton);
-
-var backOptionsButton = new CM.Button({
+var backOptionsButton = newGameMenu.createButton({
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -133,9 +129,8 @@ var backOptionsButton = new CM.Button({
     text: String.fromCharCode(parseInt("21DC", 16))
 });
 backOptionsButton.on('click', mainMenu);
-newGameMenu.appendButton(backOptionsButton);
 
-var backNewGameButton = new CM.Button({
+var backNewGameButton = optionsMenu.createButton({
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -143,9 +138,8 @@ var backNewGameButton = new CM.Button({
     text: String.fromCharCode(parseInt("21DC", 16))
 });
 backNewGameButton.on('click', mainMenu);
-optionsMenu.appendButton(backNewGameButton);
 
-var backAboutButton = new CM.Button({
+var backAboutButton = aboutMenu.createButton({
     x: 10,
     y: height - 60,
     width: buttonHeight,
@@ -153,7 +147,6 @@ var backAboutButton = new CM.Button({
     text: String.fromCharCode(parseInt("21DC", 16))
 });
 backAboutButton.on('click', mainMenu);
-aboutMenu.appendButton(backAboutButton);
 
 //Init first menu
 mainMenu.init();

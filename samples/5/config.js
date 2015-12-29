@@ -254,7 +254,7 @@ var RedrawFocusedButton = function () {
 };
 
 
-var newGameButton = new CM.Button({
+var newGameButton = mainMenu.createButton({
     x: 200,
     y: 280,
     width: buttonWidth,
@@ -276,7 +276,7 @@ var newGameButton = new CM.Button({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier' //I want it smaller
 });
-var optionsButton = new CM.Button({
+var optionsButton = mainMenu.createButton({
     x: 200,
     y: 280 + buttonHeight + 10,
     width: buttonWidth,
@@ -298,7 +298,7 @@ var optionsButton = new CM.Button({
     },
     font: (buttonHeight * 2 / 5 ) + 'pt Courier'
 });
-var exitButton = new CM.Button({
+var exitButton = mainMenu.createButton({
     x: 200,
     y: 280 + 2 * (buttonHeight + 10),
     width: buttonWidth,
@@ -330,11 +330,5 @@ optionsButton.on('click', function () {
 exitButton.on('click', function () {
     alert("Exit where? It's a freakin' web page!");
 });
-
-
-mainMenu.appendButton(newGameButton);
-mainMenu.appendButton(optionsButton);
-mainMenu.appendButton(exitButton);
-
 
 mainMenu.init();
