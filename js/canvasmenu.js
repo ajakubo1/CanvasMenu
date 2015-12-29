@@ -323,6 +323,12 @@ CM.Button = function(config) {
     this.redraw(BUTTON_STATES.over);
     this.redraw(BUTTON_STATES.down);
     this.redraw(BUTTON_STATES.up);
+
+    if (config.on) {
+        for (var i = 0; i < config.on.length; i += 1) {
+            this.on(config.on[i][0], config.on[i][1]);
+        }
+    }
 };
 
 CM.Button.prototype.inRange = function (x, y) {

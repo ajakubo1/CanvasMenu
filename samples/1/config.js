@@ -16,32 +16,39 @@ var x = 20, // px
     buttonHeight = 50, // px
     buttonText = "Test text";
 
-var button = myMenu.createButton({
+myMenu.createButton({
     x: x,
     y: y,
     width: buttonWidth,
     height: buttonHeight,
-    text: buttonText
-});
-
-button.on('click', function (event) {
-    alert("You've clicked me!");
-});
-
-button.on('mousedown', function (event) {
-    console.info("Down!");
-});
-
-button.on('mousemove', function (event) {
-    console.info("Moving!");
-});
-
-button.on('mouseenter', function (event) {
-    console.info("Enter!");
-});
-
-button.on('mouseleave', function (event) {
-    console.info("Leave!");
+    text: buttonText,
+    on: [
+        [
+            "click", function (event) {
+                alert("You've clicked me!");
+            }
+        ],
+        [
+            "mousedown", function (event) {
+                console.info("Down!");
+            }
+        ],
+        [
+            "mousemove", function (event) {
+                console.info("Moving!");
+            }
+        ],
+        [
+            "mouseenter", function (event) {
+                console.info("Enter!");
+            }
+        ],
+        [
+            "mouseleave", function (event) {
+                console.info("Leave!");
+            }
+        ],
+    ]
 });
 
 myMenu.init();
