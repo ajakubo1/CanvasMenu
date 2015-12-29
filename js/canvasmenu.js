@@ -40,7 +40,7 @@ CM.Menu = function(config) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-			self.swapButtonState(BUTTON_STATES.down);
+			self.swapButtonState(CM.BUTTON_STATES.down);
 			self.focused.redrawBackground(self.tickCount);
             self.focused.trigger('mousedown', event);
 		}
@@ -51,7 +51,7 @@ CM.Menu = function(config) {
 
 		if (self.focused !== undefined) {
 			if (!self.focused.inRange(x, y)) {
-				self.swapButtonState(BUTTON_STATES.idle);
+				self.swapButtonState(CM.BUTTON_STATES.idle);
                 self.focused.trigger('mouseleave', event);
 				self.focused = undefined;
 			} else {
@@ -61,7 +61,7 @@ CM.Menu = function(config) {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.swapButtonState(BUTTON_STATES.over);
+                    self.swapButtonState(CM.BUTTON_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
                 }
@@ -72,8 +72,8 @@ CM.Menu = function(config) {
 	this.listener_mouseup = function (event) {
 		var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 		if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            if (self.focused.getState() === BUTTON_STATES.down) {
-                self.swapButtonState(BUTTON_STATES.up);
+            if (self.focused.getState() === CM.BUTTON_STATES.down) {
+                self.swapButtonState(CM.BUTTON_STATES.up);
                 self.focused.trigger('click', event);
                 self.focused.redrawBackground(self.tickCount);
             }
@@ -185,7 +185,7 @@ CM.Menu.prototype.destroy = function () {
 	}
 
 	for (i = 0; i < this.elements.length; i += 1) {
-		this.elements[i].setState(BUTTON_STATES.idle);
+		this.elements[i].setState(CM.BUTTON_STATES.idle);
 		this.redrawButtons();
 	}
 
@@ -210,7 +210,7 @@ CM.Menu.prototype.updateScaleY = function (scale) {
 	this.scaleY = scale;
 };
 
-var BUTTON_STATES = {
+CM.BUTTON_STATES = {
 	"idle": "idle",
 	"over": "over",
 	"down": "down",
@@ -252,7 +252,7 @@ CM.Button = function(config) {
 	this.height = config.height;
 	this.x_limit = this.x + this.width;
 	this.y_limit = this.y + this.height;
-	this.state = BUTTON_STATES.idle;
+	this.state = CM.BUTTON_STATES.idle;
 	this.tick = 0;
 	this.text = config.text;
 	this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
@@ -320,9 +320,9 @@ CM.Button = function(config) {
 	};
 
 	this.redraw();
-    this.redraw(BUTTON_STATES.over);
-    this.redraw(BUTTON_STATES.down);
-    this.redraw(BUTTON_STATES.up);
+    this.redraw(CM.BUTTON_STATES.over);
+    this.redraw(CM.BUTTON_STATES.down);
+    this.redraw(CM.BUTTON_STATES.up);
 
     if (config.on) {
         for (var i = 0; i < config.on.length; i += 1) {
@@ -343,7 +343,7 @@ CM.Button.prototype.setState = function (newState) {
 
 	// If the button state is changed to 'over', when means
 	// the button is in the 'over' state...
-	if (newState === BUTTON_STATES.over) {
+	if (newState === CM.BUTTON_STATES.over) {
 		// ...change the mouse cursor to 'pointer' so it behaves as
 		// a regular link.
 		menuCanvas.style.cursor = 'pointer';
