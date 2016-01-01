@@ -5,7 +5,8 @@ var expect = chai.expect;
 
 describe("Button", function () {
 
-    var button,
+    var menu,
+        button,
         config;
 
     describe("Constructor check", function () {
@@ -18,7 +19,12 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new CM.Button(config);
+            menu = new CM.Menu({
+                canvas: document.createElement('canvas'),
+                width: 800,
+                height: 600
+            });
+            button = menu.create('button', config);
         });
 
         it("Should have x coordinate as indicated in config.x", function () {
@@ -89,7 +95,12 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new CM.Button(config);
+            menu = new CM.Menu({
+                canvas: document.createElement('canvas'),
+                width: 800,
+                height: 600
+            });
+            button = menu.create('button', config);
         });
 
         it("Is on the left", function () {
@@ -130,7 +141,12 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new CM.Button(config);
+            menu = new CM.Menu({
+                canvas: document.createElement('canvas'),
+                width: 800,
+                height: 600
+            });
+            button = menu.create('button', config);
         });
 
         it("Check if animation frame gets resets after state change", function () {
