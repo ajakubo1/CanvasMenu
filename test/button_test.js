@@ -1,7 +1,6 @@
 /**
  * Created by claim on 19.12.15.
  */
-
 var expect = chai.expect;
 
 describe("Button", function () {
@@ -19,7 +18,7 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new Button(config);
+            button = new CM.Button(config);
         });
 
         it("Should have x coordinate as indicated in config.x", function () {
@@ -40,32 +39,32 @@ describe("Button", function () {
             expect(button.width).to.equal(config.width);
         });
         it("Should have canvas idle width as indicated in config.width", function () {
-            expect(button.canvas_inactive.width).to.equal(config.width);
+            expect(button.canvas.idle.width).to.equal(config.width);
         });
         it("Should have canvas over width as indicated in config.width", function () {
-            expect(button.canvas_focused.width).to.equal(config.width);
+            expect(button.canvas.over.width).to.equal(config.width);
         });
         it("Should have canvas down width as indicated in config.width", function () {
-            expect(button.canvas_down.width).to.equal(config.width);
+            expect(button.canvas.down.width).to.equal(config.width);
         });
         it("Should have canvas up width as indicated in config.width", function () {
-            expect(button.canvas_up.width).to.equal(config.width);
+            expect(button.canvas.up.width).to.equal(config.width);
         });
 
         it("Should have height as indicated in config.height", function () {
             expect(button.height).to.equal(config.height);
         });
         it("Should have canvas idle height as indicated in config.height", function () {
-            expect(button.canvas_inactive.height).to.equal(config.height);
+            expect(button.canvas.idle.height).to.equal(config.height);
         });
         it("Should have canvas over height as indicated in config.height", function () {
-            expect(button.canvas_focused.height).to.equal(config.height);
+            expect(button.canvas.over.height).to.equal(config.height);
         });
         it("Should have canvas down height as indicated in config.height", function () {
-            expect(button.canvas_down.height).to.equal(config.height);
+            expect(button.canvas.down.height).to.equal(config.height);
         });
         it("Should have canvas up height as indicated in config.height", function () {
-            expect(button.canvas_up.height).to.equal(config.height);
+            expect(button.canvas.up.height).to.equal(config.height);
         });
 
         it("Should have text value as indicated in config.text", function () {
@@ -73,7 +72,7 @@ describe("Button", function () {
         });
 
         it("Make sure that button state is idle", function () {
-            expect(button.state).to.equal(BUTTON_STATES.idle);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Make sure that animation is at step 1", function () {
@@ -90,7 +89,7 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new Button(config);
+            button = new CM.Button(config);
         });
 
         it("Is on the left", function () {
@@ -131,58 +130,58 @@ describe("Button", function () {
                 height: 50,
                 text: "Test text"
             };
-            button = new Button(config);
+            button = new CM.Button(config);
         });
 
         it("Check if animation frame gets resets after state change", function () {
             button.tick = 30;
             expect(button.tick).to.equal(30);
-            button.setState(BUTTON_STATES.idle);
+            button.setState(CM.ELEMENT_STATES.idle);
             expect(button.tick).to.equal(0);
         });
 
         it("Swap state to over", function () {
-            button.setState(BUTTON_STATES.over);
-            expect(button.state).to.equal(BUTTON_STATES.over);
+            button.setState(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
         });
 
         it("Swap state to over, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_STATES.over);
-            expect(button.getCanvas()).to.equal(button.canvas_focused);
+            button.setState(CM.ELEMENT_STATES.over);
+            expect(button.getCanvas()).to.equal(button.canvas.over);
         });
 
         it("Swap state to down", function () {
-            button.setState(BUTTON_STATES.down);
-            expect(button.state).to.equal(BUTTON_STATES.down);
+            button.setState(CM.ELEMENT_STATES.down);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.down);
         });
 
         it("Swap state to down, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_STATES.down);
-            expect(button.getCanvas()).to.equal(button.canvas_down);
+            button.setState(CM.ELEMENT_STATES.down);
+            expect(button.getCanvas()).to.equal(button.canvas.down);
         });
 
         it("Swap state to up", function () {
-            button.setState(BUTTON_STATES.up);
-            expect(button.state).to.equal(BUTTON_STATES.up);
+            button.setState(CM.ELEMENT_STATES.up);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.up);
         });
 
         it("Swap state to up, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_STATES.up);
-            expect(button.getCanvas()).to.equal(button.canvas_up);
+            button.setState(CM.ELEMENT_STATES.up);
+            expect(button.getCanvas()).to.equal(button.canvas.up);
         });
 
         it("Swap state to idle", function () {
-            button.setState(BUTTON_STATES.up);
-            expect(button.state).to.equal(BUTTON_STATES.up);
-            button.setState(BUTTON_STATES.idle);
-            expect(button.state).to.equal(BUTTON_STATES.idle);
+            button.setState(CM.ELEMENT_STATES.up);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.up);
+            button.setState(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Swap state to idle, make sure that you get the right canvas", function () {
-            button.setState(BUTTON_STATES.up);
-            expect(button.state).to.equal(BUTTON_STATES.up);
-            button.setState(BUTTON_STATES.idle);
-            expect(button.getCanvas()).to.equal(button.canvas_inactive);
+            button.setState(CM.ELEMENT_STATES.up);
+            expect(button.state).to.equal(CM.ELEMENT_STATES.up);
+            button.setState(CM.ELEMENT_STATES.idle);
+            expect(button.getCanvas()).to.equal(button.canvas.idle);
         });
     });
 });

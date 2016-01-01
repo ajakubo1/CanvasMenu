@@ -86,6 +86,35 @@ function removeFalsy() {
     }
 }
 
+function rearrangeArgs() {
+    var i, temp = [];
+    if (args.length > 0) {
+        temp.push(undefined);
+    }
+    if (args.length > 1) {
+        temp.push(undefined);
+    }
+    for (i = 0; i < args.length; i += 1) {
+        if (args[i].search('menu.js') !== -1) {
+            temp[0] = args[i];
+        } else if (args[i].search('element.js') !== -1) {
+            temp[1] = args[i];
+        } else {
+            temp.push(args[i]);
+        }
+    }
+
+    if(temp[0] === undefined) {
+        temp[0] = prefix + 'menu.js';
+    }
+
+    if(temp.length > 1 && temp[1] === undefined) {
+        temp[1] = prefix + 'element.js';
+    }
+
+    args = temp;
+}
+
 function extractArguments() {
     var i, temp = process.argv.slice(2);
     for (i = 0; i < temp.length; i += 1) {
@@ -96,15 +125,23 @@ function extractArguments() {
         }
     }
 
-    for (i = 0 ; i < args.length; i += 1) {
-        args[i] = path.normalize(prefix + args[i] + postfix);
+    if (args.length === 0) {
+        args = fs.readdirSync(path.normalize(prefix));
 
-        if (!fs.existsSync(args[i])) {
-            console.warn("There is no file called: " + args[i] + " - it will be ignored during library build");
-            args[i] = false;
+        for (i = 0 ; i < args.length; i += 1) {
+            args[i] = path.normalize(prefix + args[i]);
+        }
+    } else {
+        for (i = 0 ; i < args.length; i += 1) {
+            args[i] = path.normalize(prefix + args[i] + postfix);
+
+            if (!fs.existsSync(args[i])) {
+                console.warn("There is no file called: " + args[i] + " - it will be ignored during library build");
+                args[i] = false;
+            }
         }
     }
-
+    rearrangeArgs();
     removeFalsy();
 }
 
