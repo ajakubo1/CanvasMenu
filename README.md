@@ -19,6 +19,23 @@ To use library in your project, you have to include canvasmenu.js in your html f
 
 All of the tutorials moved to [wiki page](https://github.com/ajakubo1/CanvasMenu/wiki)
 
+## Creating customized library bundle
+
+By calling:
+
+```bash
+npm run deploy -- <package names>
+```
+
+You can re-create your own ``CanvasMenu`` library with chosen elements. Package names on the above example are 
+reffering to the file names in src/.
+
+So, for example, if you need a basic setup with only a menu and a button, you should call:
+
+```bash
+npm run deploy -- menu button
+```
+
 ## Demos
 
 If you want to check what can be done with the library, check [this link](http://trash.thedimgames.com/CanvasMenu/samples/)
