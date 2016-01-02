@@ -4,7 +4,7 @@
   "description": "HTML Canvas menu for games and applications",
   "main": "index.js",
   "scripts": {
-    "merge": "nodejs deploy.js --dest=dist/",
+    "merge": "node deploy.js --dest=dist/",
     "prepublish": "npm run deploy",
     "postpublish": "rm canvasmenu.js canvasmenu.map canvasmenu.min.js",
     "watch": "watch 'npm run merge' src/",
@@ -13,7 +13,7 @@
     "test": "echo \"You have to run tests/index.html in a browser for running tests\" && exit 1",
     "precommit": "npm run merge",
     "commit": "git add . && git commit -m ",
-    "deploy": "nodejs deploy.js"
+    "deploy": "node deploy.js"
   },
   "repository": {
     "type": "git",
