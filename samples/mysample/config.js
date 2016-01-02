@@ -73,7 +73,7 @@ var aboutMenu = new CM.Menu({
     height: height
 });
 
-//Button redraw function
+//Button redrawMenu function
 var redrawInactive = function (ctx) {
     ctx.fillStyle = "rgb(" + (200 - this.tick * 2) + ", 0, 0)";
     ctx.fillRect(0, 0, this.width, this.height);

@@ -39,8 +39,8 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.swapButtonState(CM.ELEMENT_STATES.down);
-            self.focused.redrawBackground(self.tickCount);
+            self.swapState(CM.ELEMENT_STATES.down);
+            self.focused.redraw(self.tickCount);
             self.focused.trigger('mousedown', event);
         }
     };
@@ -50,7 +50,7 @@ CM.Menu = function(config) {
 
         if (self.focused !== undefined) {
             if (!self.focused.inRange(x, y)) {
-                self.swapButtonState(CM.ELEMENT_STATES.idle);
+                self.swapState(CM.ELEMENT_STATES.idle);
                 self.focused.trigger('mouseleave', event);
                 self.focused = undefined;
             } else {
@@ -60,7 +60,7 @@ CM.Menu = function(config) {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.swapButtonState(CM.ELEMENT_STATES.over);
+                    self.swapState(CM.ELEMENT_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
                 }
@@ -72,26 +72,26 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
             if (self.focused.getState() === CM.ELEMENT_STATES.down) {
-                self.swapButtonState(CM.ELEMENT_STATES.up);
+                self.swapState(CM.ELEMENT_STATES.up);
                 self.focused.trigger('click', event);
-                self.focused.redrawBackground(self.tickCount);
+                self.focused.redraw(self.tickCount);
             }
             self.focused.trigger('mouseup', event);
         }
     };
 
-    this.swapButtonState = function (newState) {
+    this.swapState = function (newState) {
         self.focused.setState(newState);
         if(!self.animated) {
-            self.redrawButtons();
+            self.redraw();
         }
     };
 
-    this.redrawButtons = function () {
+    this.redraw = function () {
         var i;
 
         if (this.animated) {
-            this.redrawBackground();
+            this.redrawMenu();
         } else {
             this.ctx.clearRect(0, 0, this.width, this.height);
         }
@@ -124,7 +124,7 @@ CM.Menu = function(config) {
         self.scaleY = values[3];
     };
 
-    this.redrawBackground = config.animation;
+    this.redrawMenu = config.animation;
 
     this.run = function (frameTime) {
         if (self.running) {
@@ -140,10 +140,10 @@ CM.Menu = function(config) {
                 }
 
                 for (i = 0; i < self.elements.length; i += 1) {
-                    self.elements[i].redrawBackground(self.tickCount);
+                    self.elements[i].redraw(self.tickCount);
                 }
 
-                self.redrawButtons();
+                self.redraw();
             }
             window.requestAnimationFrame(self.run);
         }
@@ -158,7 +158,7 @@ CM.Menu.prototype.init = function () {
     this.canvas.addEventListener('mouseup', this.listener_mouseup);
     this.canvas.addEventListener('mousedown', this.listener_mousedown);
     this.canvas.addEventListener('mousemove', this.listener_mousemove);
-    this.redrawButtons();
+    this.redraw();
     this.running = true;
 
     if (this.autorescale) {
@@ -185,7 +185,7 @@ CM.Menu.prototype.destroy = function () {
 
     for (i = 0; i < this.elements.length; i += 1) {
         this.elements[i].setState(CM.ELEMENT_STATES.idle);
-        this.redrawButtons();
+        this.redraw();
     }
 
     this.running = false;

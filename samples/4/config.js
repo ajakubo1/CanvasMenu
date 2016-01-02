@@ -20,7 +20,7 @@ var buttonWidth = 400, // px
 /**
  * It will be a module :)
  *
- * @returns {redraw}
+ * @returns {redrawMenu}
  * @constructor
  */
 var RedrawInactiveButton = function () {
@@ -121,14 +121,14 @@ var RedrawInactiveButton = function () {
             pickNew(); //Let's pick new squares to draw
         }
 
-        for(i = 0; i < width * height; i += 1) { //We also need to redraw the squares which were already drawn
+        for(i = 0; i < width * height; i += 1) { //We also need to redrawMenu the squares which were already drawn
             //Unfortunately, you have to do that, because i call ctx.clearRect before I call on this function :/...
             // So...
             ctx.drawImage(squares[i], i % width * 5, Math.floor(i / width) * 5);
         }
     }
 
-    //And lets return only the redraw function
+    //And lets return only the redrawMenu function
     return redraw;
 };
 

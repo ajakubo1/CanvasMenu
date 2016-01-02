@@ -39,8 +39,8 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.swapButtonState(CM.ELEMENT_STATES.down);
-            self.focused.redrawBackground(self.tickCount);
+            self.swapState(CM.ELEMENT_STATES.down);
+            self.focused.redraw(self.tickCount);
             self.focused.trigger('mousedown', event);
         }
     };
@@ -50,7 +50,7 @@ CM.Menu = function(config) {
 
         if (self.focused !== undefined) {
             if (!self.focused.inRange(x, y)) {
-                self.swapButtonState(CM.ELEMENT_STATES.idle);
+                self.swapState(CM.ELEMENT_STATES.idle);
                 self.focused.trigger('mouseleave', event);
                 self.focused = undefined;
             } else {
@@ -60,7 +60,7 @@ CM.Menu = function(config) {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.swapButtonState(CM.ELEMENT_STATES.over);
+                    self.swapState(CM.ELEMENT_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
                 }
@@ -72,26 +72,26 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
             if (self.focused.getState() === CM.ELEMENT_STATES.down) {
-                self.swapButtonState(CM.ELEMENT_STATES.up);
+                self.swapState(CM.ELEMENT_STATES.up);
                 self.focused.trigger('click', event);
-                self.focused.redrawBackground(self.tickCount);
+                self.focused.redraw(self.tickCount);
             }
             self.focused.trigger('mouseup', event);
         }
     };
 
-    this.swapButtonState = function (newState) {
+    this.swapState = function (newState) {
         self.focused.setState(newState);
         if(!self.animated) {
-            self.redrawButtons();
+            self.redraw();
         }
     };
 
-    this.redrawButtons = function () {
+    this.redraw = function () {
         var i;
 
         if (this.animated) {
-            this.redrawBackground();
+            this.redrawMenu();
         } else {
             this.ctx.clearRect(0, 0, this.width, this.height);
         }
@@ -124,7 +124,7 @@ CM.Menu = function(config) {
         self.scaleY = values[3];
     };
 
-    this.redrawBackground = config.animation;
+    this.redrawMenu = config.animation;
 
     this.run = function (frameTime) {
         if (self.running) {
@@ -140,10 +140,10 @@ CM.Menu = function(config) {
                 }
 
                 for (i = 0; i < self.elements.length; i += 1) {
-                    self.elements[i].redrawBackground(self.tickCount);
+                    self.elements[i].redraw(self.tickCount);
                 }
 
-                self.redrawButtons();
+                self.redraw();
             }
             window.requestAnimationFrame(self.run);
         }
@@ -158,7 +158,7 @@ CM.Menu.prototype.init = function () {
     this.canvas.addEventListener('mouseup', this.listener_mouseup);
     this.canvas.addEventListener('mousedown', this.listener_mousedown);
     this.canvas.addEventListener('mousemove', this.listener_mousemove);
-    this.redrawButtons();
+    this.redraw();
     this.running = true;
 
     if (this.autorescale) {
@@ -185,7 +185,7 @@ CM.Menu.prototype.destroy = function () {
 
     for (i = 0; i < this.elements.length; i += 1) {
         this.elements[i].setState(CM.ELEMENT_STATES.idle);
-        this.redrawButtons();
+        this.redraw();
     }
 
     this.running = false;
@@ -226,6 +226,131 @@ CM.ELEMENT_STATES = {
     "over": "over",
     "down": "down",
     "up": "up"
+};CM.Element = function (config) {
+    this.x = config.x;
+    this.y = config.y;
+    this.width = config.width;
+    this.height = config.height;
+    this.x_limit = this.x + this.width;
+    this.y_limit = this.y + this.height;
+
+    this.tick = 0;
+    this.events = {
+        "click": [],
+        "mousedown": [],
+        "mouseup": [],
+        "mousemove": [],
+        "mouseenter": [],
+        "mouseleave": []
+    };
+
+    this.default = "yellow";
+
+    this.state = CM.ELEMENT_STATES.idle;
+
+    this.init_canvas = function () {
+        var canvas = document.createElement('canvas');
+        canvas.width = this.width;
+        canvas.height = this.height;
+        return canvas;
+    };
+
+    this.canvas = {
+        "idle": this.init_canvas(),
+        "over": this.init_canvas(),
+        "down": this.init_canvas(),
+        "up": this.init_canvas()
+    };
+
+    if (config.on) {
+        for (var i = 0; i < config.on.length; i += 1) {
+            this.on(config.on[i][0], config.on[i][1]);
+        }
+    }
+
+    this.internalRedraw = function (state) {
+        state = state || this.state;
+        var context = this.canvas[state].getContext('2d');
+        context.clearRect(0, 0, this.width, this.height);
+
+        if (config[state] && config[state].fn) {
+            config[state].fn.call(this, context);
+        } else {
+            context.fillStyle = config.color || this.default;
+            context.fillRect(0, 0, this.width, this.height);
+        }
+    };
+    this.internalRedraw();
+};
+
+CM.Element.prototype.inRange = function (x, y) {
+    if (x >= this.x && x <= this.x_limit && y >= this.y && y <= this.y_limit) {
+        return true;
+    }
+    return false;
+};
+
+CM.Element.prototype.trigger = function (eventType, event) {
+    var i, handlers = this.events[eventType];
+    for (i = 0; i < handlers.length; i += 1) {
+        if (eventType === 'click' && handlers[i] instanceof CM.Menu) {
+            this.menu.destroy();
+            handlers[i].init();
+        } else {
+            handlers[i].call(this, event);
+        }
+    }
+};
+
+CM.Element.prototype.on = function (eventType, handler) {
+    if (!(eventType in this.events)) {
+        throw new Error("Wrong Event! This library only allows for triggering the following events: " +
+            Object.keys(this.events));
+    } else {
+        if (eventType === 'click' && handler instanceof CM.Menu) {
+            var i;
+            for (i = 0; i < this.events[eventType].length; i += 1) {
+                if(this.events[eventType][i] instanceof CM.Menu) {
+                    throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+                }
+            }
+        }
+
+        this.events[eventType].push(handler);
+    }
+};
+
+CM.Element.prototype.redraw = function (step) {
+    this.tick = step;
+    this.internalRedraw();
+};
+
+
+CM.Element.prototype.getX = function () {
+    return this.x;
+};
+
+CM.Element.prototype.getY = function () {
+    return this.y;
+};
+
+
+CM.Element.prototype.setMenu = function (menu) {
+    this.menu = menu;
+};
+
+
+CM.Element.prototype.getCanvas = function () {
+    return this.canvas[this.state];
+};
+
+
+CM.Element.prototype.setState = function (newState) {
+    this.state = newState;
+};
+
+CM.Element.prototype.getState = function () {
+    return this.state;
 };/**
  *
  * @param {object} config - configuration for the button
@@ -255,38 +380,10 @@ CM.ELEMENT_STATES = {
  *
  */
 CM.Button = function(config) {
-    this.x = config.x;
-    this.y = config.y;
-    this.width = config.width;
-    this.height = config.height;
-    this.x_limit = this.x + this.width;
-    this.y_limit = this.y + this.height;
-    this.state = CM.ELEMENT_STATES.idle;
-    this.tick = 0;
+    CM.Element.call(this, config);
+
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
-    this.events = {
-        "click": [],
-        "mousedown": [],
-        "mouseup": [],
-        "mousemove": [],
-        "mouseenter": [],
-        "mouseleave": []
-    };
-
-    this.init_canvas = function () {
-        var canvas = document.createElement('canvas');
-        canvas.width = this.width;
-        canvas.height = this.height;
-        return canvas;
-    };
-
-    this.canvas = {
-        "idle": this.init_canvas(),
-        "over": this.init_canvas(),
-        "down": this.init_canvas(),
-        "up": this.init_canvas()
-    };
 
     this.default = {
         "idle": {
@@ -307,7 +404,14 @@ CM.Button = function(config) {
         }
     };
 
-    this.redraw = function (state) {
+    this.canvas = {
+        "idle": this.init_canvas(),
+        "over": this.init_canvas(),
+        "down": this.init_canvas(),
+        "up": this.init_canvas()
+    };
+
+    this.internalRedraw = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');
         context.clearRect(0, 0, this.width, this.height);
@@ -328,24 +432,14 @@ CM.Button = function(config) {
         context.fillText(this.text, this.width / 2, this.height / 2);
     };
 
-    this.redraw();
-    this.redraw(CM.ELEMENT_STATES.over);
-    this.redraw(CM.ELEMENT_STATES.down);
-    this.redraw(CM.ELEMENT_STATES.up);
-
-    if (config.on) {
-        for (var i = 0; i < config.on.length; i += 1) {
-            this.on(config.on[i][0], config.on[i][1]);
-        }
-    }
+    this.internalRedraw();
+    this.internalRedraw(CM.ELEMENT_STATES.over);
+    this.internalRedraw(CM.ELEMENT_STATES.down);
+    this.internalRedraw(CM.ELEMENT_STATES.up);
 };
 
-CM.Button.prototype.inRange = function (x, y) {
-    if (x >= this.x && x <= this.x_limit && y >= this.y && y <= this.y_limit) {
-        return true;
-    }
-    return false;
-};
+CM.Button.prototype = Object.create(CM.Element.prototype);
+CM.Button.prototype.constructor = CM.Button;
 
 CM.Button.prototype.setState = function (newState) {
     var menuCanvas = this.menu.canvas;
@@ -362,60 +456,12 @@ CM.Button.prototype.setState = function (newState) {
     }
 
     this.state = newState;
-    this.tick = 0;
 };
 
-CM.Button.prototype.getState = function () {
-    return this.state;
+
+CM.Example = function(config) {
+    CM.Element.call(this, config);
 };
 
-CM.Button.prototype.redrawBackground = function (step) {
-    this.tick = step;
-    this.redraw();
-};
-
-CM.Button.prototype.getCanvas = function () {
-    return this.canvas[this.state];
-};
-
-CM.Button.prototype.getX = function () {
-    return this.x;
-};
-
-CM.Button.prototype.getY = function () {
-    return this.y;
-};
-
-CM.Button.prototype.setMenu = function (menu) {
-    this.menu = menu;
-};
-
-CM.Button.prototype.trigger = function (eventType, event) {
-    var i, handlers = this.events[eventType];
-    for (i = 0; i < handlers.length; i += 1) {
-        if (eventType === 'click' && handlers[i] instanceof CM.Menu) {
-            this.menu.destroy();
-            handlers[i].init();
-        } else {
-            handlers[i].call(this, event);
-        }
-    }
-};
-
-CM.Button.prototype.on = function (eventType, handler) {
-    if (!(eventType in this.events)) {
-        throw new Error("Wrong Event! This library only allows for triggering the following events: " +
-            Object.keys(this.events));
-    } else {
-        if (eventType === 'click' && handler instanceof CM.Menu) {
-            var i;
-            for (i = 0; i < this.events[eventType].length; i += 1) {
-                if(this.events[eventType][i] instanceof CM.Menu) {
-                    throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
-                }
-            }
-        }
-
-        this.events[eventType].push(handler);
-    }
-};
+CM.Example.prototype = Object.create(CM.Element.prototype);
+CM.Example.prototype.constructor = CM.Example;
