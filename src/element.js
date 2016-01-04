@@ -6,6 +6,8 @@ CM.Element = function (config) {
     this.x_limit = this.x + this.width;
     this.y_limit = this.y + this.height;
 
+    this.value;
+
     this.tick = 0;
     this.events = {
         "click": [],
@@ -53,6 +55,9 @@ CM.Element = function (config) {
         }
     };
     this.internalRedraw();
+    this.internalRedraw(CM.ELEMENT_STATES.over);
+    this.internalRedraw(CM.ELEMENT_STATES.down);
+    this.internalRedraw(CM.ELEMENT_STATES.up);
 };
 
 CM.Element.prototype.inRange = function (x, y) {
@@ -97,6 +102,9 @@ CM.Element.prototype.redraw = function (step) {
     this.internalRedraw();
 };
 
+CM.Element.getValue = function () {
+    return this.value;
+};
 
 CM.Element.prototype.getX = function () {
     return this.x;

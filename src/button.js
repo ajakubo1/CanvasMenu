@@ -51,13 +51,6 @@ CM.Button = function(config) {
         }
     };
 
-    this.canvas = {
-        "idle": this.init_canvas(),
-        "over": this.init_canvas(),
-        "down": this.init_canvas(),
-        "up": this.init_canvas()
-    };
-
     this.internalRedraw = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');

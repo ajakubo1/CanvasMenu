@@ -234,6 +234,8 @@ CM.ELEMENT_STATES = {
     this.x_limit = this.x + this.width;
     this.y_limit = this.y + this.height;
 
+    this.value;
+
     this.tick = 0;
     this.events = {
         "click": [],
@@ -281,6 +283,9 @@ CM.ELEMENT_STATES = {
         }
     };
     this.internalRedraw();
+    this.internalRedraw(CM.ELEMENT_STATES.over);
+    this.internalRedraw(CM.ELEMENT_STATES.down);
+    this.internalRedraw(CM.ELEMENT_STATES.up);
 };
 
 CM.Element.prototype.inRange = function (x, y) {
@@ -325,6 +330,9 @@ CM.Element.prototype.redraw = function (step) {
     this.internalRedraw();
 };
 
+CM.Element.getValue = function () {
+    return this.value;
+};
 
 CM.Element.prototype.getX = function () {
     return this.x;
@@ -402,13 +410,6 @@ CM.Button = function(config) {
             "color": "orange",
             "font": "white"
         }
-    };
-
-    this.canvas = {
-        "idle": this.init_canvas(),
-        "over": this.init_canvas(),
-        "down": this.init_canvas(),
-        "up": this.init_canvas()
     };
 
     this.internalRedraw = function (state) {
