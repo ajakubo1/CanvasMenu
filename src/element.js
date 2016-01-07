@@ -1,4 +1,5 @@
 CM.Element = function (config) {
+    this.name = config.name;
     this.x = config.x;
     this.y = config.y;
     this.width = config.width;
@@ -104,6 +105,12 @@ CM.Element.prototype.redraw = function (step) {
 
 CM.Element.getValue = function () {
     return this.value;
+};
+
+CM.Element.getFormattedValue = function () {
+    var toReturn = {};
+    toReturn[this.name] = this.value;
+    return toReturn;
 };
 
 CM.Element.prototype.getX = function () {
