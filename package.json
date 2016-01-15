@@ -10,8 +10,8 @@
     "watch": "watch 'npm run merge' src/",
     "lint": "jshint src/*.js",
     "pretest": "npm run merge && npm run lint",
-    "test": "echo \"You have to run tests/index.html in a browser for running tests\" && exit 1",
-    "precommit": "npm run merge",
+    "test": "mocha-phantomjs -R dot tests/index.html",
+    "precommit": "npm test",
     "commit": "git add . && git commit -m ",
     "deploy": "node deploy.js"
   },

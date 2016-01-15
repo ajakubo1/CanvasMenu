@@ -243,7 +243,7 @@ CM.ELEMENT_STATES = {
     this.x_limit = this.x + this.width;
     this.y_limit = this.y + this.height;
 
-    this.value;
+    this.value = undefined;
 
     this.tick = 0;
     this.events = {
