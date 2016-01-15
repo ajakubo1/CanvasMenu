@@ -149,13 +149,6 @@ describe("Button", function () {
             button = menu.create('button', config);
         });
 
-        it("Check if animation frame gets resets after state change", function () {
-            button.tick = 30;
-            expect(button.tick).to.equal(30);
-            button.setState(CM.ELEMENT_STATES.idle);
-            expect(button.tick).to.equal(0);
-        });
-
         it("Swap state to over", function () {
             button.setState(CM.ELEMENT_STATES.over);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);

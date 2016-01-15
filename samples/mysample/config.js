@@ -7,7 +7,7 @@ var width = 800,
 
 //Animation of menu
 var squares = [];
-var menuAnimation = function () {   //There is something wrong with this function... But it works, just don't change
+var menuAnimation = function (ctx) {   //There is something wrong with this function... But it works, just don't change
                                     // anything :D
     var i;
 

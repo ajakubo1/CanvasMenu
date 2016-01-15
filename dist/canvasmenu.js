@@ -4,10 +4,10 @@ CM = {};
  *
  * @param {object} config - configuration for the button
  * Mandatory:
- * @param {DOM object} config.canvas - x coordinate for button
- * @param {number} config.width - y coordinate for button
- * @param {number} config.height - width for button
+ * @param {DOM object} config.canvas - Canvas DOM element
  *
+ * @param {number} [config.width=800] - width for menu
+ * @param {number} [config.height=600] - height for button
  * @param {number} [config.tickMax=Number.MAX_VALUE] - change the amount of time for which tick will be rotated
  * @param {functon} [config.animation=undefined] - menu animation function
  * @param {boolean} [config.autorescale=false] - let the menu scale automatically (from css transform)
@@ -19,8 +19,8 @@ CM.Menu = function(config) {
     var self = this;
     this.elements = [];
     this.canvas = config.canvas;
-    this.width = config.width;
-    this.height = config.height;
+    this.width = config.width || 800;
+    this.height = config.height || 600;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
     this.ctx = this.canvas.getContext('2d');
@@ -54,6 +54,9 @@ CM.Menu = function(config) {
                 self.focused.trigger('mouseleave', event);
                 self.focused = undefined;
             } else {
+                if (self.focused.getState() === CM.ELEMENT_STATES.up) {
+                    self.swapState(CM.ELEMENT_STATES.over);
+                }
                 self.focused.trigger('mousemove', event);
             }
         } else {
@@ -91,7 +94,7 @@ CM.Menu = function(config) {
         var i;
 
         if (this.animated) {
-            this.redrawMenu();
+            this.redrawMenu(this.ctx);
         } else {
             this.ctx.clearRect(0, 0, this.width, this.height);
         }
@@ -112,7 +115,6 @@ CM.Menu = function(config) {
                 style.getPropertyValue("transform") ||
                 undefined,
             values;
-
         if (!transform) {
             return;
         }
@@ -160,7 +162,6 @@ CM.Menu.prototype.init = function () {
     this.canvas.addEventListener('mousemove', this.listener_mousemove);
     this.redraw();
     this.running = true;
-
     if (this.autorescale) {
         window.addEventListener('resize', this.rescale);
         this.rescale();
@@ -227,6 +228,7 @@ CM.ELEMENT_STATES = {
     "down": "down",
     "up": "up"
 };CM.Element = function (config) {
+    this.name = config.name;
     this.x = config.x;
     this.y = config.y;
     this.width = config.width;
@@ -332,6 +334,12 @@ CM.Element.prototype.redraw = function (step) {
 
 CM.Element.getValue = function () {
     return this.value;
+};
+
+CM.Element.getFormattedValue = function () {
+    var toReturn = {};
+    toReturn[this.name] = this.value;
+    return toReturn;
 };
 
 CM.Element.prototype.getX = function () {
