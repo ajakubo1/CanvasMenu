@@ -141,141 +141,69 @@ describe("Menu tests", function () {
         });
 
         it('Mouse is out, Mouse is over, Mouse is out', function () {
-            var event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is out, Mouse is over, Mouse is down', function () {
-            var event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousedown', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked', function () {
-            var event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousedown', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
 
-            event = new MouseEvent('mouseup', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked, Mouse is over, Mouse is out', function () {
-            var event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousedown', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
 
-            event = new MouseEvent('mouseup', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 55,
-                clientY: 55
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 55, 55, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is up', function () {
-            var event = new MouseEvent('mouseup', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is down', function () {
 
-            var event = new MouseEvent('mousedown', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -308,13 +236,7 @@ describe("Menu tests", function () {
             button.on('mouseenter', function () {
                 entered = true;
             });
-
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(entered).to.equal(true);
         });
 
@@ -324,18 +246,8 @@ describe("Menu tests", function () {
                 left = true;
             });
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(left).to.equal(true);
         });
 
@@ -345,17 +257,8 @@ describe("Menu tests", function () {
                 moved = true;
             });
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousemove', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousemove', 70, 70, dom_canvas);
 
             expect(moved).to.equal(true);
         });
@@ -365,19 +268,8 @@ describe("Menu tests", function () {
             button.on('mousedown', function () {
                 downed = true;
             });
-
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousedown', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
             expect(downed).to.equal(true);
         });
 
@@ -387,23 +279,9 @@ describe("Menu tests", function () {
                 upped = true;
             });
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousedown', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mouseup', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(upped).to.equal(true);
         });
@@ -414,23 +292,9 @@ describe("Menu tests", function () {
                 clicked = true;
             });
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousedown', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mouseup', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(clicked).to.equal(true);
         });
@@ -441,35 +305,11 @@ describe("Menu tests", function () {
                 clicked = true;
             });
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mousedown', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
-
-            var event = new MouseEvent('mousemove', {
-                clientX: 10,
-                clientY: 10
-            });
-            dom_canvas.dispatchEvent(event);
-
-            var event = new MouseEvent('mousemove', {
-                clientX: 60,
-                clientY: 60
-            });
-            dom_canvas.dispatchEvent(event);
-
-            event = new MouseEvent('mouseup', {
-                clientX: 70,
-                clientY: 70
-            });
-            dom_canvas.dispatchEvent(event);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(clicked).to.equal(false);
         });
@@ -500,108 +340,48 @@ describe("Menu tests", function () {
         it("Manual rescale of both x and y", function () {
             menu.updateScale(2, 2);
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 101,
-                clientY: 101
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 199,
-                clientY: 199
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 199, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 201,
-                clientY: 201
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 201, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Manual rescale of x", function () {
             menu.updateScaleX(2);
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 49
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 49, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 101,
-                clientY: 51
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 51, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 199,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 199, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 201,
-                clientY: 101
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 201, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Manual rescale of y", function () {
             menu.updateScaleY(2);
 
-            var event = new MouseEvent('mousemove', {
-                clientX: 49,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 49, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 51,
-                clientY: 101
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 51, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 199
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 101,
-                clientY: 201
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -613,7 +393,7 @@ describe("Menu tests", function () {
     describe("Autorescale tests", function () {
 
         beforeEach(function () {
-            document.getElementById('canvas').appendChild(dom_canvas)
+            document.getElementById('canvas').appendChild(dom_canvas);
             config = {
                 canvas: dom_canvas,
                 autorescale: true
@@ -630,122 +410,55 @@ describe("Menu tests", function () {
             });
 
             menu.init();
-
-
         });
 
         it("Auto rescale of both x and y", function () {
+            menu.rescale();
 
-            var event = new Event('resize');
-            window.dispatchEvent(event);
-
-            event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 102,
-                clientY: 102
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 199,
-                clientY: 199
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 199, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 201,
-                clientY: 201
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 201, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Auto rescale of x", function () {
             dom_canvas.style.transform = "scale(2, 1)";
-            var event = new Event('resize');
-            window.dispatchEvent(event);
+            menu.rescale();
 
-            event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 49
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 49, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 101,
-                clientY: 51
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 51, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 199,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 199, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 201,
-                clientY: 101
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 201, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Auto rescale of y", function () {
             dom_canvas.style.transform = "scale(1, 2)";
+            menu.rescale();
 
-            var event = new Event('resize');
-            window.dispatchEvent(event);
-
-            event = new MouseEvent('mousemove', {
-                clientX: 49,
-                clientY: 99
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 49, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 51,
-                clientY: 101
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 51, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 99,
-                clientY: 199
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 99, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            event = new MouseEvent('mousemove', {
-                clientX: 101,
-                clientY: 201
-            });
-            dom_canvas.dispatchEvent(event);
-
+            triggerMouseEvent('mousemove', 101, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -803,4 +516,17 @@ describe("Menu tests", function () {
 function rgbToHex(point) {
     var red = point[0], green = point[1], blue = point[2];
     return ((red << 16) | (green << 8) | blue).toString(16);
+}
+
+function triggerMouseEvent(type, x, y, element) {
+    var event = document.createEvent("MouseEvent");
+    event.initMouseEvent(
+        type,
+        true /* bubble */, true /* cancelable */,
+        window, null,
+        0, 0, x, y, /* coordinates */
+        false, false, false, false, /* modifier keys */
+        0 /*left*/, null
+    );
+    element.dispatchEvent(event);
 }

@@ -115,6 +115,13 @@ CM.Menu = function(config) {
                 style.getPropertyValue("transform") ||
                 undefined,
             values;
+        if(transform === 'none') { //only way for phantomjs tests to work...
+            transform = self.canvas.style.transform;
+            transform = transform.split(')')[0];
+            transform = transform.split(',');
+            transform = transform[0] + ", 1, 1, " + transform[1] + ")";
+        }
+
         if (!transform) {
             return;
         }
