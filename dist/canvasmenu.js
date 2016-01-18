@@ -339,11 +339,11 @@ CM.Element.prototype.redraw = function (step) {
     this.internalRedraw();
 };
 
-CM.Element.getValue = function () {
+CM.Element.prototype.getValue = function () {
     return this.value;
 };
 
-CM.Element.getFormattedValue = function () {
+CM.Element.prototype.getFormattedValue = function () {
     var toReturn = {};
     toReturn[this.name] = this.value;
     return toReturn;

@@ -18,10 +18,13 @@
 
 <script>mocha.setup('bdd');</script>
 <script src="../dist/canvasmenu.js"></script>
+<script src="test_helper.js"></script>
 <script src="menu_tests.js"></script>
+<script src="element_tests.js"></script>
 <script src="button_tests.js"></script>
 <script>
-    mocha.run();
+    if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+    else { mocha.run(); }
 </script>
 </body>
 </html>

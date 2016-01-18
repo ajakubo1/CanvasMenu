@@ -141,69 +141,69 @@ describe("Menu tests", function () {
         });
 
         it('Mouse is out, Mouse is over, Mouse is out', function () {
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is out, Mouse is over, Mouse is down', function () {
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked', function () {
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
 
-            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked, Mouse is over, Mouse is out', function () {
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
 
-            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
 
-            triggerMouseEvent('mousemove', 55, 55, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 55, 55, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is up', function () {
-            triggerMouseEvent('mouseup', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it('Mouse is down', function () {
 
-            triggerMouseEvent('mousedown', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -236,7 +236,7 @@ describe("Menu tests", function () {
             button.on('mouseenter', function () {
                 entered = true;
             });
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
             expect(entered).to.equal(true);
         });
 
@@ -246,8 +246,8 @@ describe("Menu tests", function () {
                 left = true;
             });
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
             expect(left).to.equal(true);
         });
 
@@ -257,8 +257,8 @@ describe("Menu tests", function () {
                 moved = true;
             });
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousemove', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 70, 70, dom_canvas);
 
             expect(moved).to.equal(true);
         });
@@ -268,8 +268,8 @@ describe("Menu tests", function () {
             button.on('mousedown', function () {
                 downed = true;
             });
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 70, 70, dom_canvas);
             expect(downed).to.equal(true);
         });
 
@@ -279,9 +279,9 @@ describe("Menu tests", function () {
                 upped = true;
             });
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
-            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(upped).to.equal(true);
         });
@@ -292,9 +292,9 @@ describe("Menu tests", function () {
                 clicked = true;
             });
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
-            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(clicked).to.equal(true);
         });
@@ -305,11 +305,11 @@ describe("Menu tests", function () {
                 clicked = true;
             });
 
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mousedown', 70, 70, dom_canvas);
-            triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            triggerMouseEvent('mouseup', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 70, 70, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 70, 70, dom_canvas);
 
             expect(clicked).to.equal(false);
         });
@@ -340,48 +340,48 @@ describe("Menu tests", function () {
         it("Manual rescale of both x and y", function () {
             menu.updateScale(2, 2);
 
-            triggerMouseEvent('mousemove', 99, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 101, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 199, 199, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 199, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 201, 201, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 201, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Manual rescale of x", function () {
             menu.updateScaleX(2);
 
-            triggerMouseEvent('mousemove', 99, 49, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 49, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 101, 51, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 51, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 199, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 199, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 201, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 201, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Manual rescale of y", function () {
             menu.updateScaleY(2);
 
-            triggerMouseEvent('mousemove', 49, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 49, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 51, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 51, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 99, 199, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 101, 201, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -415,16 +415,16 @@ describe("Menu tests", function () {
         it("Auto rescale of both x and y", function () {
             menu.rescale();
 
-            triggerMouseEvent('mousemove', 99, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 101, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 199, 199, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 199, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 201, 201, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 201, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -432,16 +432,16 @@ describe("Menu tests", function () {
             dom_canvas.style.transform = "scale(2, 1)";
             menu.rescale();
 
-            triggerMouseEvent('mousemove', 99, 49, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 49, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 101, 51, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 51, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 199, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 199, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 201, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 201, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -449,16 +449,16 @@ describe("Menu tests", function () {
             dom_canvas.style.transform = "scale(1, 2)";
             menu.rescale();
 
-            triggerMouseEvent('mousemove', 49, 99, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 49, 99, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
 
-            triggerMouseEvent('mousemove', 51, 101, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 51, 101, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 99, 199, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 99, 199, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
 
-            triggerMouseEvent('mousemove', 101, 201, dom_canvas);
+            TestHelper.triggerMouseEvent('mousemove', 101, 201, dom_canvas);
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
@@ -495,13 +495,13 @@ describe("Menu tests", function () {
 
         it('Should draw the canvas with designated color', function() {
             var point = menu.ctx.getImageData(10, 10, 1, 1).data;
-            var hex = "#" + rgbToHex(point);
+            var hex = "#" + TestHelper.rgbToHex (point);
             expect(hex).to.equal('#ffffff');
         });
 
         it('Button should be drawn with color for button', function() {
             var point = menu.ctx.getImageData(60, 60, 1, 1).data;
-            var hex = "#" + rgbToHex(point);
+            var hex = "#" + TestHelper.rgbToHex (point);
             expect(hex).to.equal('#ffff00');
         });
 
@@ -509,24 +509,51 @@ describe("Menu tests", function () {
             menu.destroy();
         });
     });
+
+    describe("Create elements test", function () {
+        beforeEach(function () {
+            config = {
+                canvas: dom_canvas
+            };
+            menu = new CM.Menu(config);
+        });
+
+        it("Should create 'Element' element", function () {
+            menu.create('element', {});
+
+            //).to.not.throw(TypeError);
+        });
+
+        it("Should create 'Button' element", function () {
+            menu.create('button', {});
+        });
+
+        it("Should create 'Example' element", function () {
+            menu.create('example', {});
+        });
+
+        it("Should not create 'Text' element", function () {
+            expect(function () {
+                menu.create('text', {});
+            }).to.throw(Error, "Component of Text type not found")
+        });
+
+        it("Should not create 'Radio' element", function () {
+            expect(function () {
+                menu.create('radio', {});
+            }).to.throw(Error, "Component of Radio type not found")
+        });
+
+        it("Should not create 'Multiple' element", function () {
+            expect(function () {
+                menu.create('multiple', {});
+            }).to.throw(Error, "Component of Multiple type not found")
+        });
+
+        it("Should not create 'Switch' element", function () {
+            expect(function () {
+                menu.create('switch', {});
+            }).to.throw(Error, "Component of Switch type not found")
+        });
+    });
 });
-
-
-// based on: http://stackoverflow.com/questions/6735470/get-pixel-color-from-canvas-on-mouseover
-function rgbToHex(point) {
-    var red = point[0], green = point[1], blue = point[2];
-    return ((red << 16) | (green << 8) | blue).toString(16);
-}
-
-function triggerMouseEvent(type, x, y, element) {
-    var event = document.createEvent("MouseEvent");
-    event.initMouseEvent(
-        type,
-        true /* bubble */, true /* cancelable */,
-        window, null,
-        0, 0, x, y, /* coordinates */
-        false, false, false, false, /* modifier keys */
-        0 /*left*/, null
-    );
-    element.dispatchEvent(event);
-}

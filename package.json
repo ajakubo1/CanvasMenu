@@ -10,7 +10,7 @@
     "watch": "watch 'npm run merge' src/",
     "lint": "jshint src/*.js",
     "pretest": "npm run merge && npm run lint",
-    "test": "mocha-phantomjs -R dot tests/index.html",
+    "test": "mocha-phantomjs -R nyan tests/index.html",
     "precommit": "npm test",
     "commit": "git add . && git commit -m ",
     "deploy": "node deploy.js"
