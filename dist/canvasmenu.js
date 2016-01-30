@@ -39,8 +39,6 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.swapState(CM.ELEMENT_STATES.down);
-            self.focused.redraw(self.tickCount);
             self.focused.trigger('mousedown', event);
         }
     };
@@ -50,20 +48,15 @@ CM.Menu = function(config) {
 
         if (self.focused !== undefined) {
             if (!self.focused.inRange(x, y)) {
-                self.swapState(CM.ELEMENT_STATES.idle);
                 self.focused.trigger('mouseleave', event);
                 self.focused = undefined;
             } else {
-                if (self.focused.getState() === CM.ELEMENT_STATES.up) {
-                    self.swapState(CM.ELEMENT_STATES.over);
-                }
                 self.focused.trigger('mousemove', event);
             }
         } else {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.swapState(CM.ELEMENT_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
                 }
@@ -74,19 +67,7 @@ CM.Menu = function(config) {
     this.listener_mouseup = function (event) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            if (self.focused.getState() === CM.ELEMENT_STATES.down) {
-                self.swapState(CM.ELEMENT_STATES.up);
-                self.focused.trigger('click', event);
-                self.focused.redraw(self.tickCount);
-            }
             self.focused.trigger('mouseup', event);
-        }
-    };
-
-    this.swapState = function (newState) {
-        self.focused.setState(newState);
-        if(!self.animated) {
-            self.redraw();
         }
     };
 
@@ -199,9 +180,9 @@ CM.Menu.prototype.destroy = function () {
     this.running = false;
 };
 
-CM.Menu.prototype.add = function (button) {
-    this.elements.push(button);
-    button.setMenu(this);
+CM.Menu.prototype.add = function (element) {
+    this.elements.push(element);
+    element.setMenu(this);
 };
 
 CM.Menu.prototype.updateScale = function (scale) {
@@ -242,10 +223,9 @@ CM.ELEMENT_STATES = {
     this.height = config.height;
     this.x_limit = this.x + this.width;
     this.y_limit = this.y + this.height;
-
     this.value = undefined;
-
     this.tick = 0;
+
     this.events = {
         "click": [],
         "mousedown": [],
@@ -255,9 +235,8 @@ CM.ELEMENT_STATES = {
         "mouseleave": []
     };
 
-    this.default = "yellow";
-
-    this.state = CM.ELEMENT_STATES.idle;
+    this.default = "none";
+    this.state = "none";
 
     this.init_canvas = function () {
         var canvas = document.createElement('canvas');
@@ -267,10 +246,24 @@ CM.ELEMENT_STATES = {
     };
 
     this.canvas = {
-        "idle": this.init_canvas(),
-        "over": this.init_canvas(),
-        "down": this.init_canvas(),
-        "up": this.init_canvas()
+        "none": this.init_canvas()
+    };
+
+    this.__down = undefined;
+
+    this.__downListener = function() {
+        this.__down = true;
+    };
+
+    this.__upListener = function(event) {
+        if (this.__down) {
+            this.trigger('click', event);
+        }
+        this.__down = false;
+    };
+    
+    this.__leaveListener = function () {
+        this.__down = false;
     };
 
     if (config.on) {
@@ -278,23 +271,6 @@ CM.ELEMENT_STATES = {
             this.on(config.on[i][0], config.on[i][1]);
         }
     }
-
-    this.internalRedraw = function (state) {
-        state = state || this.state;
-        var context = this.canvas[state].getContext('2d');
-        context.clearRect(0, 0, this.width, this.height);
-
-        if (config[state] && config[state].fn) {
-            config[state].fn.call(this, context);
-        } else {
-            context.fillStyle = config.color || this.default;
-            context.fillRect(0, 0, this.width, this.height);
-        }
-    };
-    this.internalRedraw();
-    this.internalRedraw(CM.ELEMENT_STATES.over);
-    this.internalRedraw(CM.ELEMENT_STATES.down);
-    this.internalRedraw(CM.ELEMENT_STATES.up);
 };
 
 CM.Element.prototype.inRange = function (x, y) {
@@ -321,23 +297,28 @@ CM.Element.prototype.on = function (eventType, handler) {
         throw new Error("Wrong Event! This library only allows for triggering the following events: " +
             Object.keys(this.events));
     } else {
-        if (eventType === 'click' && handler instanceof CM.Menu) {
-            var i;
-            for (i = 0; i < this.events[eventType].length; i += 1) {
-                if(this.events[eventType][i] instanceof CM.Menu) {
-                    throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+        if (eventType === 'click') {
+            if (handler instanceof CM.Menu) {
+                var i;
+                for (i = 0; i < this.events[eventType].length; i += 1) {
+                    if(this.events[eventType][i] instanceof CM.Menu) {
+                        throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+                    }
                 }
             }
+            if (this.__down === undefined) {
+                this.__down = false;
+                this.on('mouseleave', this.__leaveListener);
+                this.on('mousedown', this.__downListener);
+                this.on('mouseup', this.__upListener);
+            }
         }
-
         this.events[eventType].push(handler);
     }
 };
 
-CM.Element.prototype.redraw = function (step) {
-    this.tick = step;
-    this.internalRedraw();
-};
+//TODO let's think about it... Maybe I should delete it??
+CM.Element.prototype.redraw = function (step) {};
 
 CM.Element.prototype.getValue = function () {
     return this.value;
@@ -357,19 +338,12 @@ CM.Element.prototype.getY = function () {
     return this.y;
 };
 
-
 CM.Element.prototype.setMenu = function (menu) {
     this.menu = menu;
 };
 
-
 CM.Element.prototype.getCanvas = function () {
     return this.canvas[this.state];
-};
-
-
-CM.Element.prototype.setState = function (newState) {
-    this.state = newState;
 };
 
 CM.Element.prototype.getState = function () {
@@ -405,6 +379,7 @@ CM.Element.prototype.getState = function () {
 CM.Button = function(config) {
     CM.Element.call(this, config);
 
+    this.state = CM.ELEMENT_STATES.idle;
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
 
@@ -425,6 +400,13 @@ CM.Button = function(config) {
             "color": "orange",
             "font": "white"
         }
+    };
+
+    this.canvas = {
+        "idle": this.init_canvas(),
+        "over": this.init_canvas(),
+        "down": this.init_canvas(),
+        "up": this.init_canvas()
     };
 
     this.internalRedraw = function (state) {
@@ -452,25 +434,40 @@ CM.Button = function(config) {
     this.internalRedraw(CM.ELEMENT_STATES.over);
     this.internalRedraw(CM.ELEMENT_STATES.down);
     this.internalRedraw(CM.ELEMENT_STATES.up);
+    
+    this.enterListener = function (event) {
+        this.menu.canvas.style.cursor = 'pointer';
+        this.state = CM.ELEMENT_STATES.over;
+    };
+
+    this.leaveListener = function (event) {
+        this.menu.canvas.style.cursor = '';
+        this.state = CM.ELEMENT_STATES.idle;
+    };
+
+    this.upListener = function (event) {
+        this.state = CM.ELEMENT_STATES.up;
+    };
+
+    this.downListener = function (event) {
+        this.state = CM.ELEMENT_STATES.down;
+    };
+
+    this.moveListener = function (event) {
+        if (this.state === CM.ELEMENT_STATES.up) {
+            this.state = CM.ELEMENT_STATES.over;
+        }
+    };
+
+    this.on('mouseenter', this.enterListener);
+    this.on('mouseleave', this.leaveListener);
+    this.on('mousedown', this.downListener);
+    this.on('mouseup', this.upListener);
+    this.on('mouseup', this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
-
-CM.Button.prototype.setState = function (newState) {
-    var menuCanvas = this.menu.canvas;
-    // If the button state is changed to 'over', when means
-    // the button is in the 'over' state...
-    if (newState === CM.ELEMENT_STATES.over) {
-        // ...change the mouse cursor to 'pointer' so it behaves as
-        // a regular link.
-        menuCanvas.style.cursor = 'pointer';
-    } else {
-        // If it's not, switch the cursor to the regular state.
-        menuCanvas.style.cursor = '';
-    }
-    this.state = newState;
-};
 
 
 CM.Example = function(config) {

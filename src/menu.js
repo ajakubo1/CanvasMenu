@@ -39,8 +39,6 @@ CM.Menu = function(config) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.swapState(CM.ELEMENT_STATES.down);
-            self.focused.redraw(self.tickCount);
             self.focused.trigger('mousedown', event);
         }
     };
@@ -50,20 +48,15 @@ CM.Menu = function(config) {
 
         if (self.focused !== undefined) {
             if (!self.focused.inRange(x, y)) {
-                self.swapState(CM.ELEMENT_STATES.idle);
                 self.focused.trigger('mouseleave', event);
                 self.focused = undefined;
             } else {
-                if (self.focused.getState() === CM.ELEMENT_STATES.up) {
-                    self.swapState(CM.ELEMENT_STATES.over);
-                }
                 self.focused.trigger('mousemove', event);
             }
         } else {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.swapState(CM.ELEMENT_STATES.over);
                     self.focused.trigger('mouseenter', event);
                     break;
                 }
@@ -74,19 +67,7 @@ CM.Menu = function(config) {
     this.listener_mouseup = function (event) {
         var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
         if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            if (self.focused.getState() === CM.ELEMENT_STATES.down) {
-                self.swapState(CM.ELEMENT_STATES.up);
-                self.focused.trigger('click', event);
-                self.focused.redraw(self.tickCount);
-            }
             self.focused.trigger('mouseup', event);
-        }
-    };
-
-    this.swapState = function (newState) {
-        self.focused.setState(newState);
-        if(!self.animated) {
-            self.redraw();
         }
     };
 
@@ -199,9 +180,9 @@ CM.Menu.prototype.destroy = function () {
     this.running = false;
 };
 
-CM.Menu.prototype.add = function (button) {
-    this.elements.push(button);
-    button.setMenu(this);
+CM.Menu.prototype.add = function (element) {
+    this.elements.push(element);
+    element.setMenu(this);
 };
 
 CM.Menu.prototype.updateScale = function (scale) {

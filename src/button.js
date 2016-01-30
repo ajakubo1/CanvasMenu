@@ -29,6 +29,7 @@
 CM.Button = function(config) {
     CM.Element.call(this, config);
 
+    this.state = CM.ELEMENT_STATES.idle;
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
 
@@ -49,6 +50,13 @@ CM.Button = function(config) {
             "color": "orange",
             "font": "white"
         }
+    };
+
+    this.canvas = {
+        "idle": this.init_canvas(),
+        "over": this.init_canvas(),
+        "down": this.init_canvas(),
+        "up": this.init_canvas()
     };
 
     this.internalRedraw = function (state) {
@@ -76,22 +84,37 @@ CM.Button = function(config) {
     this.internalRedraw(CM.ELEMENT_STATES.over);
     this.internalRedraw(CM.ELEMENT_STATES.down);
     this.internalRedraw(CM.ELEMENT_STATES.up);
+    
+    this.enterListener = function (event) {
+        this.menu.canvas.style.cursor = 'pointer';
+        this.state = CM.ELEMENT_STATES.over;
+    };
+
+    this.leaveListener = function (event) {
+        this.menu.canvas.style.cursor = '';
+        this.state = CM.ELEMENT_STATES.idle;
+    };
+
+    this.upListener = function (event) {
+        this.state = CM.ELEMENT_STATES.up;
+    };
+
+    this.downListener = function (event) {
+        this.state = CM.ELEMENT_STATES.down;
+    };
+
+    this.moveListener = function (event) {
+        if (this.state === CM.ELEMENT_STATES.up) {
+            this.state = CM.ELEMENT_STATES.over;
+        }
+    };
+
+    this.on('mouseenter', this.enterListener);
+    this.on('mouseleave', this.leaveListener);
+    this.on('mousedown', this.downListener);
+    this.on('mouseup', this.upListener);
+    this.on('mouseup', this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
-
-CM.Button.prototype.setState = function (newState) {
-    var menuCanvas = this.menu.canvas;
-    // If the button state is changed to 'over', when means
-    // the button is in the 'over' state...
-    if (newState === CM.ELEMENT_STATES.over) {
-        // ...change the mouse cursor to 'pointer' so it behaves as
-        // a regular link.
-        menuCanvas.style.cursor = 'pointer';
-    } else {
-        // If it's not, switch the cursor to the regular state.
-        menuCanvas.style.cursor = '';
-    }
-    this.state = newState;
-};

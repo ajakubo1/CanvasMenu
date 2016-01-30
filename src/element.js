@@ -6,10 +6,9 @@ CM.Element = function (config) {
     this.height = config.height;
     this.x_limit = this.x + this.width;
     this.y_limit = this.y + this.height;
-
     this.value = undefined;
-
     this.tick = 0;
+
     this.events = {
         "click": [],
         "mousedown": [],
@@ -19,9 +18,8 @@ CM.Element = function (config) {
         "mouseleave": []
     };
 
-    this.default = "yellow";
-
-    this.state = CM.ELEMENT_STATES.idle;
+    this.default = "none";
+    this.state = "none";
 
     this.init_canvas = function () {
         var canvas = document.createElement('canvas');
@@ -31,10 +29,24 @@ CM.Element = function (config) {
     };
 
     this.canvas = {
-        "idle": this.init_canvas(),
-        "over": this.init_canvas(),
-        "down": this.init_canvas(),
-        "up": this.init_canvas()
+        "none": this.init_canvas()
+    };
+
+    this.__down = undefined;
+
+    this.__downListener = function() {
+        this.__down = true;
+    };
+
+    this.__upListener = function(event) {
+        if (this.__down) {
+            this.trigger('click', event);
+        }
+        this.__down = false;
+    };
+    
+    this.__leaveListener = function () {
+        this.__down = false;
     };
 
     if (config.on) {
@@ -42,23 +54,6 @@ CM.Element = function (config) {
             this.on(config.on[i][0], config.on[i][1]);
         }
     }
-
-    this.internalRedraw = function (state) {
-        state = state || this.state;
-        var context = this.canvas[state].getContext('2d');
-        context.clearRect(0, 0, this.width, this.height);
-
-        if (config[state] && config[state].fn) {
-            config[state].fn.call(this, context);
-        } else {
-            context.fillStyle = config.color || this.default;
-            context.fillRect(0, 0, this.width, this.height);
-        }
-    };
-    this.internalRedraw();
-    this.internalRedraw(CM.ELEMENT_STATES.over);
-    this.internalRedraw(CM.ELEMENT_STATES.down);
-    this.internalRedraw(CM.ELEMENT_STATES.up);
 };
 
 CM.Element.prototype.inRange = function (x, y) {
@@ -85,23 +80,28 @@ CM.Element.prototype.on = function (eventType, handler) {
         throw new Error("Wrong Event! This library only allows for triggering the following events: " +
             Object.keys(this.events));
     } else {
-        if (eventType === 'click' && handler instanceof CM.Menu) {
-            var i;
-            for (i = 0; i < this.events[eventType].length; i += 1) {
-                if(this.events[eventType][i] instanceof CM.Menu) {
-                    throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+        if (eventType === 'click') {
+            if (handler instanceof CM.Menu) {
+                var i;
+                for (i = 0; i < this.events[eventType].length; i += 1) {
+                    if(this.events[eventType][i] instanceof CM.Menu) {
+                        throw new Error("Duplicated Menu! You can't assign second Menu object to the same Button!");
+                    }
                 }
             }
+            if (this.__down === undefined) {
+                this.__down = false;
+                this.on('mouseleave', this.__leaveListener);
+                this.on('mousedown', this.__downListener);
+                this.on('mouseup', this.__upListener);
+            }
         }
-
         this.events[eventType].push(handler);
     }
 };
 
-CM.Element.prototype.redraw = function (step) {
-    this.tick = step;
-    this.internalRedraw();
-};
+//TODO let's think about it... Maybe I should delete it??
+CM.Element.prototype.redraw = function (step) {};
 
 CM.Element.prototype.getValue = function () {
     return this.value;
@@ -121,19 +121,12 @@ CM.Element.prototype.getY = function () {
     return this.y;
 };
 
-
 CM.Element.prototype.setMenu = function (menu) {
     this.menu = menu;
 };
 
-
 CM.Element.prototype.getCanvas = function () {
     return this.canvas[this.state];
-};
-
-
-CM.Element.prototype.setState = function (newState) {
-    this.state = newState;
 };
 
 CM.Element.prototype.getState = function () {

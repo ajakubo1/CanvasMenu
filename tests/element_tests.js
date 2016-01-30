@@ -56,36 +56,18 @@ describe("Element tests", function () {
             expect(element.width).to.equal(config.width);
         });
         it("Should have canvas idle width as indicated in config.width", function () {
-            expect(element.canvas.idle.width).to.equal(config.width);
-        });
-        it("Should have canvas over width as indicated in config.width", function () {
-            expect(element.canvas.over.width).to.equal(config.width);
-        });
-        it("Should have canvas down width as indicated in config.width", function () {
-            expect(element.canvas.down.width).to.equal(config.width);
-        });
-        it("Should have canvas up width as indicated in config.width", function () {
-            expect(element.canvas.up.width).to.equal(config.width);
+            expect(element.canvas.none.width).to.equal(config.width);
         });
 
         it("Should have height as indicated in config.height", function () {
             expect(element.height).to.equal(config.height);
         });
         it("Should have canvas idle height as indicated in config.height", function () {
-            expect(element.canvas.idle.height).to.equal(config.height);
-        });
-        it("Should have canvas over height as indicated in config.height", function () {
-            expect(element.canvas.over.height).to.equal(config.height);
-        });
-        it("Should have canvas down height as indicated in config.height", function () {
-            expect(element.canvas.down.height).to.equal(config.height);
-        });
-        it("Should have canvas up height as indicated in config.height", function () {
-            expect(element.canvas.up.height).to.equal(config.height);
+            expect(element.canvas.none.height).to.equal(config.height);
         });
 
         it("Make sure that element state is idle", function () {
-            expect(element.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(element.state).to.equal("none");
         });
 
         it("Make sure that animation step is initiated", function () {

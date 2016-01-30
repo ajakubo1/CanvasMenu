@@ -16,7 +16,7 @@ var x = 20, // px
     buttonHeight = 50, // px
     buttonText = "Test text";
 
-myMenu.create('element', {
+myMenu.create('button', {
     x: x,
     y: y,
     width: buttonWidth,
@@ -47,7 +47,7 @@ myMenu.create('element', {
             "mouseleave", function (event) {
                 console.info("Leave!");
             }
-        ],
+        ]
     ]
 });
 

@@ -36,6 +36,36 @@ describe("Button", function () {
         it("Should have text value as indicated in config.text", function () {
             expect(button.text).to.equal(config.text);
         });
+
+        it("Should have canvas idle width as indicated in config.width", function () {
+            expect(button.canvas.idle.width).to.equal(config.width);
+        });
+        it("Should have canvas over width as indicated in config.width", function () {
+            expect(button.canvas.over.width).to.equal(config.width);
+        });
+        it("Should have canvas down width as indicated in config.width", function () {
+            expect(button.canvas.down.width).to.equal(config.width);
+        });
+        it("Should have canvas up width as indicated in config.width", function () {
+            expect(button.canvas.up.width).to.equal(config.width);
+        });
+
+        it("Should have canvas idle height as indicated in config.height", function () {
+            expect(button.canvas.idle.height).to.equal(config.height);
+        });
+        it("Should have canvas over height as indicated in config.height", function () {
+            expect(button.canvas.over.height).to.equal(config.height);
+        });
+        it("Should have canvas down height as indicated in config.height", function () {
+            expect(button.canvas.down.height).to.equal(config.height);
+        });
+        it("Should have canvas up height as indicated in config.height", function () {
+            expect(button.canvas.up.height).to.equal(config.height);
+        });
+
+        it("Make sure that element state is idle", function () {
+            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+        });
     });
 
     describe("Swap states", function () {
