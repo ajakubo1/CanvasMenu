@@ -459,7 +459,6 @@ CM.Button.prototype.constructor = CM.Button;
 
 CM.Button.prototype.setState = function (newState) {
     var menuCanvas = this.menu.canvas;
-
     // If the button state is changed to 'over', when means
     // the button is in the 'over' state...
     if (newState === CM.ELEMENT_STATES.over) {
@@ -470,7 +469,6 @@ CM.Button.prototype.setState = function (newState) {
         // If it's not, switch the cursor to the regular state.
         menuCanvas.style.cursor = '';
     }
-
     this.state = newState;
 };
 

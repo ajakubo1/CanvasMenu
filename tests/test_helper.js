@@ -22,4 +22,4 @@ TestHelper.triggerMouseEvent = function(type, x, y, element) {
         0 /*left*/, null
     );
     element.dispatchEvent(event);
-}
+};

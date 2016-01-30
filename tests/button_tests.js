@@ -7,11 +7,17 @@ describe("Button", function () {
 
     var menu,
         button,
-        config;
+        config,
+        dom_canvas;
+
+    beforeEach(function() {
+        dom_canvas = document.createElement('canvas');
+    });
 
     describe("Constructor tests", function () {
 
         beforeEach(function() {
+
             config = {
                 x: 20,
                 y: 30,
@@ -20,7 +26,7 @@ describe("Button", function () {
                 text: "Test text"
             };
             menu = new CM.Menu({
-                canvas: document.createElement('canvas'),
+                canvas: dom_canvas,
                 width: 800,
                 height: 600
             });
@@ -35,16 +41,14 @@ describe("Button", function () {
     describe("Swap states", function () {
         beforeEach(function() {
             config = {
-                x: 20,
-                y: 30,
-                width: 40,
+                x: 50,
+                y: 50,
+                width: 50,
                 height: 50,
                 text: "Test text"
             };
             menu = new CM.Menu({
-                canvas: document.createElement('canvas'),
-                width: 800,
-                height: 600
+                canvas: dom_canvas
             });
             button = menu.create('button', config);
         });
@@ -91,6 +95,67 @@ describe("Button", function () {
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
             button.setState(CM.ELEMENT_STATES.idle);
             expect(button.getCanvas()).to.equal(button.canvas.idle);
+        });
+    });
+    
+    describe("Testing re-drawing functions", function () {
+
+        beforeEach(function() {
+            config = {
+                x: 50,
+                y: 50,
+                width: 50,
+                height: 50,
+                text: "Test text",
+                idle: {
+                    color: "#333333"
+                },
+                over: {
+                    color: "#222222"
+                },
+                down: {
+                    color: "#111111"
+                },
+                up: {
+                    color: "#444444"
+                }
+            };
+            menu = new CM.Menu({
+                canvas: dom_canvas
+            });
+            button = menu.create('button', config);
+
+            menu.init();
+        });
+
+        it("Should have idle colors", function () {
+            var point = menu.ctx.getImageData(51, 51, 1, 1).data;
+            var hex = "#" + TestHelper.rgbToHex(point);
+            expect(hex).to.equal('#333333');
+        });
+
+        it("Should have over colors", function () {
+            TestHelper.triggerMouseEvent('mousemove', 51, 51, dom_canvas);
+            var point = menu.ctx.getImageData(51, 51, 1, 1).data;
+            var hex = "#" + TestHelper.rgbToHex(point);
+            expect(hex).to.equal('#222222');
+        });
+
+        it("Should have down colors", function () {
+            TestHelper.triggerMouseEvent('mousemove', 51, 51, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 51, 51, dom_canvas);
+            var point = menu.ctx.getImageData(51, 51, 1, 1).data;
+            var hex = "#" + TestHelper.rgbToHex(point);
+            expect(hex).to.equal('#111111');
+        });
+
+        it("Should have up colors", function () {
+            TestHelper.triggerMouseEvent('mousemove', 51, 51, dom_canvas);
+            TestHelper.triggerMouseEvent('mousedown', 51, 51, dom_canvas);
+            TestHelper.triggerMouseEvent('mouseup', 51, 51, dom_canvas);
+            var point = menu.ctx.getImageData(51, 51, 1, 1).data;
+            var hex = "#" + TestHelper.rgbToHex(point);
+            expect(hex).to.equal('#444444');
         });
     });
 });
