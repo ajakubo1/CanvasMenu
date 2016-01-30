@@ -71,19 +71,6 @@ CM.Menu = function(config) {
         }
     };
 
-    this.redraw = function () {
-        var i;
-
-        if (this.animated) {
-            this.redrawMenu(this.ctx);
-        } else {
-            this.ctx.clearRect(0, 0, this.width, this.height);
-        }
-        for (i = 0; i < this.elements.length; i += 1) {
-            this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
-        }
-    };
-
     /**
      * found it at https://css-tricks.com/get-value-of-css-rotation-through-javascript/
      */
@@ -173,9 +160,10 @@ CM.Menu.prototype.destroy = function () {
     }
 
     for (i = 0; i < this.elements.length; i += 1) {
-        this.elements[i].setState(CM.ELEMENT_STATES.idle);
-        this.redraw();
+        this.elements[i].reinit();
     }
+
+    this.redraw();
 
     this.running = false;
 };
@@ -207,6 +195,19 @@ CM.Menu.prototype.create = function (componentType, config) {
         return component;
     } else {
         throw new Error("Component of " + componentType + " type not found");
+    }
+};
+
+CM.Menu.prototype.redraw = function () {
+    var i;
+
+    if (this.animated) {
+        this.redrawMenu(this.ctx);
+    } else {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+    for (i = 0; i < this.elements.length; i += 1) {
+        this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
     }
 };
 

@@ -132,3 +132,5 @@ CM.Element.prototype.getCanvas = function () {
 CM.Element.prototype.getState = function () {
     return this.state;
 };
+
+CM.Element.prototype.reinit = function () {};

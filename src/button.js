@@ -88,24 +88,29 @@ CM.Button = function(config) {
     this.enterListener = function (event) {
         this.menu.canvas.style.cursor = 'pointer';
         this.state = CM.ELEMENT_STATES.over;
+        this.menu.redraw();
     };
 
     this.leaveListener = function (event) {
         this.menu.canvas.style.cursor = '';
         this.state = CM.ELEMENT_STATES.idle;
+        this.menu.redraw();
     };
 
     this.upListener = function (event) {
         this.state = CM.ELEMENT_STATES.up;
+        this.menu.redraw();
     };
 
     this.downListener = function (event) {
         this.state = CM.ELEMENT_STATES.down;
+        this.menu.redraw();
     };
 
     this.moveListener = function (event) {
         if (this.state === CM.ELEMENT_STATES.up) {
             this.state = CM.ELEMENT_STATES.over;
+            this.menu.redraw();
         }
     };
 
@@ -113,8 +118,17 @@ CM.Button = function(config) {
     this.on('mouseleave', this.leaveListener);
     this.on('mousedown', this.downListener);
     this.on('mouseup', this.upListener);
-    this.on('mouseup', this.moveListener);
+    this.on('mousemove', this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
+
+CM.Element.prototype.reinit = function () {
+    this.state = CM.ELEMENT_STATES.idle;
+};
+
+CM.Element.prototype.redraw = function (step) {
+    this.tick = step;
+    this.internalRedraw();
+};

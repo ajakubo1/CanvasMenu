@@ -71,19 +71,6 @@ CM.Menu = function(config) {
         }
     };
 
-    this.redraw = function () {
-        var i;
-
-        if (this.animated) {
-            this.redrawMenu(this.ctx);
-        } else {
-            this.ctx.clearRect(0, 0, this.width, this.height);
-        }
-        for (i = 0; i < this.elements.length; i += 1) {
-            this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
-        }
-    };
-
     /**
      * found it at https://css-tricks.com/get-value-of-css-rotation-through-javascript/
      */
@@ -173,9 +160,10 @@ CM.Menu.prototype.destroy = function () {
     }
 
     for (i = 0; i < this.elements.length; i += 1) {
-        this.elements[i].setState(CM.ELEMENT_STATES.idle);
-        this.redraw();
+        this.elements[i].reinit();
     }
+
+    this.redraw();
 
     this.running = false;
 };
@@ -207,6 +195,19 @@ CM.Menu.prototype.create = function (componentType, config) {
         return component;
     } else {
         throw new Error("Component of " + componentType + " type not found");
+    }
+};
+
+CM.Menu.prototype.redraw = function () {
+    var i;
+
+    if (this.animated) {
+        this.redrawMenu(this.ctx);
+    } else {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+    for (i = 0; i < this.elements.length; i += 1) {
+        this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
     }
 };
 
@@ -348,7 +349,9 @@ CM.Element.prototype.getCanvas = function () {
 
 CM.Element.prototype.getState = function () {
     return this.state;
-};/**
+};
+
+CM.Element.prototype.reinit = function () {};/**
  *
  * @param {object} config - configuration for the button
  * Mandatory:
@@ -438,24 +441,29 @@ CM.Button = function(config) {
     this.enterListener = function (event) {
         this.menu.canvas.style.cursor = 'pointer';
         this.state = CM.ELEMENT_STATES.over;
+        this.menu.redraw();
     };
 
     this.leaveListener = function (event) {
         this.menu.canvas.style.cursor = '';
         this.state = CM.ELEMENT_STATES.idle;
+        this.menu.redraw();
     };
 
     this.upListener = function (event) {
         this.state = CM.ELEMENT_STATES.up;
+        this.menu.redraw();
     };
 
     this.downListener = function (event) {
         this.state = CM.ELEMENT_STATES.down;
+        this.menu.redraw();
     };
 
     this.moveListener = function (event) {
         if (this.state === CM.ELEMENT_STATES.up) {
             this.state = CM.ELEMENT_STATES.over;
+            this.menu.redraw();
         }
     };
 
@@ -463,11 +471,20 @@ CM.Button = function(config) {
     this.on('mouseleave', this.leaveListener);
     this.on('mousedown', this.downListener);
     this.on('mouseup', this.upListener);
-    this.on('mouseup', this.moveListener);
+    this.on('mousemove', this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
+
+CM.Element.prototype.reinit = function () {
+    this.state = CM.ELEMENT_STATES.idle;
+};
+
+CM.Element.prototype.redraw = function (step) {
+    this.tick = step;
+    this.internalRedraw();
+};
 
 
 CM.Example = function(config) {

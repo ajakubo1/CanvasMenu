@@ -84,46 +84,46 @@ describe("Button", function () {
         });
 
         it("Swap state to over", function () {
-            button.setState(CM.ELEMENT_STATES.over);
+            button.enterListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.over);
         });
 
         it("Swap state to over, make sure that you get the right canvas", function () {
-            button.setState(CM.ELEMENT_STATES.over);
+            button.enterListener();
             expect(button.getCanvas()).to.equal(button.canvas.over);
         });
 
         it("Swap state to down", function () {
-            button.setState(CM.ELEMENT_STATES.down);
+            button.downListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.down);
         });
 
         it("Swap state to down, make sure that you get the right canvas", function () {
-            button.setState(CM.ELEMENT_STATES.down);
+            button.downListener();
             expect(button.getCanvas()).to.equal(button.canvas.down);
         });
 
         it("Swap state to up", function () {
-            button.setState(CM.ELEMENT_STATES.up);
+            button.upListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
         });
 
         it("Swap state to up, make sure that you get the right canvas", function () {
-            button.setState(CM.ELEMENT_STATES.up);
+            button.upListener();
             expect(button.getCanvas()).to.equal(button.canvas.up);
         });
 
         it("Swap state to idle", function () {
-            button.setState(CM.ELEMENT_STATES.up);
+            button.upListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
-            button.setState(CM.ELEMENT_STATES.idle);
+            button.leaveListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
         });
 
         it("Swap state to idle, make sure that you get the right canvas", function () {
-            button.setState(CM.ELEMENT_STATES.up);
+            button.upListener();
             expect(button.state).to.equal(CM.ELEMENT_STATES.up);
-            button.setState(CM.ELEMENT_STATES.idle);
+            button.leaveListener();
             expect(button.getCanvas()).to.equal(button.canvas.idle);
         });
     });
