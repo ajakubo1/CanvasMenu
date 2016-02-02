@@ -30,7 +30,7 @@ CM.Menu = function(config) {
     this.animated = config.animation ? true : false;
     this.running = false;
     this.updateTime = undefined;
-    this.tickLength = 1000.0 / 60;
+    this.tickLength = 1000.0 / (config.fps || 60);
     this.tickCount = 0;
     this.tickMax = config.tickMax || Number.MAX_VALUE;
     this.autorescale = config.autorescale || false;
@@ -101,27 +101,38 @@ CM.Menu = function(config) {
         self.scaleY = values[3];
     };
 
-    this.redrawMenu = config.animation;
+    this.animationStep = config.animation;
+
+    this.render = function () {
+        var i;
+
+        if (this.animated) {
+            this.animationStep(this.ctx);
+        } else {
+            this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+        for (i = 0; i < this.elements.length; i += 1) {
+            this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
+        }
+    };
 
     this.run = function (frameTime) {
-        if (self.running) {
-            var tickCount = Math.floor((frameTime - self.updateTime) / self.tickLength), i;
-            if (tickCount > 0) {
+        var tickCount = Math.floor((frameTime - self.updateTime) / self.tickLength), i;
+        if (tickCount > 0) {
 
-                self.updateTime += tickCount * self.tickLength;
+            self.updateTime += tickCount * self.tickLength;
+            self.tickCount += tickCount;
 
-                self.tickCount += tickCount;
-
-                if(self.tickCount > self.tickMax) {
-                    self.tickCount = 0;
-                }
-
-                for (i = 0; i < self.elements.length; i += 1) {
-                    self.elements[i].redraw(self.tickCount);
-                }
-
-                self.redraw();
+            if(self.tickCount > self.tickMax) {
+                self.tickCount = 0;
             }
+            for (i = 0; i < self.elements.length; i += 1) {
+                self.elements[i].update(self.tickCount);
+            }
+            self.render();
+        }
+
+        if (self.running) {
             window.requestAnimationFrame(self.run);
         }
     };
@@ -135,7 +146,7 @@ CM.Menu.prototype.init = function () {
     this.canvas.addEventListener('mouseup', this.listener_mouseup);
     this.canvas.addEventListener('mousedown', this.listener_mousedown);
     this.canvas.addEventListener('mousemove', this.listener_mousemove);
-    this.redraw();
+    this.render();
     this.running = true;
     if (this.autorescale) {
         window.addEventListener('resize', this.rescale);
@@ -160,10 +171,10 @@ CM.Menu.prototype.destroy = function () {
     }
 
     for (i = 0; i < this.elements.length; i += 1) {
-        this.elements[i].reinit();
+        this.elements[i].destroy();
     }
 
-    this.redraw();
+    this.render();
 
     this.running = false;
 };
@@ -198,16 +209,9 @@ CM.Menu.prototype.create = function (componentType, config) {
     }
 };
 
-CM.Menu.prototype.redraw = function () {
-    var i;
-
-    if (this.animated) {
-        this.redrawMenu(this.ctx);
-    } else {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-    }
-    for (i = 0; i < this.elements.length; i += 1) {
-        this.ctx.drawImage(this.elements[i].getCanvas(), this.elements[i].getX(), this.elements[i].getY());
+CM.Menu.prototype.forceRedraw = function () {
+    if (!this.animated) {
+        this.render();
     }
 };
 
@@ -318,8 +322,7 @@ CM.Element.prototype.on = function (eventType, handler) {
     }
 };
 
-//TODO let's think about it... Maybe I should delete it??
-CM.Element.prototype.redraw = function (step) {};
+CM.Element.prototype.update = function (newTick) {};
 
 CM.Element.prototype.getValue = function () {
     return this.value;
@@ -351,7 +354,7 @@ CM.Element.prototype.getState = function () {
     return this.state;
 };
 
-CM.Element.prototype.reinit = function () {};/**
+CM.Element.prototype.destroy = function () {};/**
  *
  * @param {object} config - configuration for the button
  * Mandatory:
@@ -412,7 +415,7 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
-    this.internalRedraw = function (state) {
+    this.redrawState = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');
         context.clearRect(0, 0, this.width, this.height);
@@ -433,37 +436,37 @@ CM.Button = function(config) {
         context.fillText(this.text, this.width / 2, this.height / 2);
     };
 
-    this.internalRedraw();
-    this.internalRedraw(CM.ELEMENT_STATES.over);
-    this.internalRedraw(CM.ELEMENT_STATES.down);
-    this.internalRedraw(CM.ELEMENT_STATES.up);
+    this.redrawState();
+    this.redrawState(CM.ELEMENT_STATES.over);
+    this.redrawState(CM.ELEMENT_STATES.down);
+    this.redrawState(CM.ELEMENT_STATES.up);
     
     this.enterListener = function (event) {
         this.menu.canvas.style.cursor = 'pointer';
         this.state = CM.ELEMENT_STATES.over;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.leaveListener = function (event) {
         this.menu.canvas.style.cursor = '';
         this.state = CM.ELEMENT_STATES.idle;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.upListener = function (event) {
         this.state = CM.ELEMENT_STATES.up;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.downListener = function (event) {
         this.state = CM.ELEMENT_STATES.down;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.moveListener = function (event) {
         if (this.state === CM.ELEMENT_STATES.up) {
             this.state = CM.ELEMENT_STATES.over;
-            this.menu.redraw();
+            this.menu.forceRedraw();
         }
     };
 
@@ -477,13 +480,13 @@ CM.Button = function(config) {
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
 
-CM.Element.prototype.reinit = function () {
+CM.Element.prototype.destroy = function () {
     this.state = CM.ELEMENT_STATES.idle;
 };
 
-CM.Element.prototype.redraw = function (step) {
-    this.tick = step;
-    this.internalRedraw();
+CM.Element.prototype.update = function (newTick) {
+    this.tick = newTick;
+    this.redrawState();
 };
 
 

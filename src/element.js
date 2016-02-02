@@ -100,8 +100,7 @@ CM.Element.prototype.on = function (eventType, handler) {
     }
 };
 
-//TODO let's think about it... Maybe I should delete it??
-CM.Element.prototype.redraw = function (step) {};
+CM.Element.prototype.update = function (newTick) {};
 
 CM.Element.prototype.getValue = function () {
     return this.value;
@@ -133,4 +132,4 @@ CM.Element.prototype.getState = function () {
     return this.state;
 };
 
-CM.Element.prototype.reinit = function () {};
+CM.Element.prototype.destroy = function () {};

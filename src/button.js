@@ -59,7 +59,7 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
-    this.internalRedraw = function (state) {
+    this.redrawState = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');
         context.clearRect(0, 0, this.width, this.height);
@@ -80,37 +80,37 @@ CM.Button = function(config) {
         context.fillText(this.text, this.width / 2, this.height / 2);
     };
 
-    this.internalRedraw();
-    this.internalRedraw(CM.ELEMENT_STATES.over);
-    this.internalRedraw(CM.ELEMENT_STATES.down);
-    this.internalRedraw(CM.ELEMENT_STATES.up);
+    this.redrawState();
+    this.redrawState(CM.ELEMENT_STATES.over);
+    this.redrawState(CM.ELEMENT_STATES.down);
+    this.redrawState(CM.ELEMENT_STATES.up);
     
     this.enterListener = function (event) {
         this.menu.canvas.style.cursor = 'pointer';
         this.state = CM.ELEMENT_STATES.over;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.leaveListener = function (event) {
         this.menu.canvas.style.cursor = '';
         this.state = CM.ELEMENT_STATES.idle;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.upListener = function (event) {
         this.state = CM.ELEMENT_STATES.up;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.downListener = function (event) {
         this.state = CM.ELEMENT_STATES.down;
-        this.menu.redraw();
+        this.menu.forceRedraw();
     };
 
     this.moveListener = function (event) {
         if (this.state === CM.ELEMENT_STATES.up) {
             this.state = CM.ELEMENT_STATES.over;
-            this.menu.redraw();
+            this.menu.forceRedraw();
         }
     };
 
@@ -124,11 +124,11 @@ CM.Button = function(config) {
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
 
-CM.Element.prototype.reinit = function () {
+CM.Element.prototype.destroy = function () {
     this.state = CM.ELEMENT_STATES.idle;
 };
 
-CM.Element.prototype.redraw = function (step) {
-    this.tick = step;
-    this.internalRedraw();
+CM.Element.prototype.update = function (newTick) {
+    this.tick = newTick;
+    this.redrawState();
 };
