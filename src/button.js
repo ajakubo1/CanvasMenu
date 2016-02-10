@@ -1,38 +1,38 @@
 /**
  *
  * @param {object} config - configuration for the button
- * Mandatory:
- * @param {number} config.x - x coordinate for button
- * @param {number} config.y - y coordinate for button
- * @param {number} config.width - width for button
- * @param {number} config.height - height for button
  * @param {string} [config.text=undefined] - text displayed in button field
+ * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  *
- * Optional:
- * @param {string} [config.font=(this.height * 3 / 5 ) + 'pt Arial'] - font style for button (inputted directly into context.font during draw phase)
- * @param {string} [config.redrawInactiveColor='green'] - html color for inactive button background (defaults to 'green')
- * @param {string} [config.redrawFocusedColor='blue'] - html color for focused button background (defaults to 'blue')
- * @param {string} [config.redrawDownColor='red'] - html color for down button background (defaults to 'red')
- * @param {string} [config.redrawUpColor='orange'] - html color for up button background (defaults to 'orange')
- * @param {string} [config.redrawInactiveFont='white'] - html color for inactive button foreground (defaults to 'white')
- * @param {string} [config.redrawFocusedFont='white'] - html color for focused button foreground (defaults to 'white')
- * @param {string} [config.redrawDownFont='white'] - html color for down button foreground (defaults to 'white')
- * @param {string} [config.redrawUpFont='white'] - html color for up button foreground (defaults to 'white')
- * @param {function} [config.redrawInactive=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawFocused=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawDown=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawUp=undefined] - function called to redraw background during inactive state
+ * @param {object} [config.down=undefined] - description of down state button
+ * @param {string} [config.down.color="red"] - button background color for down state
+ * @param {string} [config.down.font="white"] - font color for down state
+ * @param {function} [config.down.fn=undefined] - animation function for down state
+ *
+ * @param {object} [config.over=undefined] - description of over state button
+ * @param {string} [config.over.color="blue"] - button background color for over state
+ * @param {string} [config.over.font="white"] - font color for over state
+ * @param {function} [config.over.fn=undefined] - animation function for over state
+ *
+ * @param {object} [config.up=undefined] - description of up state button
+ * @param {string} [config.up.color="orange"] - button background color for up state
+ * @param {string} [config.up.font="white"] - font color for up state
+ * @param {function} [config.up.fn=undefined] - animation function for up state
+ *
+ * @param {object} [config.idle=undefined] - description of idle state button
+ * @param {string} [config.idle.color="green"] - button background color for idle state
+ * @param {string} [config.idle.font="white"] - font color for idle state
+ * @param {function} [config.idle.fn=undefined] - animation function for idle state
  *
  * @constructor
- *
  */
 CM.Button = function(config) {
     CM.Element.call(this, config);
 
-    this.state = CM.ELEMENT_STATES.idle;
+    this.state = CM.BUTTON_STATES.idle;
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
-
+    
     this.default = {
         "idle": {
             "color": "green",
@@ -59,6 +59,10 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
+    /**
+     * Function called whenever canvas for specific state should be redrawn
+     * @param {string} [state=undefined] - state which should be redrawn
+     */
     this.redrawState = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');
@@ -81,51 +85,51 @@ CM.Button = function(config) {
     };
 
     this.redrawState();
-    this.redrawState(CM.ELEMENT_STATES.over);
-    this.redrawState(CM.ELEMENT_STATES.down);
-    this.redrawState(CM.ELEMENT_STATES.up);
+    this.redrawState(CM.BUTTON_STATES.over);
+    this.redrawState(CM.BUTTON_STATES.down);
+    this.redrawState(CM.BUTTON_STATES.up);
     
-    this.enterListener = function (event) {
+    this.enterListener = function (x, y) {
         this.menu.canvas.style.cursor = 'pointer';
-        this.state = CM.ELEMENT_STATES.over;
+        this.state = CM.BUTTON_STATES.over;
         this.menu.forceRedraw();
     };
 
-    this.leaveListener = function (event) {
+    this.leaveListener = function (x, y) {
         this.menu.canvas.style.cursor = '';
-        this.state = CM.ELEMENT_STATES.idle;
+        this.state = CM.BUTTON_STATES.idle;
         this.menu.forceRedraw();
     };
 
-    this.upListener = function (event) {
-        this.state = CM.ELEMENT_STATES.up;
+    this.upListener = function (x, y) {
+        this.state = CM.BUTTON_STATES.up;
         this.menu.forceRedraw();
     };
 
-    this.downListener = function (event) {
-        this.state = CM.ELEMENT_STATES.down;
+    this.downListener = function (x, y) {
+        this.state = CM.BUTTON_STATES.down;
         this.menu.forceRedraw();
     };
 
-    this.moveListener = function (event) {
-        if (this.state === CM.ELEMENT_STATES.up) {
-            this.state = CM.ELEMENT_STATES.over;
+    this.moveListener = function (x, y) {
+        if (this.state === CM.BUTTON_STATES.up) {
+            this.state = CM.BUTTON_STATES.over;
             this.menu.forceRedraw();
         }
     };
 
-    this.on('mouseenter', this.enterListener);
-    this.on('mouseleave', this.leaveListener);
-    this.on('mousedown', this.downListener);
-    this.on('mouseup', this.upListener);
-    this.on('mousemove', this.moveListener);
+    this.on(CM.EVENTS.mouseenter, this.enterListener);
+    this.on(CM.EVENTS.mouseleave, this.leaveListener);
+    this.on(CM.EVENTS.mousedown, this.downListener);
+    this.on(CM.EVENTS.mouseup, this.upListener);
+    this.on(CM.EVENTS.mousemove, this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
 
 CM.Element.prototype.destroy = function () {
-    this.state = CM.ELEMENT_STATES.idle;
+    this.state = CM.BUTTON_STATES.idle;
 };
 
 CM.Element.prototype.update = function (newTick) {

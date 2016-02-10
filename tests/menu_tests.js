@@ -142,69 +142,69 @@ describe("Menu tests", function () {
 
         it('Mouse is out, Mouse is over, Mouse is out', function () {
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it('Mouse is out, Mouse is over, Mouse is down', function () {
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.down);
+            expect(button.state).to.equal(CM.BUTTON_STATES.down);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked', function () {
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.down);
+            expect(button.state).to.equal(CM.BUTTON_STATES.down);
 
             TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.up);
+            expect(button.state).to.equal(CM.BUTTON_STATES.up);
         });
 
         it('Mouse is out, Mouse is over, Mouse is clicked, Mouse is over, Mouse is out', function () {
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.down);
+            expect(button.state).to.equal(CM.BUTTON_STATES.down);
 
             TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.up);
+            expect(button.state).to.equal(CM.BUTTON_STATES.up);
 
             TestHelper.triggerMouseEvent('mousemove', 55, 55, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 10, 10, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it('Mouse is up', function () {
             TestHelper.triggerMouseEvent('mouseup', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it('Mouse is down', function () {
 
             TestHelper.triggerMouseEvent('mousedown', 60, 60, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         afterEach(function () {
@@ -341,48 +341,48 @@ describe("Menu tests", function () {
             menu.updateScale(2, 2);
 
             TestHelper.triggerMouseEvent('mousemove', 99, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 199, 199, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 201, 201, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it("Manual rescale of x", function () {
             menu.updateScaleX(2);
 
             TestHelper.triggerMouseEvent('mousemove', 99, 49, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 51, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 199, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 201, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it("Manual rescale of y", function () {
             menu.updateScaleY(2);
 
             TestHelper.triggerMouseEvent('mousemove', 49, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 51, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 99, 199, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 201, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         afterEach(function () {
@@ -416,16 +416,16 @@ describe("Menu tests", function () {
             menu.rescale();
 
             TestHelper.triggerMouseEvent('mousemove', 99, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 199, 199, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 201, 201, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it("Auto rescale of x", function () {
@@ -433,16 +433,16 @@ describe("Menu tests", function () {
             menu.rescale();
 
             TestHelper.triggerMouseEvent('mousemove', 99, 49, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 51, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 199, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 201, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         it("Auto rescale of y", function () {
@@ -450,16 +450,16 @@ describe("Menu tests", function () {
             menu.rescale();
 
             TestHelper.triggerMouseEvent('mousemove', 49, 99, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
 
             TestHelper.triggerMouseEvent('mousemove', 51, 101, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 99, 199, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.over);
+            expect(button.state).to.equal(CM.BUTTON_STATES.over);
 
             TestHelper.triggerMouseEvent('mousemove', 101, 201, dom_canvas);
-            expect(button.state).to.equal(CM.ELEMENT_STATES.idle);
+            expect(button.state).to.equal(CM.BUTTON_STATES.idle);
         });
 
         afterEach(function () {

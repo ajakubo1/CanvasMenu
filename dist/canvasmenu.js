@@ -1,15 +1,23 @@
 CM = {};
 
+CM.EVENTS = {
+    "click": "click",
+    "mousedown": "mousedown",
+    "mouseup": "mouseup",
+    "mousemove": "mousemove",
+    "mouseenter": "mouseenter",
+    "mouseleave": "mouseleave"
+};
+
 /**
  *
- * @param {object} config - configuration for the button
- * Mandatory:
+ * @param {object} config - configuration for the menu
  * @param {DOM object} config.canvas - Canvas DOM element
- *
  * @param {number} [config.width=800] - width for menu
  * @param {number} [config.height=600] - height for button
  * @param {number} [config.tickMax=Number.MAX_VALUE] - change the amount of time for which tick will be rotated
- * @param {functon} [config.animation=undefined] - menu animation function
+ * @param {number} [config.fps=60] - how many redraw operations should be made per second
+ * @param {function} [config.animation=undefined] - menu animation function
  * @param {boolean} [config.autorescale=false] - let the menu scale automatically (from css transform)
  *
  * @constructor
@@ -35,44 +43,59 @@ CM.Menu = function(config) {
     this.tickMax = config.tickMax || Number.MAX_VALUE;
     this.autorescale = config.autorescale || false;
 
+    /**
+     * Listens to mousedown event on canvas, triggers mousedown event on focused element
+     * @param event
+     */
     this.listener_mousedown = function (event) {
-        var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
-
-        if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.focused.trigger('mousedown', event);
+        if (self.focused !== undefined) {
+            var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
+            self.focused.trigger(CM.EVENTS.mousedown, x, y);
         }
     };
 
+    /**
+     * Listens to mousemove event on canvas, sets-up focused element, removes focus from element, triggers
+     * mouseleave, mouseenter and mousemove events on focused element
+     * @param event
+     */
     this.listener_mousemove = function (event) {
         var i, x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
 
         if (self.focused !== undefined) {
             if (!self.focused.inRange(x, y)) {
-                self.focused.trigger('mouseleave', event);
+                self.focused.trigger(CM.EVENTS.mouseleave, x, y);
                 self.focused = undefined;
             } else {
-                self.focused.trigger('mousemove', event);
+                self.focused.trigger(CM.EVENTS.mousemove, x, y);
             }
         } else {
             for (i = 0; i < self.elements.length; i += 1) {
                 if (self.elements[i].inRange(x, y)) {
                     self.focused = self.elements[i];
-                    self.focused.trigger('mouseenter', event);
+                    self.focused.trigger(CM.EVENTS.mouseenter, x, y);
                     break;
                 }
             }
         }
     };
 
+    /**
+     * Listens to mouseup event on canvas, triggers mouseup event on focused element
+     * @param event
+     */
     this.listener_mouseup = function (event) {
-        var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
-        if (self.focused !== undefined && self.focused.inRange(x, y)) {
-            self.focused.trigger('mouseup', event);
+        if (self.focused !== undefined) {
+            var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
+            self.focused.trigger(CM.EVENTS.mouseup, x, y);
         }
     };
 
     /**
      * found it at https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+     *
+     * Takes transform style element and extracts scale information (x and y scale), it then adjusts scaleX and
+     * scaleY parameters
      */
     this.rescale = function () {
         var	style = window.getComputedStyle(self.canvas, null),
@@ -101,8 +124,14 @@ CM.Menu = function(config) {
         self.scaleY = values[3];
     };
 
+    /**
+     * Sets up animation function - if it is enabled, it will be called every {config.fps} times per second
+     */
     this.animationStep = config.animation;
 
+    /**
+     * Renders the whole menu with every single element
+     */
     this.render = function () {
         var i;
 
@@ -116,6 +145,10 @@ CM.Menu = function(config) {
         }
     };
 
+    /**
+     * Animation loop, running only when menu animations are enabled
+     * @param frameTime
+     */
     this.run = function (frameTime) {
         var tickCount = Math.floor((frameTime - self.updateTime) / self.tickLength), i;
         if (tickCount > 0) {
@@ -138,10 +171,17 @@ CM.Menu = function(config) {
     };
 };
 
+/**
+ * Indicates if menu is currently visible/animating
+ * @returns {boolean}
+ */
 CM.Menu.prototype.isVisible = function () {
     return this.running;
 };
 
+/**
+ * Initiates menu
+ */
 CM.Menu.prototype.init = function () {
     this.canvas.addEventListener('mouseup', this.listener_mouseup);
     this.canvas.addEventListener('mousedown', this.listener_mousedown);
@@ -159,6 +199,9 @@ CM.Menu.prototype.init = function () {
     }
 };
 
+/**
+ * Destroys menu
+ */
 CM.Menu.prototype.destroy = function () {
     var i;
 
@@ -179,24 +222,45 @@ CM.Menu.prototype.destroy = function () {
     this.running = false;
 };
 
+/**
+ * Adds element to menu
+ * @param {CM.Element} element
+ */
 CM.Menu.prototype.add = function (element) {
     this.elements.push(element);
     element.setMenu(this);
 };
 
+/**
+ * Function for manual scale update (updates x and y scales with the same value)
+ * @param {float} scale
+ */
 CM.Menu.prototype.updateScale = function (scale) {
     this.scaleX = scale;
     this.scaleY = scale;
 };
 
+/**
+ * Function for manual scale update (updates x scale)
+ * @param {float} scale
+ */
 CM.Menu.prototype.updateScaleX = function (scale) {
     this.scaleX = scale;
 };
 
+/**
+ * Function for manual scale update (updates y scale)
+ * @param {float} scale
+ */
 CM.Menu.prototype.updateScaleY = function (scale) {
     this.scaleY = scale;
 };
 
+/**
+ * Element generation + assigning it to the menu
+ * @param {String} componentType - name of element you want to create
+ * @param config - configuration passed to element creation
+ */
 CM.Menu.prototype.create = function (componentType, config) {
     // capitalize the type of the component, so 'button' will became 'Button'
     componentType = componentType.charAt(0).toUpperCase() + componentType.slice(1);
@@ -209,18 +273,33 @@ CM.Menu.prototype.create = function (componentType, config) {
     }
 };
 
+/**
+ * Redraw the whole menu manually (called by elements when their state changes)
+ */
 CM.Menu.prototype.forceRedraw = function () {
     if (!this.animated) {
         this.render();
     }
 };
 
-CM.ELEMENT_STATES = {
+CM.BUTTON_STATES = {
     "idle": "idle",
     "over": "over",
     "down": "down",
     "up": "up"
-};CM.Element = function (config) {
+};/**
+ *
+ * @param {object} config - configuration for the element
+ * @param {number} config.x - x coordinate for button
+ * @param {number} config.y - y coordinate for button
+ * @param {number} config.width - width for button
+ * @param {number} config.height - height for button
+ * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
+ * @param {array} [config.on=undefined] - all of the listeners for current element each array element is an array with two
+ * elements. The [0] element is event name, [1] element is function to be called
+ * @constructor
+ */
+CM.Element = function (config) {
     this.name = config.name;
     this.x = config.x;
     this.y = config.y;
@@ -243,6 +322,11 @@ CM.ELEMENT_STATES = {
     this.default = "none";
     this.state = "none";
 
+    /**
+     * Initializes canvas with button width and height
+     * Initializes canvas with button width and height
+     * @returns {Element}
+     */
     this.init_canvas = function () {
         var canvas = document.createElement('canvas');
         canvas.width = this.width;
@@ -256,17 +340,29 @@ CM.ELEMENT_STATES = {
 
     this.__down = undefined;
 
+    /**
+     * listens for down event (click event)
+     * @private
+     */
     this.__downListener = function() {
         this.__down = true;
     };
 
-    this.__upListener = function(event) {
+    /**
+     * listens for up event (click event)
+     * @private
+     */
+    this.__upListener = function(x, y) {
         if (this.__down) {
-            this.trigger('click', event);
+            this.trigger(CM.EVENTS.click, x, y);
         }
         this.__down = false;
     };
-    
+
+    /**
+     * listens for leave event (click event)
+     * @private
+     */
     this.__leaveListener = function () {
         this.__down = false;
     };
@@ -278,6 +374,12 @@ CM.ELEMENT_STATES = {
     }
 };
 
+/**
+ * Indicate if given element is in range of given x, y coordinates
+ * @param {int} x - x coordinate
+ * @param {int} y - y coordinate
+ * @returns {boolean}
+ */
 CM.Element.prototype.inRange = function (x, y) {
     if (x >= this.x && x <= this.x_limit && y >= this.y && y <= this.y_limit) {
         return true;
@@ -285,24 +387,35 @@ CM.Element.prototype.inRange = function (x, y) {
     return false;
 };
 
-CM.Element.prototype.trigger = function (eventType, event) {
+/**
+ * Trigger event on an element
+ * @param {string} eventType - what event gets triggered
+ * @param {int} x - x coordinate of where the mouse is during event trigger
+ * @param {int} y - y coordinate of where the mouse is during event trigger
+ */
+CM.Element.prototype.trigger = function (eventType, x, y) {
     var i, handlers = this.events[eventType];
     for (i = 0; i < handlers.length; i += 1) {
-        if (eventType === 'click' && handlers[i] instanceof CM.Menu) {
+        if (eventType === CM.EVENTS.click && handlers[i] instanceof CM.Menu) {
             this.menu.destroy();
             handlers[i].init();
         } else {
-            handlers[i].call(this, event);
+            handlers[i].call(this, x, y);
         }
     }
 };
 
+/**
+ * Set event handler for given event
+ * @param {string} eventType - event type for which to listen
+ * @param {function} handler - handler function
+ */
 CM.Element.prototype.on = function (eventType, handler) {
-    if (!(eventType in this.events)) {
+    if (!(eventType in CM.EVENTS)) {
         throw new Error("Wrong Event! This library only allows for triggering the following events: " +
-            Object.keys(this.events));
+            Object.keys(CM.EVENTS));
     } else {
-        if (eventType === 'click') {
+        if (eventType === CM.EVENTS.click) {
             if (handler instanceof CM.Menu) {
                 var i;
                 for (i = 0; i < this.events[eventType].length; i += 1) {
@@ -313,82 +426,113 @@ CM.Element.prototype.on = function (eventType, handler) {
             }
             if (this.__down === undefined) {
                 this.__down = false;
-                this.on('mouseleave', this.__leaveListener);
-                this.on('mousedown', this.__downListener);
-                this.on('mouseup', this.__upListener);
+                this.on(CM.EVENTS.mouseleave, this.__leaveListener);
+                this.on(CM.EVENTS.mousedown, this.__downListener);
+                this.on(CM.EVENTS.mouseup, this.__upListener);
             }
         }
         this.events[eventType].push(handler);
     }
 };
 
+/**
+ * Function called when menu animation is enabled
+ * @param {int} newTick - tick number from menu
+ */
 CM.Element.prototype.update = function (newTick) {};
 
+/**
+ * Returns element value (if any is set)
+ * @returns {undefined|*}
+ */
 CM.Element.prototype.getValue = function () {
     return this.value;
 };
 
+/**
+ * Returns element value wrapped in object (keyed by element name). If no name is set, returns undefined
+ * @returns {*}
+ */
 CM.Element.prototype.getFormattedValue = function () {
     var toReturn = {};
-    toReturn[this.name] = this.value;
+    if (this.name) {
+        toReturn[this.name] = this.value;
+    } else {
+        return undefined;
+    }
     return toReturn;
 };
 
+/**
+ * Get X coordinate of element
+ * @returns {number|*}
+ */
 CM.Element.prototype.getX = function () {
     return this.x;
 };
 
+/**
+ * Get Y coordinate of element
+ * @returns {number|*}
+ */
 CM.Element.prototype.getY = function () {
     return this.y;
 };
 
+/**
+ * Sets menu for which element is added
+ * @param menu
+ */
 CM.Element.prototype.setMenu = function (menu) {
     this.menu = menu;
 };
 
+/**
+ * Get current canvas
+ * @returns {*}
+ */
 CM.Element.prototype.getCanvas = function () {
     return this.canvas[this.state];
 };
 
-CM.Element.prototype.getState = function () {
-    return this.state;
-};
-
+/**
+ * function called when menu disappears
+ */
 CM.Element.prototype.destroy = function () {};/**
  *
  * @param {object} config - configuration for the button
- * Mandatory:
- * @param {number} config.x - x coordinate for button
- * @param {number} config.y - y coordinate for button
- * @param {number} config.width - width for button
- * @param {number} config.height - height for button
  * @param {string} [config.text=undefined] - text displayed in button field
+ * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  *
- * Optional:
- * @param {string} [config.font=(this.height * 3 / 5 ) + 'pt Arial'] - font style for button (inputted directly into context.font during draw phase)
- * @param {string} [config.redrawInactiveColor='green'] - html color for inactive button background (defaults to 'green')
- * @param {string} [config.redrawFocusedColor='blue'] - html color for focused button background (defaults to 'blue')
- * @param {string} [config.redrawDownColor='red'] - html color for down button background (defaults to 'red')
- * @param {string} [config.redrawUpColor='orange'] - html color for up button background (defaults to 'orange')
- * @param {string} [config.redrawInactiveFont='white'] - html color for inactive button foreground (defaults to 'white')
- * @param {string} [config.redrawFocusedFont='white'] - html color for focused button foreground (defaults to 'white')
- * @param {string} [config.redrawDownFont='white'] - html color for down button foreground (defaults to 'white')
- * @param {string} [config.redrawUpFont='white'] - html color for up button foreground (defaults to 'white')
- * @param {function} [config.redrawInactive=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawFocused=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawDown=undefined] - function called to redraw background during inactive state
- * @param {function} [config.redrawUp=undefined] - function called to redraw background during inactive state
+ * @param {object} [config.down=undefined] - description of down state button
+ * @param {string} [config.down.color="red"] - button background color for down state
+ * @param {string} [config.down.font="white"] - font color for down state
+ * @param {function} [config.down.fn=undefined] - animation function for down state
+ *
+ * @param {object} [config.over=undefined] - description of over state button
+ * @param {string} [config.over.color="blue"] - button background color for over state
+ * @param {string} [config.over.font="white"] - font color for over state
+ * @param {function} [config.over.fn=undefined] - animation function for over state
+ *
+ * @param {object} [config.up=undefined] - description of up state button
+ * @param {string} [config.up.color="orange"] - button background color for up state
+ * @param {string} [config.up.font="white"] - font color for up state
+ * @param {function} [config.up.fn=undefined] - animation function for up state
+ *
+ * @param {object} [config.idle=undefined] - description of idle state button
+ * @param {string} [config.idle.color="green"] - button background color for idle state
+ * @param {string} [config.idle.font="white"] - font color for idle state
+ * @param {function} [config.idle.fn=undefined] - animation function for idle state
  *
  * @constructor
- *
  */
 CM.Button = function(config) {
     CM.Element.call(this, config);
 
-    this.state = CM.ELEMENT_STATES.idle;
+    this.state = CM.BUTTON_STATES.idle;
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
-
+    
     this.default = {
         "idle": {
             "color": "green",
@@ -415,6 +559,10 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
+    /**
+     * Function called whenever canvas for specific state should be redrawn
+     * @param {string} [state=undefined] - state which should be redrawn
+     */
     this.redrawState = function (state) {
         state = state || this.state;
         var context = this.canvas[state].getContext('2d');
@@ -437,51 +585,51 @@ CM.Button = function(config) {
     };
 
     this.redrawState();
-    this.redrawState(CM.ELEMENT_STATES.over);
-    this.redrawState(CM.ELEMENT_STATES.down);
-    this.redrawState(CM.ELEMENT_STATES.up);
+    this.redrawState(CM.BUTTON_STATES.over);
+    this.redrawState(CM.BUTTON_STATES.down);
+    this.redrawState(CM.BUTTON_STATES.up);
     
-    this.enterListener = function (event) {
+    this.enterListener = function (x, y) {
         this.menu.canvas.style.cursor = 'pointer';
-        this.state = CM.ELEMENT_STATES.over;
+        this.state = CM.BUTTON_STATES.over;
         this.menu.forceRedraw();
     };
 
-    this.leaveListener = function (event) {
+    this.leaveListener = function (x, y) {
         this.menu.canvas.style.cursor = '';
-        this.state = CM.ELEMENT_STATES.idle;
+        this.state = CM.BUTTON_STATES.idle;
         this.menu.forceRedraw();
     };
 
-    this.upListener = function (event) {
-        this.state = CM.ELEMENT_STATES.up;
+    this.upListener = function (x, y) {
+        this.state = CM.BUTTON_STATES.up;
         this.menu.forceRedraw();
     };
 
-    this.downListener = function (event) {
-        this.state = CM.ELEMENT_STATES.down;
+    this.downListener = function (x, y) {
+        this.state = CM.BUTTON_STATES.down;
         this.menu.forceRedraw();
     };
 
-    this.moveListener = function (event) {
-        if (this.state === CM.ELEMENT_STATES.up) {
-            this.state = CM.ELEMENT_STATES.over;
+    this.moveListener = function (x, y) {
+        if (this.state === CM.BUTTON_STATES.up) {
+            this.state = CM.BUTTON_STATES.over;
             this.menu.forceRedraw();
         }
     };
 
-    this.on('mouseenter', this.enterListener);
-    this.on('mouseleave', this.leaveListener);
-    this.on('mousedown', this.downListener);
-    this.on('mouseup', this.upListener);
-    this.on('mousemove', this.moveListener);
+    this.on(CM.EVENTS.mouseenter, this.enterListener);
+    this.on(CM.EVENTS.mouseleave, this.leaveListener);
+    this.on(CM.EVENTS.mousedown, this.downListener);
+    this.on(CM.EVENTS.mouseup, this.upListener);
+    this.on(CM.EVENTS.mousemove, this.moveListener);
 };
 
 CM.Button.prototype = Object.create(CM.Element.prototype);
 CM.Button.prototype.constructor = CM.Button;
 
 CM.Element.prototype.destroy = function () {
-    this.state = CM.ELEMENT_STATES.idle;
+    this.state = CM.BUTTON_STATES.idle;
 };
 
 CM.Element.prototype.update = function (newTick) {
