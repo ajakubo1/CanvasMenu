@@ -549,11 +549,5 @@ describe("Menu tests", function () {
                 menu.create('multiple', {});
             }).to.throw(Error, "Component of Multiple type not found")
         });
-
-        it("Should not create 'Switch' element", function () {
-            expect(function () {
-                menu.create('switch', {});
-            }).to.throw(Error, "Component of Switch type not found")
-        });
     });
 });

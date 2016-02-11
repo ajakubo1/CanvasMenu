@@ -294,6 +294,8 @@ CM.BUTTON_STATES = {
  * @param {number} config.y - y coordinate for button
  * @param {number} config.width - width for button
  * @param {number} config.height - height for button
+ * @param {string} [config.text=undefined] - text displayed in element field
+ * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
  * @param {array} [config.on=undefined] - all of the listeners for current element each array element is an array with two
  * elements. The [0] element is event name, [1] element is function to be called
@@ -309,6 +311,8 @@ CM.Element = function (config) {
     this.y_limit = this.y + this.height;
     this.value = undefined;
     this.tick = 0;
+    this.text = config.text;
+    this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
 
     this.events = {
         "click": [],
@@ -501,8 +505,6 @@ CM.Element.prototype.getCanvas = function () {
 CM.Element.prototype.destroy = function () {};/**
  *
  * @param {object} config - configuration for the button
- * @param {string} [config.text=undefined] - text displayed in button field
- * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  *
  * @param {object} [config.down=undefined] - description of down state button
  * @param {string} [config.down.color="red"] - button background color for down state
@@ -530,9 +532,7 @@ CM.Button = function(config) {
     CM.Element.call(this, config);
 
     this.state = CM.BUTTON_STATES.idle;
-    this.text = config.text;
-    this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
-    
+
     this.default = {
         "idle": {
             "color": "green",
@@ -643,4 +643,93 @@ CM.Example = function(config) {
 };
 
 CM.Example.prototype = Object.create(CM.Element.prototype);
-CM.Example.prototype.constructor = CM.Example;
+CM.Example.prototype.constructor = CM.Example;/**
+ * Created by claim on 10.02.16.
+ */
+
+
+CM.SWITCH_STATE = {
+    "on": "on",
+    "off": "off"
+};
+
+CM.Switch = function(config) {
+    CM.Element.call(this, config);
+
+    this.align = config.align || "left";
+
+    this.default = {
+        "on": {
+            "inner": "white",
+            "outer": "white",
+            "font": "white"
+        },
+        "off": {
+            "inner": "none",
+            "outer": "white",
+            "font": "white"
+        }
+    };
+
+    this.canvas = {
+        "on": this.init_canvas(),
+        "off": this.init_canvas()
+    };
+    this.value = config.value || false;
+    this.state = this.value ? CM.SWITCH_STATE.on : CM.SWITCH_STATE.off;
+
+    this.redrawState = function (state) {
+        state = state || this.state;
+        var context = this.canvas[state].getContext('2d'), x;
+        context.clearRect(0, 0, this.width, this.height);
+
+        context.font = this.font;
+        context.textAlign = this.align;
+        context.textBaseline = "middle";
+        context.fillStyle = config[state] ? config[state].font || this.default[state].font : this.default[state].font;
+        context.fillText(this.text, this.align === "left" ? 5 : this.width - 5, this.height / 2);
+
+        if (config[state] && config[state].fn) {
+            config[state].fn.call(this, context);
+        } else {
+            context.strokeStyle = config[state] ? config[state].outer || this.default[state].outer : this.default[state].outer;
+            context.strokeWidth = 2;
+
+            if (this.align === "left") {
+                x = this.width - this.height * 4 / 5;
+            } else {
+                x = this.height / 5;
+            }
+
+            context.strokeRect(x, this.height / 5, this.height * 3 / 5, this.height * 3 / 5);
+
+            if((config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner) !== "none") {
+                context.fillStyle = config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner;
+                context.fillRect(x + 3, this.height / 5 + 3, this.height * 3 / 5 - 6, this.height * 3 / 5 - 6);
+            }
+        }
+    };
+
+    this.redrawState(CM.SWITCH_STATE.off);
+    this.redrawState(CM.SWITCH_STATE.on);
+
+    this.clickListener = function (x, y) {
+        this.value = !this.value;
+        if (this.value) {
+            this.state = CM.SWITCH_STATE.on;
+        } else {
+            this.state = CM.SWITCH_STATE.off;
+        }
+        this.menu.forceRedraw();
+    };
+
+    this.on(CM.EVENTS.click, this.clickListener);
+};
+
+CM.Switch.prototype = Object.create(CM.Element.prototype);
+CM.Switch.prototype.constructor = CM.Example;
+
+CM.Switch.prototype.update = function (newTick) {
+    this.tick = newTick;
+    this.redrawState();
+};

@@ -1,8 +1,6 @@
 /**
  *
  * @param {object} config - configuration for the button
- * @param {string} [config.text=undefined] - text displayed in button field
- * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  *
  * @param {object} [config.down=undefined] - description of down state button
  * @param {string} [config.down.color="red"] - button background color for down state
@@ -30,9 +28,7 @@ CM.Button = function(config) {
     CM.Element.call(this, config);
 
     this.state = CM.BUTTON_STATES.idle;
-    this.text = config.text;
-    this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
-    
+
     this.default = {
         "idle": {
             "color": "green",
