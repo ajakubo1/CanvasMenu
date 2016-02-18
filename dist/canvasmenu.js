@@ -294,6 +294,7 @@ CM.BUTTON_STATES = {
  * @param {number} config.y - y coordinate for button
  * @param {number} config.width - width for button
  * @param {number} config.height - height for button
+ * @param {string} [config.align="left"] - text alignment of element
  * @param {string} [config.text=undefined] - text displayed in element field
  * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
@@ -313,6 +314,7 @@ CM.Element = function (config) {
     this.tick = 0;
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
+    this.align = config.align || "left";
 
     this.events = {
         "click": [],
@@ -336,6 +338,42 @@ CM.Element = function (config) {
         canvas.width = this.width;
         canvas.height = this.height;
         return canvas;
+    };
+
+    this.redrawStateField = function (context, state) {
+
+    };
+
+    this.redrawStateText = function (context, state) {
+        var xPlacement = 5;
+        if (this.align === "center") {
+            xPlacement = this.width / 2;
+        } else if (this.align === "right") {
+            xPlacement = this.width - 5;
+        }
+        context.font = this.font;
+        context.textAlign = this.align;
+        context.textBaseline = "middle";
+        context.fillStyle = config[state] ? config[state].font || this.default[state].font : this.default[state].font;
+        context.fillText(this.text, xPlacement, this.height / 2);
+    };
+
+    /**
+     * Function called whenever canvas for specific state should be redrawn
+     * @param {string} [state=undefined] - state which should be redrawn
+     */
+    this.redrawState = function (state) {
+        state = state || this.state;
+        var context = this.canvas[state].getContext('2d'), x;
+        context.clearRect(0, 0, this.width, this.height);
+
+        if (config[state] && config[state].fn) {
+            config[state].fn.call(this, context);
+        } else {
+            this.redrawStateField(context, state);
+        }
+
+        this.redrawStateText(context, state);
     };
 
     this.canvas = {
@@ -505,6 +543,7 @@ CM.Element.prototype.getCanvas = function () {
 CM.Element.prototype.destroy = function () {};/**
  *
  * @param {object} config - configuration for the button
+ * @param {string} [config.align="center"] - text alignment of button
  *
  * @param {object} [config.down=undefined] - description of down state button
  * @param {string} [config.down.color="red"] - button background color for down state
@@ -532,6 +571,7 @@ CM.Button = function(config) {
     CM.Element.call(this, config);
 
     this.state = CM.BUTTON_STATES.idle;
+    this.align = config.align || "center";
 
     this.default = {
         "idle": {
@@ -559,29 +599,10 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
-    /**
-     * Function called whenever canvas for specific state should be redrawn
-     * @param {string} [state=undefined] - state which should be redrawn
-     */
-    this.redrawState = function (state) {
-        state = state || this.state;
-        var context = this.canvas[state].getContext('2d');
-        context.clearRect(0, 0, this.width, this.height);
-
-        if (config[state] && config[state].fn) {
-            config[state].fn.call(this, context);
-        } else {
-            context.fillStyle = config[state] ? config[state].color || this.default[state].color :
-                this.default[state].color;
-            context.fillRect(0, 0, this.width, this.height);
-        }
-
-        context.font = this.font;
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillStyle = config[state] ? config[state].font || this.default[state].font :
-            this.default[state].font;
-        context.fillText(this.text, this.width / 2, this.height / 2);
+    this.redrawStateField = function (context, state) {
+        context.fillStyle = config[state] ? config[state].color || this.default[state].color :
+            this.default[state].color;
+        context.fillRect(0, 0, this.width, this.height);
     };
 
     this.redrawState();
@@ -656,8 +677,6 @@ CM.SWITCH_STATE = {
 CM.Switch = function(config) {
     CM.Element.call(this, config);
 
-    this.align = config.align || "left";
-
     this.default = {
         "on": {
             "inner": "white",
@@ -678,35 +697,23 @@ CM.Switch = function(config) {
     this.value = config.value || false;
     this.state = this.value ? CM.SWITCH_STATE.on : CM.SWITCH_STATE.off;
 
-    this.redrawState = function (state) {
-        state = state || this.state;
-        var context = this.canvas[state].getContext('2d'), x;
-        context.clearRect(0, 0, this.width, this.height);
 
-        context.font = this.font;
-        context.textAlign = this.align;
-        context.textBaseline = "middle";
-        context.fillStyle = config[state] ? config[state].font || this.default[state].font : this.default[state].font;
-        context.fillText(this.text, this.align === "left" ? 5 : this.width - 5, this.height / 2);
+    this.redrawStateField = function (context, state) {
+        var x;
+        context.strokeStyle = config[state] ? config[state].outer || this.default[state].outer : this.default[state].outer;
+        context.strokeWidth = 2;
 
-        if (config[state] && config[state].fn) {
-            config[state].fn.call(this, context);
+        if (this.align === "left") {
+            x = this.width - this.height * 4 / 5;
         } else {
-            context.strokeStyle = config[state] ? config[state].outer || this.default[state].outer : this.default[state].outer;
-            context.strokeWidth = 2;
+            x = this.height / 5;
+        }
 
-            if (this.align === "left") {
-                x = this.width - this.height * 4 / 5;
-            } else {
-                x = this.height / 5;
-            }
+        context.strokeRect(x, this.height / 5, this.height * 3 / 5, this.height * 3 / 5);
 
-            context.strokeRect(x, this.height / 5, this.height * 3 / 5, this.height * 3 / 5);
-
-            if((config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner) !== "none") {
-                context.fillStyle = config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner;
-                context.fillRect(x + 3, this.height / 5 + 3, this.height * 3 / 5 - 6, this.height * 3 / 5 - 6);
-            }
+        if((config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner) !== "none") {
+            context.fillStyle = config[state] ? config[state].inner || this.default[state].inner : this.default[state].inner;
+            context.fillRect(x + 3, this.height / 5 + 3, this.height * 3 / 5 - 6, this.height * 3 / 5 - 6);
         }
     };
 

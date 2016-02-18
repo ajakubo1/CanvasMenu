@@ -33,10 +33,6 @@ describe("Button", function () {
             button = menu.create('button', config);
         });
 
-        it("Should have text value as indicated in config.text", function () {
-            expect(button.text).to.equal(config.text);
-        });
-
         it("Should have canvas idle width as indicated in config.width", function () {
             expect(button.canvas.idle.width).to.equal(config.width);
         });
@@ -63,8 +59,12 @@ describe("Button", function () {
             expect(button.canvas.up.height).to.equal(config.height);
         });
 
-        it("Make sure that element state is idle", function () {
+        it("Make sure that button state is idle", function () {
             expect(button.state).to.equal(CM.BUTTON_STATES.idle);
+        });
+
+        it("Make sure that button align is 'center'", function () {
+            expect(button.align).to.equal("center");
         });
     });
 

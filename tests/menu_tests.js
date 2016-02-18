@@ -532,6 +532,10 @@ describe("Menu tests", function () {
             menu.create('example', {});
         });
 
+        it("Should create 'Switch' element", function () {
+            menu.create('switch', {});
+        });
+
         it("Should not create 'Text' element", function () {
             expect(function () {
                 menu.create('text', {});

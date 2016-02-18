@@ -1,6 +1,7 @@
 /**
  *
  * @param {object} config - configuration for the button
+ * @param {string} [config.align="center"] - text alignment of button
  *
  * @param {object} [config.down=undefined] - description of down state button
  * @param {string} [config.down.color="red"] - button background color for down state
@@ -28,6 +29,7 @@ CM.Button = function(config) {
     CM.Element.call(this, config);
 
     this.state = CM.BUTTON_STATES.idle;
+    this.align = config.align || "center";
 
     this.default = {
         "idle": {
@@ -55,29 +57,10 @@ CM.Button = function(config) {
         "up": this.init_canvas()
     };
 
-    /**
-     * Function called whenever canvas for specific state should be redrawn
-     * @param {string} [state=undefined] - state which should be redrawn
-     */
-    this.redrawState = function (state) {
-        state = state || this.state;
-        var context = this.canvas[state].getContext('2d');
-        context.clearRect(0, 0, this.width, this.height);
-
-        if (config[state] && config[state].fn) {
-            config[state].fn.call(this, context);
-        } else {
-            context.fillStyle = config[state] ? config[state].color || this.default[state].color :
-                this.default[state].color;
-            context.fillRect(0, 0, this.width, this.height);
-        }
-
-        context.font = this.font;
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillStyle = config[state] ? config[state].font || this.default[state].font :
-            this.default[state].font;
-        context.fillText(this.text, this.width / 2, this.height / 2);
+    this.redrawStateField = function (context, state) {
+        context.fillStyle = config[state] ? config[state].color || this.default[state].color :
+            this.default[state].color;
+        context.fillRect(0, 0, this.width, this.height);
     };
 
     this.redrawState();

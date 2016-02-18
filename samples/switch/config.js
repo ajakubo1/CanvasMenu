@@ -43,6 +43,7 @@ var switchElement2 = mainMenu.create('switch', {
     text: "Human",
     name: "human",
     align: "left",
+    value: true,
     on: {
         'inner': "green"
     },
@@ -59,6 +60,7 @@ var switchElement3 = mainMenu.create('switch', {
     text: "Human",
     name: "human",
     align: "left",
+    value: true,
     on: {
         fn: function (context) {
             var width = this.tick % 160 / 6;

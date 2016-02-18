@@ -24,7 +24,8 @@ describe("Element tests", function () {
                 x: 50,
                 y: 50,
                 width: 50,
-                height: 50
+                height: 50,
+                text: "Test text"
             };
             element = menu.create('element', config);
         });
@@ -70,8 +71,16 @@ describe("Element tests", function () {
             expect(element.state).to.equal("none");
         });
 
+        it("Make sure that element align is 'left'", function () {
+            expect(element.align).to.equal("left");
+        });
+
         it("Make sure that animation step is initiated", function () {
             expect(element.tick).to.equal(0);
+        });
+
+        it("Should have text value as indicated in config.text", function () {
+            expect(element.text).to.equal(config.text);
         });
 
         it("Check if value has been initiated", function () {
