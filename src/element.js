@@ -6,6 +6,7 @@
  * @param {number} config.width - width for button
  * @param {number} config.height - height for button
  * @param {string} [config.align="left"] - text alignment of element
+ * @param {string} [config.baseline="middle"] - text alignment of element
  * @param {string} [config.text=undefined] - text displayed in element field
  * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
@@ -26,6 +27,7 @@ CM.Element = function (config) {
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
     this.align = config.align || "left";
+    this.baseline = config.baseline || "middle";
 
     this.events = {
         "click": [],
@@ -64,7 +66,7 @@ CM.Element = function (config) {
         }
         context.font = this.font;
         context.textAlign = this.align;
-        context.textBaseline = "middle";
+        context.textBaseline = this.baseline;
         context.fillStyle = config[state] ? config[state].font || this.default[state].font : this.default[state].font;
         context.fillText(this.text, xPlacement, this.height / 2);
     };
