@@ -6,10 +6,7 @@ var canvas = document.getElementById('canvas'),
 var menuConfig = {
     canvas: canvas,
     width: width,
-    height: height,
-    animation: function () {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-    }
+    height: height
 };
 
 var mainMenu = new CM.Menu(menuConfig);
@@ -22,27 +19,43 @@ var multiple = mainMenu.create('multiple', {
     y: 50,
     width: 500,
     height: 500,
-    text: "Multiple"
-});
-
-
-/*var switchElement = mainMenu.create('switch', {
-    x: 200,
-    y: 250,
-    width: buttonWidth,
-    height: buttonHeight,
-    text: "Human",
-    name: "human",
-    align: "right",
-    on: {
-        'inner': "green"
+    text: "Multiple",
+    template: {
+        width: 250,
+        height: 40
     },
-    off: {
-
-    }
+    elements: [
+        {
+            text: "Text one",
+            name: "text1",
+            value: true
+        }, {
+            text: "Text two",
+            name: "text2",
+            value: true
+        }, {
+            text: "Text three",
+            name: "text3",
+            value: true
+        }, {
+            text: "Text four",
+            name: "text4",
+            value: true
+        }, {
+            text: "Text five",
+            name: "text5",
+            value: true
+        }, {
+            text: "Text six",
+            name: "text6",
+            value: true
+        }
+    ]
 });
 
 
+
+/*
 var switchElement2 = mainMenu.create('switch', {
     x: 200,
     y: 300,

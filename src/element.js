@@ -6,7 +6,7 @@
  * @param {number} config.width - width for button
  * @param {number} config.height - height for button
  * @param {string} [config.align="left"] - text alignment of element
- * @param {string} [config.baseline="middle"] - text alignment of element
+ * @param {string} [config.vertical="middle"] - text alignment of element
  * @param {string} [config.text=undefined] - text displayed in element field
  * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
@@ -24,10 +24,11 @@ CM.Element = function (config) {
     this.y_limit = this.y + this.height;
     this.value = undefined;
     this.tick = 0;
+
     this.text = config.text;
     this.font = config.font || (this.height * 3 / 5 ) + 'pt Arial';
     this.align = config.align || "left";
-    this.baseline = config.baseline || "middle";
+    this.vertical = config.vertical || "middle";
 
     this.events = {
         "click": [],
@@ -53,22 +54,41 @@ CM.Element = function (config) {
         return canvas;
     };
 
+    this.canvas = {
+        "main": this.init_canvas()
+    };
+
+    this.default = {
+        "main": {
+            "font": "white"
+        }
+    };
+
     this.redrawStateField = function (context, state) {
 
     };
 
     this.redrawStateText = function (context, state) {
-        var xPlacement = 5;
+        var xPlacement = 5, yPlacement = 5;
         if (this.align === "center") {
             xPlacement = this.width / 2;
         } else if (this.align === "right") {
             xPlacement = this.width - 5;
         }
+        context.textBaseline = "top";
+        if(this.vertical === "middle") {
+            context.textBaseline = "middle";
+            yPlacement = this.height / 2;
+        } else if(this.vertical === "bottom") {
+            context.textBaseline = "bottom";
+            yPlacement = this.height;
+        }
+
         context.font = this.font;
         context.textAlign = this.align;
-        context.textBaseline = this.baseline;
+
         context.fillStyle = config[state] ? config[state].font || this.default[state].font : this.default[state].font;
-        context.fillText(this.text, xPlacement, this.height / 2);
+        context.fillText(this.text, xPlacement, yPlacement);
     };
 
     /**
@@ -87,10 +107,6 @@ CM.Element = function (config) {
         }
 
         this.redrawStateText(context, state);
-    };
-
-    this.canvas = {
-        "main": this.init_canvas()
     };
 
     this.__down = undefined;

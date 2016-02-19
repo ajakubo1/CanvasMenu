@@ -227,8 +227,8 @@ CM.Menu.prototype.destroy = function () {
  * @param {CM.Element} element
  */
 CM.Menu.prototype.add = function (element) {
-    element.setMenu(this);
     this.elements.push(element);
+    element.setMenu(this);
 };
 
 /**
