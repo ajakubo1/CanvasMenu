@@ -227,8 +227,8 @@ CM.Menu.prototype.destroy = function () {
  * @param {CM.Element} element
  */
 CM.Menu.prototype.add = function (element) {
-    this.elements.push(element);
     element.setMenu(this);
+    this.elements.push(element);
 };
 
 /**
@@ -325,8 +325,8 @@ CM.Element = function (config) {
         "mouseleave": []
     };
 
-    this.default = "none";
-    this.state = "none";
+    this.default = "main";
+    this.state = "main";
 
     /**
      * Initializes canvas with button width and height
@@ -377,7 +377,7 @@ CM.Element = function (config) {
     };
 
     this.canvas = {
-        "none": this.init_canvas()
+        "main": this.init_canvas()
     };
 
     this.__down = undefined;
@@ -665,6 +665,46 @@ CM.Example = function(config) {
 
 CM.Example.prototype = Object.create(CM.Element.prototype);
 CM.Example.prototype.constructor = CM.Example;/**
+ * Created by claim on 19.02.16.
+ */
+
+
+CM.Multiple = function (config) {
+    CM.Element.call(this, config);
+
+    //Gets template for used switches + layout coordinates
+    //  width, height, font, on - this is passed
+    //  for individual checkboxes: names, values,
+    //Just when menu is set, it adds all of the checkboxes to the menu (it's not responsible for the checkbox listeners)
+    //Can redraw the inside of itself (so it should extend element also, but it doesn't have any states, just one
+    //Add new listener - on statechange
+    //Set listeners to enter and leave
+
+    //layouts:
+    //left
+    //right
+    //double inner
+    //double outer
+    //double left
+    //double right
+
+    this.redrawStateField = function (context, state) {
+
+    };
+};
+
+CM.Multiple.prototype = Object.create(CM.Element.prototype);
+CM.Multiple.prototype.constructor = CM.Multiple;/**
+ * Created by claim on 18.02.16.
+ */
+
+
+CM.Radio = function (config) {
+    CM.Multiple.call(this, config);
+};
+
+CM.Radio.prototype = Object.create(CM.Multiple.prototype);
+CM.Radio.prototype.constructor = CM.Radio;/**
  * Created by claim on 10.02.16.
  */
 

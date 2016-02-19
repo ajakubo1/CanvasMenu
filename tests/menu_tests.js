@@ -543,15 +543,11 @@ describe("Menu tests", function () {
         });
 
         it("Should not create 'Radio' element", function () {
-            expect(function () {
-                menu.create('radio', {});
-            }).to.throw(Error, "Component of Radio type not found")
+            menu.create('radio', {});
         });
 
         it("Should not create 'Multiple' element", function () {
-            expect(function () {
-                menu.create('multiple', {});
-            }).to.throw(Error, "Component of Multiple type not found")
+            menu.create('multiple', {});
         });
     });
 });

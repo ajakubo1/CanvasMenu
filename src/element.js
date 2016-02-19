@@ -36,8 +36,8 @@ CM.Element = function (config) {
         "mouseleave": []
     };
 
-    this.default = "none";
-    this.state = "none";
+    this.default = "main";
+    this.state = "main";
 
     /**
      * Initializes canvas with button width and height
@@ -88,7 +88,7 @@ CM.Element = function (config) {
     };
 
     this.canvas = {
-        "none": this.init_canvas()
+        "main": this.init_canvas()
     };
 
     this.__down = undefined;

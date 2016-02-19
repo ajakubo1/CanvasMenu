@@ -57,18 +57,18 @@ describe("Element tests", function () {
             expect(element.width).to.equal(config.width);
         });
         it("Should have canvas idle width as indicated in config.width", function () {
-            expect(element.canvas.none.width).to.equal(config.width);
+            expect(element.canvas.main.width).to.equal(config.width);
         });
 
         it("Should have height as indicated in config.height", function () {
             expect(element.height).to.equal(config.height);
         });
         it("Should have canvas idle height as indicated in config.height", function () {
-            expect(element.canvas.none.height).to.equal(config.height);
+            expect(element.canvas.main.height).to.equal(config.height);
         });
 
         it("Make sure that element state is idle", function () {
-            expect(element.state).to.equal("none");
+            expect(element.state).to.equal("main");
         });
 
         it("Make sure that element align is 'left'", function () {
