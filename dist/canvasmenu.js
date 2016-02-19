@@ -34,7 +34,7 @@ CM.Menu = function(config) {
     this.ctx = this.canvas.getContext('2d');
     this.scaleX = 1;
     this.scaleY = 1;
-    this.focused = undefined;
+    this.focused = [];
     this.animated = config.animation ? true : false;
     this.running = false;
     this.updateTime = undefined;
@@ -48,9 +48,9 @@ CM.Menu = function(config) {
      * @param event
      */
     this.listener_mousedown = function (event) {
-        if (self.focused !== undefined) {
+        if (self.focused.length !== 0) {
             var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
-            self.focused.trigger(CM.EVENTS.mousedown, x, y);
+            self.triggerEvent(CM.EVENTS.mousedown, x, y);
         }
     };
 
@@ -60,21 +60,35 @@ CM.Menu = function(config) {
      * @param event
      */
     this.listener_mousemove = function (event) {
-        var i, x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
-
-        if (self.focused !== undefined) {
-            if (!self.focused.inRange(x, y)) {
-                self.focused.trigger(CM.EVENTS.mouseleave, x, y);
-                self.focused = undefined;
-            } else {
-                self.focused.trigger(CM.EVENTS.mousemove, x, y);
+        var i, j, notFocused,
+            x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
+        //Check if still in range
+        for (i = self.focused.length - 1; i >= 0; i -= 1) {
+            if (!self.elements[self.focused[i]].inRange(x, y)) {
+                self.elements[self.focused[i]].trigger(CM.EVENTS.mouseleave, x, y);
+                self.focused.splice(i, 1);
             }
-        } else {
-            for (i = 0; i < self.elements.length; i += 1) {
-                if (self.elements[i].inRange(x, y)) {
-                    self.focused = self.elements[i];
-                    self.focused.trigger(CM.EVENTS.mouseenter, x, y);
+        }
+
+        //Inform of mousemove event
+        if (self.focused.length !== 0) {
+            self.triggerEvent(CM.EVENTS.mousemove, x, y);
+        }
+
+        //Check if new one is in range
+        for (i = 0; i < self.elements.length; i += 1) {
+            notFocused = true;
+            for (j = 0; j < self.focused.length; j += 1) {
+                if(j === self.focused[i]) {
+                    notFocused = false;
                     break;
+                }
+            }
+
+            if (notFocused) {
+                if (self.elements[i].inRange(x, y)) {
+                    self.focused.push(i);
+                    self.elements[i].trigger(CM.EVENTS.mouseenter, x, y);
                 }
             }
         }
@@ -85,9 +99,16 @@ CM.Menu = function(config) {
      * @param event
      */
     this.listener_mouseup = function (event) {
-        if (self.focused !== undefined) {
+        if (self.focused.length !== 0) {
             var x =  (event.pageX - this.offsetLeft) / self.scaleX, y = (event.pageY - this.offsetTop) / self.scaleY;
-            self.focused.trigger(CM.EVENTS.mouseup, x, y);
+            self.triggerEvent(CM.EVENTS.mouseup, x, y);
+        }
+    };
+
+    this.triggerEvent = function (event, x, y) {
+        var i;
+        for (i = 0 ; i < self.focused.length ; i += 1) {
+            self.elements[self.focused[i]].trigger(event, x, y);
         }
     };
 
