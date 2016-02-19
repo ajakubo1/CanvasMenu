@@ -20,6 +20,7 @@ var multiple = mainMenu.create('multiple', {
     width: 500,
     height: 500,
     text: "Multiple",
+    name: "multitest",
     template: {
         width: 250,
         height: 40

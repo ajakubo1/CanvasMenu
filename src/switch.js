@@ -8,6 +8,13 @@ CM.SWITCH_STATE = {
     "off": "off"
 };
 
+/**
+ *
+ * @param {object} config - configuration for the element
+ * @param {boolean} config.value - value of the switch
+ * @param {string} config.name - name of the switch
+ * @constructor
+ */
 CM.Switch = function(config) {
     CM.Element.call(this, config);
 

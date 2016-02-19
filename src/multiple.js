@@ -3,9 +3,15 @@
  */
 
 
+/**
+ *
+ * @param config
+ * @param {string} config.name - name of the multiple selector
+ * @constructor
+ */
 CM.Multiple = function (config) {
     CM.Element.call(this, config);
-    this.font = config.font || "20pt Arial";
+    this.font = config.font || "30pt Arial";
     this.vertical = config.vertical || "top";
     this.elements = [];
 
@@ -27,7 +33,7 @@ CM.Multiple = function (config) {
 
     this.init = function () {
         if (config.elements) {
-            var initialY = 40 + this.y, i;
+            var initialY = 100 + this.y, i;
             for (i = 0; i < config.elements.length; i += 1) {
                 this.elements.push(new CM.Switch({
                     "x": 10 + this.x,
@@ -64,4 +70,30 @@ CM.Multiple.prototype.setMenu = function (menu) {
         console.info(i);
         this.menu.add(this.elements[i]);
     }
+};
+
+/**
+ * Returns element value (if any is set)
+ * @returns {undefined|*}
+ */
+CM.Multiple.prototype.getValue = function () {
+    var i, toReturn = [];
+    for (i = 0 ; i < this.elements.length; i += 1) {
+        toReturn.push(this.elements[i].getFormattedValue());
+    }
+    return toReturn;
+};
+
+/**
+ * Returns element value wrapped in object (keyed by element name). If no name is set, returns undefined
+ * @returns {*}
+ */
+CM.Multiple.prototype.getFormattedValue = function () {
+    var toReturn = {};
+    if (this.name) {
+        toReturn[this.name] = this.getValue();
+    } else {
+        return undefined;
+    }
+    return toReturn;
 };
