@@ -6,7 +6,10 @@ var canvas = document.getElementById('canvas'),
 var menuConfig = {
     canvas: canvas,
     width: width,
-    height: height
+    height: height,
+    animation: function(context) {
+        context.clearRect(0, 0, this.width, this.height);
+    }
 };
 
 var mainMenu = new CM.Menu(menuConfig);
@@ -18,12 +21,45 @@ var multiple = mainMenu.create('multiple', {
     x: 50,
     y: 50,
     width: 500,
-    height: 500,
+    height: 310,
     text: "Multiple",
     name: "multitest",
+    offsetY: 80,
+    layout: "double_inner",
     template: {
-        width: 250,
-        height: 40
+        width: 225,
+        height: 40,
+        on: {
+            fn: function (context) {
+                var width = this.tick % 160 / 6;
+                context.strokeStyle = "white";
+                context.strokeWidth = width;
+
+                if (this.align === "left") {
+                    x = this.width - this.height * 4 / 5;
+                } else {
+                    x = this.height / 5;
+                }
+                context.strokeRect(x, this.height / 5, this.height * 3 / 5, this.height * 3 / 5);
+                context.fillStyle = "green";
+                context.fillRect(x + width + 1, this.height / 5 + width + 1, this.height * 3 / 5 - 2 * width - 2, this.height * 3 / 5 -  2 *width - 2);
+            }
+        },
+        off: {
+            fn: function (context) {
+                var width = this.tick % 20;
+                context.strokeStyle = "white";
+                context.strokeWidth = width;
+
+                if (this.align === "left") {
+                    x = this.width - this.height * 4 / 5;
+                } else {
+                    x = this.height / 5;
+                }
+                context.strokeRect(x, this.height / 5, this.height * 3 / 5, this.height * 3 / 5);
+
+            }
+        }
     },
     elements: [
         {
@@ -50,7 +86,20 @@ var multiple = mainMenu.create('multiple', {
             text: "Text six",
             name: "text6",
             value: true
+        }, {
+            text: "Text seven",
+            name: "text7",
+            value: true
+        }, {
+            text: "Text eight",
+            name: "text8",
+            value: true
+        }, {
+            text: "Text nine",
+            name: "text9",
+            value: true
         }
+
     ]
 });
 
