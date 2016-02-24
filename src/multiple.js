@@ -16,6 +16,12 @@ CM.LAYOUTS = {
  *
  * @param config
  * @param {string} config.name - name of the multiple selector
+ * @param {string} [config.vertical="top"] - text alignment of element
+ * @param {string} [config.font='30pt Arial'] - font property inputted directly into canvas.context.font property
+ * @param {number} [config.offsetY=100] - y axis offset for which Multiple starts drawing Switch boxes
+ * @param {string} [config.layout="left"] - layout for the buttons (from CM.LAYOUTS options)
+ * @param {array} config.elements - Switch properties for individual created elements
+ * @param {object} config.template - Switch properties copied to every single Switch constructor
  * @constructor
  */
 CM.Multiple = function (config) {
@@ -95,7 +101,6 @@ CM.Multiple.prototype.setMenu = function (menu) {
     var i;
     this.menu = menu;
     for (i = 0; i < this.elements.length; i += 1) {
-        console.info(i);
         this.menu.add(this.elements[i]);
     }
 };
@@ -105,9 +110,9 @@ CM.Multiple.prototype.setMenu = function (menu) {
  * @returns {undefined|*}
  */
 CM.Multiple.prototype.getValue = function () {
-    var i, toReturn = [];
+    var i, toReturn = {};
     for (i = 0 ; i < this.elements.length; i += 1) {
-        toReturn.push(this.elements[i].getFormattedValue());
+        toReturn[this.elements[i].name] = this.elements[i].getFormattedValue()[this.elements[i].name];
     }
     return toReturn;
 };

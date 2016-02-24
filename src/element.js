@@ -8,7 +8,7 @@
  * @param {string} [config.align="left"] - text alignment of element
  * @param {string} [config.vertical="middle"] - text alignment of element
  * @param {string} [config.text=undefined] - text displayed in element field
- * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
+ * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial'] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
  * @param {array} [config.on=undefined] - all of the listeners for current element each array element is an array with two
  * elements. The [0] element is event name, [1] element is function to be called

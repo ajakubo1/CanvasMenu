@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe("Element tests", function () {
+describe("Switch tests", function () {
 
     var menu,
         switchElement,
@@ -27,7 +27,14 @@ describe("Element tests", function () {
                 y: 50,
                 width: 300,
                 height: 50,
-                text: "test"
+                text: "Multiple",
+                name: "multitest",
+                offsetY: 80,
+                layout: "double_inner",
+                template: {
+                    width: 225,
+                    height: 40
+                }
             };
 
             switchElement = menu.create('switch', config)
@@ -58,7 +65,7 @@ describe("Element tests", function () {
 
     describe("Change value tests", function () {
         beforeEach(function () {
-            document.getElementById('canvas').appendChild(dom_canvas);
+
             config = {
                 x: 50,
                 y: 50,

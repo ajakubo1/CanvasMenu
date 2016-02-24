@@ -318,7 +318,7 @@ CM.BUTTON_STATES = {
  * @param {string} [config.align="left"] - text alignment of element
  * @param {string} [config.vertical="middle"] - text alignment of element
  * @param {string} [config.text=undefined] - text displayed in element field
- * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial';] - font property inputted directly into canvas.context.font property
+ * @param {string} [config.font=(config.height * 3 / 5 ) + 'pt Arial'] - font property inputted directly into canvas.context.font property
  * @param {string} [config.name=undefined] - name of an element (used when element stores some value)
  * @param {array} [config.on=undefined] - all of the listeners for current element each array element is an array with two
  * elements. The [0] element is event name, [1] element is function to be called
@@ -721,6 +721,12 @@ CM.LAYOUTS = {
  *
  * @param config
  * @param {string} config.name - name of the multiple selector
+ * @param {string} [config.vertical="top"] - text alignment of element
+ * @param {string} [config.font='30pt Arial'] - font property inputted directly into canvas.context.font property
+ * @param {number} [config.offsetY=100] - y axis offset for which Multiple starts drawing Switch boxes
+ * @param {string} [config.layout="left"] - layout for the buttons (from CM.LAYOUTS options)
+ * @param {array} config.elements - Switch properties for individual created elements
+ * @param {object} config.template - Switch properties copied to every single Switch constructor
  * @constructor
  */
 CM.Multiple = function (config) {
@@ -800,7 +806,6 @@ CM.Multiple.prototype.setMenu = function (menu) {
     var i;
     this.menu = menu;
     for (i = 0; i < this.elements.length; i += 1) {
-        console.info(i);
         this.menu.add(this.elements[i]);
     }
 };
@@ -810,9 +815,9 @@ CM.Multiple.prototype.setMenu = function (menu) {
  * @returns {undefined|*}
  */
 CM.Multiple.prototype.getValue = function () {
-    var i, toReturn = [];
+    var i, toReturn = {};
     for (i = 0 ; i < this.elements.length; i += 1) {
-        toReturn.push(this.elements[i].getFormattedValue());
+        toReturn[this.elements[i].name] = this.elements[i].getFormattedValue()[this.elements[i].name];
     }
     return toReturn;
 };
